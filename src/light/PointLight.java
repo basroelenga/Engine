@@ -1,7 +1,7 @@
 package light;
 
 import cam.Camera;
-import game.Simulation;
+import engine.Engine;
 import math.Matrix4f;
 import math.Vector3f;
 import math.Vector4f;
@@ -45,7 +45,7 @@ public class PointLight {
 		if(showLight)
 		{
 			
-			ShaderManager.getShader("basic").uploadMatrices(modelMatrix, Simulation.projMatrix, Camera.getViewMatrix());
+			ShaderManager.getShader("basic").uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
 			ShaderManager.getShader("basic").uploadColor(new Vector4f(1, 1, 0, 1));
 			
 			DrawShapes.drawQuad(ShaderManager.getShader("basic"), sphere.getVaoID(), sphere.getAmountOfTriangles());

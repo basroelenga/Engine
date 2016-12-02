@@ -8,15 +8,10 @@ import game.obj.Sphere;
 import game.simobj.Particle;
 import graphics.Texture;
 import light.LightManager;
-import math.Matrices;
-import math.Matrix4f;
 import math.Vector3f;
 import text.Text;
 
 public class Simulation {
-
-	public static Matrix4f projMatrix;
-	public static Matrix4f orthoMatrix;
 	
 	public static Camera cam;
 	
@@ -28,11 +23,6 @@ public class Simulation {
 	
 	public Simulation()
 	{
-		
-		// This is mandatory to be generated in order for the camera to work (should be moved)
-		// =========================
-		projMatrix = Matrices.projectionMatrix(1280f, 720f);
-		orthoMatrix = Matrices.orthographicMatrix(0f, 1280f, 720f, 0f);
 		
 		cam = new Camera();
 		// =========================

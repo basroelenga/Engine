@@ -1,7 +1,7 @@
 package game.obj;
 
 import cam.Camera;
-import game.Simulation;
+import engine.Engine;
 import generation.TerrainGenerator;
 import math.Matrix4f;
 import math.Vector4f;
@@ -42,7 +42,7 @@ public class TerrainObj {
 	public void render()
 	{
 		
-		ShaderManager.getShader("basic").uploadMatrices(modelMatrix, Simulation.projMatrix, Camera.getViewMatrix());
+		ShaderManager.getShader("basic").uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
 		ShaderManager.getShader("basic").uploadColor(new Vector4f(1, 1, 1, 1));
 		
 		DrawShapes.drawQuad(ShaderManager.getShader("basic") ,vaoID[0], vaoID[1]);

@@ -3,14 +3,13 @@ package terrain;
 import java.util.ArrayList;
 
 import cam.Camera;
-import game.Simulation;
+import engine.Engine;
 import generation.TerrainGenerator;
 import light.LightManager;
 import math.MathUtils;
 import math.Matrix4f;
 import math.SimplexNoise;
 import math.Vector3f;
-import math.Vector4f;
 import shaders.ShaderManager;
 import utils.DrawShapes;
 
@@ -170,7 +169,7 @@ public class TerrainTile {
 	public void render()
 	{
 		
-		ShaderManager.getShader("basicT").uploadMatrices(modelMatrix, Simulation.projMatrix, Camera.getViewMatrix());
+		ShaderManager.getShader("basicT").uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
 		
 		ShaderManager.getShader("basicT").uploadVector3f(LightManager.getPointLight("light").getPosition(), ShaderManager.getShader("basicT").getLightPosLoc());
 		ShaderManager.getShader("basicT").uploadVector3f(new Vector3f(1f, 1f, 1f), ShaderManager.getShader("basicT").getAmbColorLoc());

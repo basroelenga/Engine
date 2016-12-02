@@ -3,7 +3,7 @@ package text;
 import java.util.ArrayList;
 
 import cam.Camera;
-import game.Simulation;
+import engine.Engine;
 import math.Matrix4f;
 import shaders.Shader;
 import shaders.ShaderManager;
@@ -41,7 +41,7 @@ public class Text {
 		
 		case "3D":
 			
-			projMatrix = Simulation.projMatrix;
+			projMatrix = Engine.projMatrix;
 			textShader = ShaderManager.getShader("basictex");
 			
 			scaling = 1f;
@@ -50,7 +50,7 @@ public class Text {
 			
 		case "HUD":
 		
-			projMatrix = Simulation.orthoMatrix;
+			projMatrix = Engine.orthoMatrix;
 			textShader = ShaderManager.getShader("ui");
 			
 			scaling = 50f;

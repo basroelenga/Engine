@@ -10,10 +10,15 @@ import org.lwjgl.opengl.GL;
 
 import game.Simulation;
 import input.KeyboardInput;
+import math.Matrices;
+import math.Matrix4f;
 import shaders.ShaderManager;
 import text.TextManager;
 
 public class Engine {
+	
+	public static Matrix4f projMatrix;
+	public static Matrix4f orthoMatrix;
 	
 	public static float FPS;
 	
@@ -90,6 +95,10 @@ public class Engine {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
+		
+		// Set up the projection matrices
+		projMatrix = Matrices.projectionMatrix(1280f, 720f);
+		orthoMatrix = Matrices.orthographicMatrix(0f, 1280f, 720f, 0f);
 	}
 	
 	private void engineResourceLoader()

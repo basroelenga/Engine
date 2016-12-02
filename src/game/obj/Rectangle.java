@@ -3,7 +3,7 @@ package game.obj;
 import java.util.ArrayList;
 
 import cam.Camera;
-import game.Simulation;
+import engine.Engine;
 import math.Matrix4f;
 import math.Vector3f;
 import math.Vector4f;
@@ -64,7 +64,7 @@ public class Rectangle {
 	public void render()
 	{
 		
-		ShaderManager.getShader("basic").uploadMatrices(modelMatrix, Simulation.projMatrix, Camera.getViewMatrix());
+		ShaderManager.getShader("basic").uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
 		ShaderManager.getShader("basic").uploadColor(color);
 		
 		DrawShapes.drawQuad(ShaderManager.getShader("basic") ,vaoID, 2);

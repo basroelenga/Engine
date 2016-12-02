@@ -1,7 +1,7 @@
 package game.obj;
 
 import cam.Camera;
-import game.Simulation;
+import engine.Engine;
 import graphics.Texture;
 import light.LightManager;
 import math.Matrix4f;
@@ -65,7 +65,7 @@ public class Sphere {
 	public void render()
 	{
 		
-		ShaderManager.getShader(shader).uploadMatrices(modelMatrix, Simulation.projMatrix, Camera.getViewMatrix());
+		ShaderManager.getShader(shader).uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
 		ShaderManager.getShader(shader).uploadColor(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
 		
 		ShaderManager.getShader(shader).uploadVector3f(new Vector3f(LightManager.getPointLight("light").getPosition()), ShaderManager.getShader(shader).getLightPosLoc());
