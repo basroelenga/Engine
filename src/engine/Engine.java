@@ -96,14 +96,15 @@ public class Engine {
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
 		
-		// Set up the projection matrices
-		projMatrix = Matrices.projectionMatrix(1280f, 720f);
-		orthoMatrix = Matrices.orthographicMatrix(0f, 1280f, 720f, 0f);
+		// Set up the projection matrices (these are configured at the width and height of the OpenGL window)
+		projMatrix = Matrices.projectionMatrix(width, height);
+		orthoMatrix = Matrices.orthographicMatrix(0f, width, height, 0f);
 	}
 	
 	private void engineResourceLoader()
 	{
 		
+		// Create the engine fundamental managers
 		new TextManager();
 		new ShaderManager();
 	}
