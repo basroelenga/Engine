@@ -31,7 +31,7 @@ public class Simulation {
 		bgS = new Sphere(20, 0, 0, 0, 50, new Texture("bg"), false);
 		
 		LightManager.addPointLight(new Vector3f(0, 0, 0), "light");
-		createParticles();
+		//createParticles();
 	}
 	
 	private void createParticles()
