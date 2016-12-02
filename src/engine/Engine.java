@@ -66,8 +66,8 @@ public class Engine {
 	
 	public static long window;
 	
-	private int width;
-	private int height;
+	private static int width;
+	private static int height;
 	
 	private boolean isRunning = false;
 	private boolean fullScreen = false;
@@ -78,11 +78,11 @@ public class Engine {
 	public Engine(int width, int height)
 	{
 		
-		this.width = width;
-		this.height = height;
+		Engine.width = width;
+		Engine.height = height;
 		
 		System.out.println("Engine started");
-		System.out.println("Resolution: " + width + " x " + height);
+		System.out.println("Resolution: " + Engine.width + " x " + Engine.height);
 		
 		setUpGLFWAndOpenGL();
 		engineResourceLoader();
@@ -219,5 +219,23 @@ public class Engine {
 		}
 		
 		time1 = System.nanoTime();
+	}
+	
+	/**
+	 * Get the width of the GLFW window.
+	 * @return Width of the window.
+	 */
+	public static int getWidth()
+	{
+		return Engine.width;
+	}
+	
+	/**
+	 * Get the height of the GLFW window.
+	 * @return Height of the window.
+	 */
+	public static int getHeight()
+	{
+		return Engine.height;
 	}
 }
