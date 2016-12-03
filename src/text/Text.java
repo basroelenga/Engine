@@ -24,7 +24,7 @@ public class Text {
 	
 	private String text;
 	
-	private ArrayList<Integer> charIDList = new ArrayList<Integer>();
+	private ArrayList<ECharacter> charList = new ArrayList<ECharacter>();
 	
 	public Text(String text, String type, float x, float y, float z)
 	{
@@ -53,7 +53,7 @@ public class Text {
 			projMatrix = Engine.orthoMatrix;
 			textShader = ShaderManager.getShader("ui");
 			
-			scaling = 30f;
+			scaling = 50f;
 			
 			break;
 		}
@@ -64,24 +64,27 @@ public class Text {
 	private void constructCharList()
 	{
 		
-		charIDList.clear();
+		charList.clear();
 		
 		for(int i = 0; i < text.length(); i++)
 		{
 		
-			charIDList.add(TextManager.getCharacter(text.charAt(i)).getQuad().getVaoID());	
+			charList.add(TextManager.getCharacter(text.charAt(i)));	
 		}
 	}
 	
 	public void updateAndRender()
 	{
 		
+		float xTrans = 0;
+		
 		for(int i = 0; i < text.length(); i++)
 		{
 
 			modelMatrix.setIdentity();
 			
-			modelMatrix.transelate(x + (i * scaling * 0.6f), y, z + (i * 0.01f));
+			modelMatrix.transelate(x + xTrans, y, z + (i * 0.01f));
+			xTrans += scaling * 0.5;
 			
 			modelMatrix.rotateQ(0f, 0f, 180f, false);
 			modelMatrix.rotateQ(0f, 180f, 0f, false);
@@ -89,7 +92,7 @@ public class Text {
 			modelMatrix.scale(scaling, scaling, 1f);
 			
 			textShader.uploadMatrices(modelMatrix, projMatrix, Camera.getViewMatrix());
-			DrawShapes.drawQuad(textShader, TextManager.getFontTexture(), charIDList.get(i));
+			DrawShapes.drawQuad(textShader, TextManager.getFontTexture(), charList.get(i).getQuad().getVaoID());
 		}
 	}
 	

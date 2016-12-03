@@ -103,7 +103,7 @@ public class Debugger {
 			if(input.length() != 0) System.out.println(input.toString());
 			
 			//System.out.println(Engine.keyAction);
-			text = new Text(input.toString(), "HUD", 20, Engine.getHeight() - 90f, 0);
+			text = new Text(input.toString(), "HUD", 20, Engine.getHeight() - 90f, 0.01f);
 			
 			windowBlinker.update();
 			

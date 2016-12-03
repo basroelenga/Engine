@@ -12,8 +12,5 @@ void main()
 {
 	vec4 tex = texture(sampler, pass_TexCoord);
 
-	if(tex.w < 0.001)
-		discard;
-
 	fragColor = tex;
 }

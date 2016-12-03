@@ -116,20 +116,15 @@ public class Quad {
 		vertexData.put(this.getVertexData());
 		vertexData.flip();
 
-		float texSpacing = 1 / 16f;
-		
-		texCoordX = texCoordX * texSpacing;
-		texCoordY = texCoordY * texSpacing;
-		
 		float[] texCoords = {
 				
 				texCoordX, texCoordY,
-				texCoordX + texSpacing, texCoordY,
-				texCoordX + texSpacing, texCoordY + texSpacing,
+				texCoordX + offsetX, texCoordY,
+				texCoordX + offsetX, texCoordY + offsetY,
 				
 				texCoordX, texCoordY,
-				texCoordX, texCoordY + texSpacing,
-				texCoordX + texSpacing, texCoordY + texSpacing
+				texCoordX, texCoordY + offsetY,
+				texCoordX + offsetX, texCoordY + offsetY
 		};
 		
 		FloatBuffer textureData = BufferUtils.createFloatBuffer(texCoords.length);

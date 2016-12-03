@@ -149,7 +149,7 @@ public class Engine {
 	{
 		
 		// Create the engine fundamental managers
-		new TextManager();
+		new TextManager(true);
 		new ShaderManager();
 		
 		// Create the debugger

@@ -27,7 +27,7 @@ public class Simulation {
 		cam = new Camera();
 		// =========================
 		
-		test = new Text("FPS", "HUD", 30f, Engine.getHeight() - 30f, 0f);
+		test = new Text("FPS", "HUD", 30f, Engine.getHeight() - 30f, -0.1f);
 		bgS = new Sphere(20, 0, 0, 0, 50, new Texture("bg"), false);
 		
 		LightManager.addPointLight(new Vector3f(0, 0, 0), "light");

@@ -22,17 +22,18 @@ public class ArrayObject {
 	{
 
 		type = "String";
-		
-		// Check if row size are the same
+
+		// Split all the rows from each other
 		String[] rows = data.split("\n");
 		
-		// Check delimiter
-		if (delimiter.equals(null)) delimiter = " ";
+		// Check if there is a delimiter, otherwise use default
+		if (delimiter == null) delimiter = " ";
 		
+		// This loops checks if all the rows are the same size
 		for(int i = 0; i < rows.length - 1; i++)
 		{
 			
-			String[] columnF = rows[i].split(delimiter);
+			String[] columnF = rows[i].split(delimiter);			
 			String[] columnS = rows[i + 1].split(delimiter);
 			
 			if(columnF.length != columnS.length)
@@ -252,7 +253,11 @@ public class ArrayObject {
 	
 	public String[] get(int i)
 	{
-		
 		return dataArrayS[i];
+	}
+	
+	public String[][] getDataArray()
+	{
+		return dataArrayS;
 	}
 }
