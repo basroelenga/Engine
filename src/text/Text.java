@@ -78,7 +78,7 @@ public class Text {
 		
 		for(int i = 0; i < text.length(); i++)
 		{
-			
+
 			modelMatrix.setIdentity();
 			
 			modelMatrix.transelate(x + (i * scaling * 0.6f), y, z + (i * 0.01f));
