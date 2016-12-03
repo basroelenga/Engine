@@ -17,6 +17,9 @@ public class Texture {
 	private int texID;
 	private String texName;
 	
+	private int height;
+	private int width;
+	
 	/**
 	 * Constructs an OpenGL texture from a PNG file.
 	 * @param path Texture to be loaded.
@@ -29,6 +32,9 @@ public class Texture {
 		try {
 			
 			PNGDecoder decoder = new PNGDecoder(FileIO.loadTexture(path));
+			
+			height = decoder.getHeight();
+			width = decoder.getWidth();
 			
 			ByteBuffer buffer = ByteBuffer.allocateDirect(4 * decoder.getHeight() * decoder.getWidth());
 			
@@ -60,6 +66,11 @@ public class Texture {
 		}
 	}
 	
+	/**
+	 * Construct a texture from a OpenGL texture ID
+	 * @param name Name of the texture
+	 * @param textureID The OpenGL texture id
+	 */
 	public Texture(String name, int textureID)
 	{
 		
@@ -67,9 +78,11 @@ public class Texture {
 		texName = name;
 	}
 	
+	/**
+	 * Destroy the current texture object
+	 */
 	public void destroy()
 	{
-		
 		glDeleteTextures(texID);
 	}
 	
@@ -82,9 +95,30 @@ public class Texture {
 		return texID;
 	}
 	
+	/**
+	 * Returns the name of the texture object
+	 * @return The name
+	 */
 	public String getTexName()
 	{
-		
 		return texName;
+	}
+	
+	/**
+	 * Returns the width in pixels of the texture object
+	 * @return Width in pixels
+	 */
+	public int getWidth()
+	{
+		return width;
+	}
+	
+	/**
+	 * Returns the height in pixels of the texture object
+	 * @return Height in pixels
+	 */
+	public int getHeight()
+	{
+		return height;
 	}
 }
