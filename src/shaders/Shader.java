@@ -187,6 +187,7 @@ public class Shader {
 	
 	private void upload(Matrix4f matrix, int loc)
 	{	
+		
 		glUniformMatrix4fv(loc, true, matrix.toFloatBuffer());
 	}
 	

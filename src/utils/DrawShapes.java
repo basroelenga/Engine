@@ -43,6 +43,9 @@ public class DrawShapes {
 	
 	public static void drawQuad(Shader shader, int vaoID, int amountOfTriangles){
 			
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
 		shader.bind();
 		
 		glBindVertexArray(vaoID);
@@ -58,6 +61,8 @@ public class DrawShapes {
 		glBindVertexArray(0);
 		
 		shader.unbind();
+		
+		glDisable(GL_BLEND);
 	}
 	
 	public static void drawQuad(Shader shader, Texture tex, int vaoID){

@@ -54,6 +54,9 @@ public class Engine {
 	public static Matrix4f projMatrix;
 	public static Matrix4f orthoMatrix;
 	
+	public static int keyInput;
+	public static int keyAction;
+	
 	public static float FPS;
 	
 	private Debugger debugger;
@@ -105,8 +108,13 @@ public class Engine {
 		
 		if(window == NULL) throw new RuntimeException("Failed to create GLFW window");
 		
+		// Set a key callback function
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> 
 		{
+			
+			Engine.keyInput = key;
+			Engine.keyAction = action;
+			
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) glfwSetWindowShouldClose(window, true); 
 		});
 		

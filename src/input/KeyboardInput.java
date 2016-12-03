@@ -7,8 +7,30 @@ import engine.Engine;
 
 public class KeyboardInput {
 	
+	private static int actionNow = Engine.keyAction;
+	private static int actionPrev;
+	
 	private KeyboardInput() {}
 	
+	public static char getCurrentKey()
+	{
+
+		char key = 0;
+		
+		actionPrev = actionNow;
+		actionNow = Engine.keyAction;
+		
+		if(actionPrev == 0 && actionNow == 1) key = (char) Engine.keyInput;
+		else key = 0;
+		
+		return key;
+	}
+	
+	/**
+	 * Get the current state of the key.
+	 * @param key Key to check.
+	 * @return State of the key.
+	 */
 	public static int getState(String key) {
 		
 		return glfwGetKey(Engine.window, (int) key.charAt(0));
