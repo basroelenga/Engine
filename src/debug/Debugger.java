@@ -92,9 +92,9 @@ public class Debugger {
 		if(debugState)
 		{
 			
-			char currentChar = KeyboardInput.getCurrentKey();
+			char currentChar = (char) (KeyboardInput.getCurrentKey() + 32);
 			
-			if(currentChar != 0 && currentChar != 258)
+			if(currentChar != 32 && currentChar != 290)
 			{
 				
 				input.append(currentChar);
@@ -103,7 +103,7 @@ public class Debugger {
 			if(input.length() != 0) System.out.println(input.toString());
 			
 			//System.out.println(Engine.keyAction);
-			text = new Text(input.toString(), "HUD", 10, Engine.getHeight() - 90f, 0);
+			text = new Text(input.toString(), "HUD", 20, Engine.getHeight() - 90f, 0);
 			
 			windowBlinker.update();
 			

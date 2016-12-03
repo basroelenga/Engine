@@ -13,7 +13,7 @@ public class TextManager {
 	public TextManager()
 	{
 		
-		fontTex = new Texture("font2");
+		fontTex = new Texture("font");
 		constructCharList();
 	}
 	
