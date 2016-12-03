@@ -53,7 +53,7 @@ public class Text {
 			projMatrix = Engine.orthoMatrix;
 			textShader = ShaderManager.getShader("ui");
 			
-			scaling = 50f;
+			scaling = 30f;
 			
 			break;
 		}

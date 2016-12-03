@@ -8,7 +8,7 @@ import engine.Engine;
 public class KeyboardInput {
 	
 	private static int actionNow = Engine.keyAction;
-	private static int actionPrev;
+	private static int actionPrev = Engine.keyAction;
 	
 	private KeyboardInput() {}
 	
@@ -17,11 +17,12 @@ public class KeyboardInput {
 
 		char key = 0;
 		
-		actionPrev = actionNow;
 		actionNow = Engine.keyAction;
 		
 		if(actionPrev == 0 && actionNow == 1) key = (char) Engine.keyInput;
 		else key = 0;
+		
+		actionPrev = actionNow;
 		
 		return key;
 	}

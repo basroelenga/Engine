@@ -6,6 +6,7 @@ import engine.Engine;
 import game.obj.Rectangle;
 import input.KeyboardInput;
 import math.Vector4f;
+import text.Text;
 
 public class Debugger {
 
@@ -29,6 +30,9 @@ public class Debugger {
 	
 	// Input string
 	private StringBuilder input = new StringBuilder();
+	
+	// Text object
+	private Text text;
 	
 	public Debugger()
 	{
@@ -96,9 +100,10 @@ public class Debugger {
 				input.append(currentChar);
 			}
 			
-			//if(input.length() != 0) System.out.println(input.toString());
+			if(input.length() != 0) System.out.println(input.toString());
 			
-			System.out.println(Engine.keyAction);
+			//System.out.println(Engine.keyAction);
+			text = new Text(input.toString(), "HUD", 10, Engine.getHeight() - 90f, 0);
 			
 			windowBlinker.update();
 			
@@ -115,6 +120,8 @@ public class Debugger {
 		{
 			
 			if(blinkShow) windowBlinker.render();
+			
+			text.updateAndRender();
 			
 			windowInput.render();
 			windowOutput.render();

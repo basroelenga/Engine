@@ -12,7 +12,7 @@ void main()
 {
 	vec4 tex = texture(sampler, pass_TexCoord);
 
-	if(tex.w < 0.9)
+	if(tex.w < 0.6)
 		discard;
 
 	fragColor = tex;
