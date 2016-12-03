@@ -71,10 +71,10 @@ public class Rectangle {
 		// Create the points in the rectangle.
 		ArrayList<Vector3f> points = new ArrayList<Vector3f>();
 		
-		points.add(new Vector3f(-0.5f, -0.5f, 0.0f));
-		points.add(new Vector3f(0.5f, -0.5f, 0.0f));
-		points.add(new Vector3f(0.5f, 0.5f, 0.0f));
-		points.add(new Vector3f(-0.5f, 0.5f, 0.0f));
+		points.add(new Vector3f(0f, 0f, 0.0f));
+		points.add(new Vector3f(1f, 0f, 0.0f));
+		points.add(new Vector3f(1f, 1f, 0.0f));
+		points.add(new Vector3f(0f, 1f, 0.0f));
 		
 		// Create the quad which represents the rectangle as a cube/box.
 		Quad quad = new Quad(points, true);
@@ -98,5 +98,15 @@ public class Rectangle {
 		ShaderManager.getShader("basic").uploadColor(color);
 		
 		DrawShapes.drawQuad(ShaderManager.getShader("basic") ,vaoID, 2);
+	}
+	
+	public float getX()
+	{
+		return this.x;
+	}
+	
+	public void setX(float x)
+	{
+		this.x = x;
 	}
 }

@@ -47,6 +47,7 @@ import input.KeyboardInput;
 import math.Matrices;
 import math.Matrix4f;
 import shaders.ShaderManager;
+import text.Text;
 import text.TextManager;
 
 public class Engine {
@@ -56,12 +57,17 @@ public class Engine {
 	
 	public static int keyInput;
 	public static int keyAction;
+	public static int scancode;
 	
-	public static float FPS;
+	public static boolean isRunning = false;
+	
+	public static boolean showFPS = false;
 	
 	private Debugger debugger;
 	
 	private float nanoToSecond = 1000000000f;
+	
+	private static float FPS;
 	
 	private long time1;
 	private long time2;
@@ -71,10 +77,11 @@ public class Engine {
 	
 	private static int width;
 	private static int height;
-	
-	private boolean isRunning = false;
+
 	private boolean fullScreen = false;
 	private boolean wireframe = false;
+	
+	private Text engineFPS;
 	
 	private Simulation game;
 	
@@ -114,6 +121,7 @@ public class Engine {
 			
 			Engine.keyInput = key;
 			Engine.keyAction = action;
+			Engine.scancode = scancode;
 			
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) glfwSetWindowShouldClose(window, true); 
 		});
@@ -154,6 +162,9 @@ public class Engine {
 		
 		// Create the debugger
 		debugger = new Debugger();
+		
+		// Create the engine FPS timer
+		engineFPS = new Text("FPS", "HUD", Engine.getWidth() - 120f, Engine.getHeight() - 7f, 0.1f);
 	}
 	
 	private void engineLoop()
@@ -186,6 +197,8 @@ public class Engine {
 		
 		game.update();
 		debugger.update();
+		
+		engineFPS.updateText("FPS:" + (int) FPS);
 	}
 	
 	private void render()
@@ -195,6 +208,12 @@ public class Engine {
 		
 		game.render();
 		debugger.render();
+		
+		if(showFPS) 
+		{
+			System.out.println("show fps");
+			engineFPS.updateAndRender();
+		}
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();

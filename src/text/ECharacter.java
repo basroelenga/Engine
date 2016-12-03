@@ -77,10 +77,10 @@ public class ECharacter {
 		
 		ArrayList<Vector3f> points = new ArrayList<Vector3f>();
 		
-		points.add(new Vector3f(-0.5f * correctionXFactor, -0.5f, 0.0f));
-		points.add(new Vector3f(0.5f * correctionXFactor, -0.5f, 0.0f));
-		points.add(new Vector3f(0.5f * correctionXFactor, 0.5f, 0.0f));
-		points.add(new Vector3f(-0.5f * correctionXFactor, 0.5f, 0.0f));
+		points.add(new Vector3f(0f, 0f, 0.0f));
+		points.add(new Vector3f(correctionXFactor, 0f, 0.0f));
+		points.add(new Vector3f(correctionXFactor, 1f, 0.0f));
+		points.add(new Vector3f(0f, 1f, 0.0f));
 		
 		quad = new Quad(points, texcoordX, texcoordY, spacingX, spacingY);
 	}

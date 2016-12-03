@@ -7,6 +7,7 @@ import game.obj.Rectangle;
 import input.KeyboardInput;
 import math.Vector4f;
 import text.Text;
+import text.TextManager;
 
 public class Debugger {
 
@@ -24,15 +25,28 @@ public class Debugger {
 	// Debug blinker
 	private Rectangle windowBlinker;
 	
+	// Position of the blinker
+	private float blinkerPosition = 0f;
+	
 	// Blink timer
 	private float blinkTimeOut = 500f;
 	private long blinkTimer;
 	
+	// Start text
+	private Text startText;
+	
 	// Input string
 	private StringBuilder input = new StringBuilder();
 	
-	// Text object
+	// Dynamic text object
 	private Text text;
+	
+	// Text command & reply
+	private Text command;
+	private Text reply;
+	
+	// Show reply
+	private boolean showReply = false;
 	
 	public Debugger()
 	{
@@ -42,14 +56,17 @@ public class Debugger {
 		debugTimer = System.currentTimeMillis();
 		
 		// Set up the debug window (2 windows: input and output)
-		windowInput = new Rectangle(Engine.getWidth() / 2, Engine.getHeight() - 90f, 0f, Engine.getWidth(), 30f, 0f, 0f, Engine.orthoMatrix, new Vector4f(0f, 0f, 0f, 0.6f));
-		windowOutput = new Rectangle(Engine.getWidth() / 2, Engine.getHeight() - 45f, 0f, Engine.getWidth(), 60f, 0f, 0f, Engine.orthoMatrix, new Vector4f(0f, 1f, 0f, 0.6f));
+		windowInput = new Rectangle(0f, Engine.getHeight() - 90f, 0f, Engine.getWidth(), 30f, 0f, 0f, Engine.orthoMatrix, new Vector4f(0f, 0f, 0f, 0.6f));
+		windowOutput = new Rectangle(0f, Engine.getHeight() - 60f, 0f, Engine.getWidth(), 60f, 0f, 0f, Engine.orthoMatrix, new Vector4f(0.8f, 0.8f, 0.8f, 0.6f));
 		
 		// Blinker
-		windowBlinker = new Rectangle(5, Engine.getHeight() - 90f, 0f, 5f, 30f, 0f, 0f, Engine.orthoMatrix, new Vector4f(1f, 1f, 1f, 1f));
+		windowBlinker = new Rectangle(20, Engine.getHeight() - 90f, 0f, 5f, 30f, 0f, 0f, Engine.orthoMatrix, new Vector4f(1f, 1f, 1f, 1f));
 		
 		blinkShow = true;
 		blinkTimer = System.currentTimeMillis();
+		
+		// Initial text
+		startText = new Text(">", "HUD", 0, Engine.getHeight() - 60f, 0f);
 	}
 	
 	public void update()
@@ -92,24 +109,103 @@ public class Debugger {
 		if(debugState)
 		{
 			
-			char currentChar = (char) (KeyboardInput.getCurrentKey() + 32);
+			// This get the current key
+			char currentChar = (char) (KeyboardInput.getCurrentKey());
 			
-			if(currentChar != 32 && currentChar != 290)
-			{
+			// Fix for capital to normal letters
+			if((int) currentChar >= 65 && (int) currentChar <= 90 && !KeyboardInput.shiftPressed) currentChar += 32;
+
+			// The 0 key char should be ignore
+			if(currentChar != 0 && currentChar != 258)
+			{	
 				
-				input.append(currentChar);
+				// Handle a backspace event
+				if((int) currentChar == 259)
+				{
+					
+					if(input.length() != 0)
+					{
+						
+						// This makes the blinker move with the text
+						blinkerPosition = TextManager.getCharacter(input.charAt(input.length() - 1)).getXScaleCorrection() * text.getScaling();
+						windowBlinker.setX(windowBlinker.getX() - blinkerPosition);
+						
+						input.deleteCharAt(input.length() - 1);
+					}
+				}
+				// Handle a enter key
+				else if((int) currentChar == 257)
+				{
+					
+					// Send the command for processing
+					processCommand(input.toString());
+					
+					// Reset command line
+					input = new StringBuilder();
+					windowBlinker.setX(20f);
+				}
+				else
+				{
+					
+					// Don't add a shift key
+					if((int) currentChar != 340)
+					{
+						
+						// This makes the blinker move with the text
+						blinkerPosition = TextManager.getCharacter(currentChar).getXScaleCorrection() * text.getScaling();
+						windowBlinker.setX(windowBlinker.getX() + blinkerPosition);
+						
+						input.append(currentChar);
+					}
+				}
 			}
 			
-			if(input.length() != 0) System.out.println(input.toString());
+			//if(input.length() != 0) System.out.println(input.toString());
 			
 			//System.out.println(Engine.keyAction);
-			text = new Text(input.toString(), "HUD", 20, Engine.getHeight() - 90f, 0.01f);
+			text = new Text(input.toString(), "HUD", 20, Engine.getHeight() - 60f, 0.1f);
 			
 			windowBlinker.update();
 			
 			windowInput.update();
 			windowOutput.update();
 		}
+	}
+	
+	/**
+	 * Process the input command
+	 * @param commandS Input command
+	 */
+	private void processCommand(String commandS)
+	{
+		
+		command = new Text("Command: " + commandS, "HUD", 20f, Engine.getHeight(), 0f);
+		
+		switch(commandS)
+		{
+		
+		case "Show FPS":
+			
+			if(Engine.showFPS) Engine.showFPS = false;
+			else Engine.showFPS = true;
+			
+			reply = new Text("Show FPS: " + Engine.showFPS, "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			break;
+		
+		case "Exit":
+			
+			Engine.isRunning = false;
+			
+			reply = new Text("Exiting", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			break;
+			
+		default:
+				
+			reply = new Text("Command not recognized", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			break;
+		}
+		
+		showReply = true;
 	}
 	
 	public void render()
@@ -121,10 +217,18 @@ public class Debugger {
 			
 			if(blinkShow) windowBlinker.render();
 			
-			text.updateAndRender();
-			
 			windowInput.render();
 			windowOutput.render();
+			
+			startText.updateAndRender();
+			text.updateAndRender();
+			
+			if(showReply)
+			{
+				
+				command.updateAndRender();
+				reply.updateAndRender();
+			}
 		}
 	}
 }

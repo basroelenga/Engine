@@ -7,23 +7,51 @@ import engine.Engine;
 
 public class KeyboardInput {
 	
+	public static boolean shiftPressed = false;
+	
 	private static int actionNow = Engine.keyAction;
 	private static int actionPrev = Engine.keyAction;
 	
+	private static int keyNow = Engine.keyInput;
+	private static int keyPrev = Engine.keyInput;
+	
 	private KeyboardInput() {}
 	
+	/**
+	 * This function get the current key char that is pressed
+	 * @return Returns the current key pressed
+	 */
 	public static char getCurrentKey()
 	{
 
 		char key = 0;
 		
 		actionNow = Engine.keyAction;
+		keyNow = Engine.keyInput;
 		
-		if(actionPrev == 0 && actionNow == 1) key = (char) Engine.keyInput;
+		// This handles a new key press
+		if(actionPrev == 0 && actionNow == 1) {
+			
+			key = (char) keyNow;
+		}
+		// This line should fix the rapid key press
+		else if(actionNow == 1 && keyNow != keyPrev)
+		{
+			
+			key = (char) keyNow;
+		}
+		// The key gets reset to zero if none of this action take place (this should be ignored)
 		else key = 0;
 		
-		actionPrev = actionNow;
+		// Check if the shift key is pressed
+		if(actionNow == 1 && keyNow == 340) shiftPressed = true;
+		if(actionNow == 0 && keyNow == 340) shiftPressed = false;
 		
+		//System.out.println(keyNow + " , " + actionNow);
+		
+		actionPrev = actionNow;
+		keyPrev = keyNow;
+
 		return key;
 	}
 	

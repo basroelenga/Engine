@@ -3,13 +3,11 @@ package game;
 import java.util.ArrayList;
 
 import cam.Camera;
-import engine.Engine;
 import game.obj.Sphere;
 import game.simobj.Particle;
 import graphics.Texture;
 import light.LightManager;
 import math.Vector3f;
-import text.Text;
 
 public class Simulation {
 	
@@ -19,15 +17,12 @@ public class Simulation {
 	
 	private Sphere bgS;
 	
-	private Text test;
-	
 	public Simulation()
 	{
 		
 		cam = new Camera();
 		// =========================
-		
-		test = new Text("FPS", "HUD", 30f, Engine.getHeight() - 30f, -0.1f);
+
 		bgS = new Sphere(20, 0, 0, 0, 50, new Texture("bg"), false);
 		
 		LightManager.addPointLight(new Vector3f(0, 0, 0), "light");
@@ -52,8 +47,6 @@ public class Simulation {
 		cam.update();
 		bgS.update();
 		
-		test.updateText("FPS:" + (int) Engine.FPS);
-		
 		for(Particle part : particleList)
 		{
 			
@@ -67,8 +60,6 @@ public class Simulation {
 	{
 		
 		bgS.render();
-		
-		test.updateAndRender();
 		
 		for(Particle part : particleList)
 		{
