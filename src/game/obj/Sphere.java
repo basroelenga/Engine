@@ -107,4 +107,14 @@ public class Sphere {
 	public void setZ(float z) {
 		this.z = z;
 	}
+	
+	public float getScaling()
+	{
+		return scaling;
+	}
+	
+	public void setScaling(float scaling)
+	{
+		this.scaling = scaling;
+	}
 }

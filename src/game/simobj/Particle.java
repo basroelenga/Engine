@@ -30,6 +30,8 @@ public class Particle {
 		sphere.setY(pos.getY());
 		sphere.setZ(pos.getZ());
 		
+		sphere.setScaling(0.2f);
+		
 		sphere.update();
 	}
 	
