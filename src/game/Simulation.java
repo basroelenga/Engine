@@ -3,34 +3,27 @@ package game;
 import java.util.ArrayList;
 
 import cam.Camera;
-import game.obj.Sphere;
-import game.simobj.Particle;
+import engine.EngineObjects;
+import engine.primitives.Particle;
+import engine.primitives.Sphere;
 import graphics.Texture;
 import light.LightManager;
 import math.Vector3f;
-import terrain.Terrain;
 
 public class Simulation {
 	
 	public static Camera cam;
-	
-	private ArrayList<Particle> particleList = new ArrayList<Particle>();
-	
-	private Terrain tObj;
-	
-	private Sphere bgS;
+	private ArrayList<EngineObjects> simulationObjectsList = new ArrayList<EngineObjects>();
 	
 	public Simulation()
 	{
 		
 		cam = new Camera();
 		// =========================
-
-		bgS = new Sphere(20, 0, 0, 0, 50, new Texture("bg"), false);
-		tObj = new Terrain();
+		simulationObjectsList.add(new Sphere(20, 0, 0, 0, 50, new Texture("bg"), false));
 		
 		LightManager.addPointLight(new Vector3f(0, 0, 0), "light");
-		//createParticles();
+		createParticles();
 	}
 	
 	private void createParticles()
@@ -42,7 +35,7 @@ public class Simulation {
 		{
 			for(int j = 0; j < particles; j++)
 			{
-				particleList.add(new Particle(new Vector3f(i, 0, j), new Vector3f(), 1));
+				simulationObjectsList.add(new Particle(new Vector3f(i, 0, j), new Vector3f(), 1));
 			}
 		}
 	}
@@ -51,15 +44,8 @@ public class Simulation {
 	{
 
 		cam.update();
-		bgS.update();
-		
-		tObj.update();
-		
-		for(Particle part : particleList)
-		{
-			
-			part.update();
-		}
+
+		for(EngineObjects obj : simulationObjectsList) obj.update();
 		
 		LightManager.update();
 	}
@@ -67,14 +53,7 @@ public class Simulation {
 	public void render()
 	{
 		
-		bgS.render();
-		tObj.render();
-		
-		for(Particle part : particleList)
-		{
-			
-			part.render();
-		}
+		for(EngineObjects obj : simulationObjectsList) obj.render();
 		
 		LightManager.render();
 	}

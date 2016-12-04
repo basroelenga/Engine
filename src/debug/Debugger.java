@@ -3,7 +3,7 @@ package debug;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
 
 import engine.Engine;
-import game.obj.Rectangle;
+import engine.primitives.Rectangle;
 import input.KeyboardInput;
 import math.Vector4f;
 import text.Text;

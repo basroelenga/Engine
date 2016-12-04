@@ -78,7 +78,7 @@ public class Engine {
 	private static int width;
 	private static int height;
 
-	private boolean fullScreen = false;
+	private boolean fullScreen = true;
 	private boolean wireframe = false;
 	
 	private Text engineFPS;
@@ -209,11 +209,7 @@ public class Engine {
 		game.render();
 		debugger.render();
 		
-		if(showFPS) 
-		{
-			System.out.println("show fps");
-			engineFPS.updateAndRender();
-		}
+		if(showFPS) engineFPS.updateAndRender();
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
