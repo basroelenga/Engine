@@ -1,34 +1,35 @@
 package engine.primitives;
 
 import engine.EngineObjects;
-import math.Vector3f;
 
 public class Particle extends EngineObjects{
 
 	private Sphere sphere;
 	
-	private Vector3f pos;
-	private Vector3f vel;
-	
 	private float mass;
 	
-	public Particle(Vector3f pos, Vector3f vel, float mass)
+	public Particle(float x, float y, float z, float vx, float vy, float vz, float mass)
 	{
 		
-		this.pos = pos;
-		this.vel = vel;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		
+		this.vx = vx;
+		this.vy = vy;
+		this.vz = vz;
 		
 		this.mass = mass;
 		
-		sphere = new Sphere(10, pos.getX(), pos.getY(), pos.getZ(), 1, null, true);
+		sphere = new Sphere(10, x, y, z, 1, null, true);
 	}
 	
 	public void update()
 	{
 		
-		sphere.setX(pos.getX());
-		sphere.setY(pos.getY());
-		sphere.setZ(pos.getZ());
+		sphere.setX(x);
+		sphere.setY(y);
+		sphere.setZ(z);
 		
 		sphere.setXs(0.2f);
 		sphere.setYs(0.2f);

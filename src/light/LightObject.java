@@ -1,13 +1,14 @@
-package engine;
+package light;
 
-import graphics.Texture;
+import cam.Camera;
+import engine.Engine;
 import math.Matrix4f;
-import math.Vector4f;
+import math.Vector3f;
 import shaders.Shader;
 
-public abstract class EngineObjects {
+public abstract class LightObject {
 
-	// Some general properties of objects:
+	// Some general properties of the light:
 	// The "name" of the object
 	protected String name;
 	
@@ -26,30 +27,26 @@ public abstract class EngineObjects {
 	protected float ys;
 	protected float zs;
 	
-	// Their rotation
-	protected float xa;
-	protected float ya;
-	protected float za;
+	// Should the position of the light be visible
+	protected boolean show = false;
 	
 	// Requirements for rendering (The objects VAO ID, shader, shader properties and matrices)
+	// This is for rendering the position of the light in the 3D space
 	protected int vaoID;
 	
 	protected Shader shader;
 	
-	protected Texture tex;
-	
-	protected Vector4f RGBAcolor;
-	
+	// The light is always displayed in perspective space
 	protected Matrix4f modelMatrix = new Matrix4f();
-	protected Matrix4f viewMatrix;
-	protected Matrix4f projectionMatrix;
+	protected Matrix4f viewMatrix = Camera.getViewMatrix();
+	protected Matrix4f projectionMatrix = Engine.projMatrix;
 	protected Matrix4f normalMatrix;
 	
 	// The update and render function
 	public abstract void update();
 	public abstract void render();
 	
-	// The setter functions for the position, velocities, scale and rotation
+	// The setter functions for the position, velocities, scale
 	// The getter functions for the position, velocities, scale, rotation, name and render requirements
 	public float getX() {
 		return x;
@@ -68,6 +65,9 @@ public abstract class EngineObjects {
 	}
 	public void setZ(float z) {
 		this.z = z;
+	}
+	public Vector3f getPosition() {
+		return new Vector3f(x, y, z);
 	}
 	public float getVx() {
 		return vx;
@@ -105,23 +105,11 @@ public abstract class EngineObjects {
 	public void setZs(float zs) {
 		this.zs = zs;
 	}
-	public float getXa() {
-		return xa;
+	public boolean isShow() {
+		return show;
 	}
-	public void setXa(float xa) {
-		this.xa = xa;
-	}
-	public float getYa() {
-		return ya;
-	}
-	public void setYa(float ya) {
-		this.ya = ya;
-	}
-	public float getZa() {
-		return za;
-	}
-	public void setZa(float za) {
-		this.za = za;
+	public void setShow(boolean show) {
+		this.show = show;
 	}
 	public String getName() {
 		return name;
@@ -131,12 +119,6 @@ public abstract class EngineObjects {
 	}
 	public Shader getShader() {
 		return shader;
-	}
-	public Texture getTex() {
-		return tex;
-	}
-	public Vector4f getRGBAcolor() {
-		return RGBAcolor;
 	}
 	public Matrix4f getModelMatrix() {
 		return modelMatrix;

@@ -1,28 +1,22 @@
 package game;
 
-import java.util.ArrayList;
-
 import cam.Camera;
-import engine.EngineObjects;
-import engine.primitives.Particle;
-import engine.primitives.Sphere;
+import engine.EngineObjectManager;
 import graphics.Texture;
 import light.LightManager;
-import math.Vector3f;
 
 public class Simulation {
 	
 	public static Camera cam;
-	private ArrayList<EngineObjects> simulationObjectsList = new ArrayList<EngineObjects>();
-	
+
 	public Simulation()
 	{
 		
 		cam = new Camera();
 		// =========================
-		simulationObjectsList.add(new Sphere(20, 0, 0, 0, 50, new Texture("bg"), false));
+		EngineObjectManager.addSphere(20, 0, 0, 0, 50, new Texture("bg"), false);
 		
-		LightManager.addPointLight(new Vector3f(0, 5, 0), "light");
+		LightManager.addPointLight("light", 0, 5, 0, true);
 		createParticles();
 	}
 	
@@ -35,7 +29,7 @@ public class Simulation {
 		{
 			for(int j = 0; j < particles; j++)
 			{
-				simulationObjectsList.add(new Particle(new Vector3f(i, 0, j), new Vector3f(), 1));
+				EngineObjectManager.addParticle(i, 0, j, 0, 0, 0, 1);
 			}
 		}
 	}
@@ -45,16 +39,14 @@ public class Simulation {
 
 		cam.update();
 
-		for(EngineObjects obj : simulationObjectsList) obj.update();
-		
+		EngineObjectManager.update();
 		LightManager.update();
 	}
 	
 	public void render()
 	{
-		
-		for(EngineObjects obj : simulationObjectsList) obj.render();
-		
+
+		EngineObjectManager.render();
 		LightManager.render();
 	}
 }

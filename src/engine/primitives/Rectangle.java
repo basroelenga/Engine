@@ -43,8 +43,7 @@ public class Rectangle extends EngineObjects{
 		
 		this.ya = ya;
 		this.RGBAcolor = RGBAcolor;
-		
-		modelMatrix = new Matrix4f();
+
 		viewMatrix = new Matrix4f(); 
 		
 		// Define the shader to be used

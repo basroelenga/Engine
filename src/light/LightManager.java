@@ -2,47 +2,35 @@ package light;
 
 import java.util.ArrayList;
 
-import math.Vector3f;
-
 public class LightManager {
 
-	private static ArrayList<PointLight> pointLightList = new ArrayList<PointLight>();
+	private static ArrayList<LightObject> lightList = new ArrayList<LightObject>();
 	
 	private LightManager(){}
 	
-	public static void update()
+	public static void update()	{for(LightObject light : lightList) light.update();}
+	public static void render()	{for(LightObject light : lightList) light.render();}
+	
+	public static void addPointLight(String name, float x, float y, float z, boolean show)
 	{
 		
-		for(PointLight light : pointLightList) light.update();
+		lightList.add(new PointLight(name, x, y, z, show));
 	}
 	
-	public static void render()
+	public static LightObject getLight(String id)
 	{
 		
-		for(PointLight light : pointLightList) light.render();
-	}
-	
-	public static void addPointLight(Vector3f position, String id)
-	{
-		
-		pointLightList.add(new PointLight(position, id, true));
-	}
-	
-	public static PointLight getPointLight(String id)
-	{
-		
-		for(PointLight light : pointLightList)
+		for(LightObject light : lightList)
 		{
 			
-			if(light.getID().equals(id)) return light;
+			if(light.getName().equals(id)) return light;
 		}
 		
-		System.err.println("Light does not exist: " + id);
-		return null;
+		throw new RuntimeException("Light does not exist: " + id);
 	}
 	
 	public static int size()
 	{
-		return pointLightList.size();
+		return lightList.size();
 	}
 }

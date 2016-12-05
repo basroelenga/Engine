@@ -1,33 +1,35 @@
 package light;
 
-import cam.Camera;
-import engine.Engine;
-import math.Matrix4f;
-import math.Vector3f;
 import math.Vector4f;
 import shaders.ShaderManager;
 import shapes.UVSphere;
 import utils.DrawShapes;
 
-public class PointLight {
+public class PointLight extends LightObject{
 
-	String id;
-	Vector3f position = new Vector3f();
-	
-	private boolean showLight = false;
 	private UVSphere sphere;
-	
-	private Matrix4f modelMatrix = new Matrix4f();;
-	
-	public PointLight(Vector3f position, String id, boolean show)
+
+	public PointLight(String name, float x, float y, float z, boolean show) 
 	{
 		
-		this.id = id;
-		this.position = position;
+		this.name = name;
 		
-		this.showLight = show;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		
+		this.xs = 0.2f;
+		this.ys = 0.2f;
+		this.zs = 0.2f;
+		
+		this.show = show;
+		
+		// The sphere that show the position
 		sphere = new UVSphere(8);
+		vaoID = sphere.getVaoID();
+		
+		// The sphere should not be influenced by other lighting, thus shader
+		shader = ShaderManager.getShader("basic");
 	}
 	
 	public void update()
@@ -35,36 +37,20 @@ public class PointLight {
 		
 		modelMatrix.setIdentity();
 		
-		modelMatrix.transelate(position.getX(), position.getY(), position.getZ());
-		modelMatrix.scale(0.2f, 0.2f, 0.2f);
+		modelMatrix.transelate(x, y, z);
+		modelMatrix.scale(xs, ys, zs);
 	}
 	
 	public void render()
 	{
 		
-		if(showLight)
+		if(show)
 		{
 			
-			ShaderManager.getShader("basic").uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
-			ShaderManager.getShader("basic").uploadColor(new Vector4f(1, 1, 0, 1));
+			shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix);
+			shader.uploadColor(new Vector4f(1, 1, 0, 1));
 			
-			DrawShapes.drawQuad(ShaderManager.getShader("basic"), sphere.getVaoID(), sphere.getAmountOfTriangles());
+			DrawShapes.drawQuad(shader, vaoID, sphere.getAmountOfTriangles());
 		}
-	}
-	
-	public void setPosition(Vector3f position)
-	{
-		
-		this.position = position;
-	}
-	
-	public Vector3f getPosition()
-	{
-		return position;
-	}
-	
-	public String getID()
-	{
-		return id;
 	}
 }

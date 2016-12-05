@@ -77,7 +77,7 @@ public class Engine {
 	private static int width;
 	private static int height;
 
-	private boolean fullScreen = true;
+	private boolean fullScreen = false;
 	
 	
 	private Text engineFPS;

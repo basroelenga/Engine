@@ -5,7 +5,6 @@ import engine.Engine;
 import engine.EngineObjects;
 import graphics.Texture;
 import light.LightManager;
-import math.Matrix4f;
 import math.Vector3f;
 import math.Vector4f;
 import shaders.ShaderManager;
@@ -30,7 +29,6 @@ public class Sphere extends EngineObjects{
 		this.tex = tex;
 		
 		sphere = new UVSphere(subdivision);
-		modelMatrix = new Matrix4f();
 		
 		// Define which shader to use
 		if(useLighting && LightManager.size() != 0)	shader = ShaderManager.getShader("light");
@@ -53,7 +51,7 @@ public class Sphere extends EngineObjects{
 		shader.uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
 		shader.uploadColor(new Vector4f(1.0f, 0.0f, 1.0f, 1.0f));
 		
-		shader.uploadVector3f(new Vector3f(LightManager.getPointLight("light").getPosition()), shader.getLightPosLoc());
+		shader.uploadVector3f(new Vector3f(LightManager.getLight("light").getPosition()), shader.getLightPosLoc());
 		shader.uploadVector3f(new Vector3f(1f, 1f, 1f), shader.getAmbColorLoc());
 		shader.uploadVector3f(new Vector3f(0.5f, 0.5f, 0.5f), shader.getAmbIntensityLoc());
 		

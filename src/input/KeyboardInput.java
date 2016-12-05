@@ -30,16 +30,11 @@ public class KeyboardInput {
 		keyNow = Engine.keyInput;
 		
 		// This handles a new key press
-		if(actionPrev == 0 && actionNow == 1) {
-			
-			key = (char) keyNow;
-		}
+		if(actionPrev == 0 && actionNow == 1) key = (char) keyNow;
+	
 		// This line should fix the rapid key press
-		else if(actionNow == 1 && keyNow != keyPrev)
-		{
-			
-			key = (char) keyNow;
-		}
+		else if(actionNow == 1 && keyNow != keyPrev) key = (char) keyNow;
+		
 		// The key gets reset to zero if none of this action take place (this should be ignored)
 		else key = 0;
 		

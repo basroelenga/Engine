@@ -171,7 +171,7 @@ public class TerrainTile {
 		
 		ShaderManager.getShader("basicT").uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
 		
-		ShaderManager.getShader("basicT").uploadVector3f(LightManager.getPointLight("light").getPosition(), ShaderManager.getShader("basicT").getLightPosLoc());
+		ShaderManager.getShader("basicT").uploadVector3f(LightManager.getLight("light").getPosition(), ShaderManager.getShader("basicT").getLightPosLoc());
 		ShaderManager.getShader("basicT").uploadVector3f(new Vector3f(1f, 1f, 1f), ShaderManager.getShader("basicT").getAmbColorLoc());
 		ShaderManager.getShader("basicT").uploadVector3f(new Vector3f(0.0f, 0.0f, 0.0f), ShaderManager.getShader("basicT").getAmbIntensityLoc());
 		
