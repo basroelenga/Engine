@@ -2,7 +2,6 @@ package engine;
 
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
@@ -43,7 +42,6 @@ import org.lwjgl.opengl.GL;
 
 import debug.Debugger;
 import game.Simulation;
-import input.KeyboardInput;
 import math.Matrices;
 import math.Matrix4f;
 import shaders.ShaderManager;
@@ -60,6 +58,7 @@ public class Engine {
 	public static int scancode;
 	
 	public static boolean isRunning = false;
+	public static boolean wireframe = false;
 	
 	public static boolean showFPS = false;
 	
@@ -79,7 +78,7 @@ public class Engine {
 	private static int height;
 
 	private boolean fullScreen = true;
-	private boolean wireframe = false;
+	
 	
 	private Text engineFPS;
 	
@@ -189,15 +188,9 @@ public class Engine {
 	private void update()
 	{
 		
-		if(KeyboardInput.getState("Q") == GLFW_PRESS) wireframe = true;
-		if(KeyboardInput.getState("E") == GLFW_PRESS) wireframe = false;
-		
-		if(wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		if(!wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		
 		game.update();
-		debugger.update();
 		
+		debugger.update();
 		engineFPS.updateText("FPS:" + (int) FPS);
 	}
 	
@@ -206,7 +199,14 @@ public class Engine {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+		if(wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if(!wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		
 		game.render();
+		
+		// The debugger will never be shown as a wireframe
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		
 		debugger.render();
 		
 		if(showFPS) engineFPS.updateAndRender();

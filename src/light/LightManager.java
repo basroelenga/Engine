@@ -25,7 +25,7 @@ public class LightManager {
 	public static void addPointLight(Vector3f position, String id)
 	{
 		
-		pointLightList.add(new PointLight(position, id, false));
+		pointLightList.add(new PointLight(position, id, true));
 	}
 	
 	public static PointLight getPointLight(String id)

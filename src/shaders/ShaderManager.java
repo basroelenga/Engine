@@ -27,16 +27,14 @@ public class ShaderManager {
 	public static Shader getShader(String shader)
 	{
 
-		Shader rSh = null;
-		
 		for(Shader sh : shaderList)
 		{
 			if(sh.getShaderName().equals(shader))
 			{
-				rSh = sh;
+				return sh;
 			}
 		}
 		
-		return rSh;
+		throw new RuntimeException("The shader: " + shader + " does not exist");
 	}
 }

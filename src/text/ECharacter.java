@@ -2,7 +2,6 @@ package text;
 
 import java.util.ArrayList;
 
-import engine.Engine;
 import math.Vector3f;
 import shapes.Quad;
 
@@ -19,8 +18,7 @@ public class ECharacter {
 	
 	private float spacingX;
 	private float spacingY;
-	
-	private float correctionXFactorTrans;
+
 	private float correctionXFactorScale;
 	
 	/**
@@ -61,14 +59,9 @@ public class ECharacter {
 		
 		spacingX = width / (float) TextManager.getFontTexture().getWidth();
 		spacingY = height / (float) TextManager.getFontTexture().getHeight();
-		
-		correctionXFactorTrans = width * (((float) Engine.getWidth()) / TextManager.getFontTexture().getWidth());
-		
-		System.out.println(correctionXFactorTrans + " , " + width);
-		
-		correctionXFactorScale = width / TextManager.xMax;
 
-		
+		// This correction factor makes sure that the spacing between characters is right
+		correctionXFactorScale = width / TextManager.xMax;
 		constructQuad(correctionXFactorScale);
 	}
 	
@@ -98,10 +91,5 @@ public class ECharacter {
 	public float getXScaleCorrection()
 	{
 		return correctionXFactorScale;
-	}
-	
-	public float getXTransCorrection()
-	{
-		return correctionXFactorTrans;
 	}
 }

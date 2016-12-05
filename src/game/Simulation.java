@@ -22,7 +22,7 @@ public class Simulation {
 		// =========================
 		simulationObjectsList.add(new Sphere(20, 0, 0, 0, 50, new Texture("bg"), false));
 		
-		LightManager.addPointLight(new Vector3f(0, 0, 0), "light");
+		LightManager.addPointLight(new Vector3f(0, 5, 0), "light");
 		createParticles();
 	}
 	

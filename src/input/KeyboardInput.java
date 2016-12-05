@@ -47,8 +47,6 @@ public class KeyboardInput {
 		if(actionNow == 1 && keyNow == 340) shiftPressed = true;
 		if(actionNow == 0 && keyNow == 340) shiftPressed = false;
 		
-		//System.out.println(keyNow + " , " + actionNow);
-		
 		actionPrev = actionNow;
 		keyPrev = keyNow;
 

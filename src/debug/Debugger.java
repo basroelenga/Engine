@@ -192,6 +192,14 @@ public class Debugger {
 			reply = new Text("Show FPS: " + Engine.showFPS, "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
 			break;
 		
+		case "Show wireframe":
+			
+			if(Engine.wireframe) Engine.wireframe = false;
+			else Engine.wireframe = true;
+			
+			reply = new Text("Show wireframe: " + Engine.wireframe, "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			break;
+			
 		case "Exit":
 			
 			Engine.isRunning = false;
