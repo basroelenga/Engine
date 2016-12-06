@@ -1,4 +1,6 @@
-#version 330 core
+#version 300 es
+
+precision mediump float;
 
 uniform sampler2D tex;
 uniform vec4 rgbaColor;

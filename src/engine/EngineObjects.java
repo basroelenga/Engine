@@ -41,8 +41,8 @@ public abstract class EngineObjects {
 	protected Vector4f RGBAcolor;
 	
 	protected Matrix4f modelMatrix = new Matrix4f();
-	protected Matrix4f viewMatrix;
-	protected Matrix4f projectionMatrix;
+	protected Matrix4f viewMatrix = new Matrix4f();
+	protected Matrix4f projectionMatrix = new Matrix4f();
 	protected Matrix4f normalMatrix = new Matrix4f();
 	
 	// The update and render function

@@ -1,12 +1,12 @@
 package game;
 
+import light.LightManager;
 import cam.Camera;
 import engine.EngineObjectManager;
 import graphics.Texture;
-import light.LightManager;
 
 public class Simulation {
-	
+
 	public static Camera cam;
 
 	public Simulation()

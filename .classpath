@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/eclipse/lwjgl/jar/lwjgl.jar" sourcepath="C:/eclipse/lwjgl/src.zip">
+	<classpathentry kind="lib" path="/Users/users/roelenga/Downloads/eclipse/lwjgl3/jar/lwjgl.jar" sourcepath="/Users/users/roelenga/Downloads/eclipse/lwjgl3/src.zip">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/eclipse/lwjgl/doc/javadoc.zip!/"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/eclipse/lwjgl/native"/>
+			<attribute name="javadoc_location" value="jar:file:/Users/users/roelenga/Downloads/eclipse/lwjgl3/doc/javadoc.zip!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/users/roelenga/Downloads/eclipse/lwjgl3/native"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/eclipse/lwjgl/PNGDecoder.jar"/>
+	<classpathentry kind="lib" path="/Users/users/roelenga/Downloads/eclipse/lwjgl3/PNGDecoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

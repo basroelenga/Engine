@@ -1,4 +1,6 @@
-#version 330 core
+#version 300 es
+
+precision mediump float;
 
 in vec3 pass_Vertices;
 in vec3 pass_Normals;
@@ -15,9 +17,9 @@ layout(location = 0) out vec4 fragColor;
 void main()
 {
 
-	float r = pass_Vertices.y / 2 + pass_Normals.y / 6;
+	float r = pass_Vertices.y / 2.0 + pass_Normals.y / 6.0;
 	float g = 0.80;
-	float b = pass_Vertices.y / 2 + pass_Normals.y / 6;
+	float b = pass_Vertices.y / 2.0 + pass_Normals.y / 6.0;
 	
 	vec3 baseColor = vec3(r, g, b);
 	vec3 pass_VerticesT = vec3(modelMatrix * vec4(pass_Vertices, 1)); 
