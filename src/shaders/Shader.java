@@ -172,7 +172,7 @@ public class Shader {
 		}
 	}
 	
-	public void uploadMatrices(Matrix4f modelMatrix, Matrix4f projectionMatrix, Matrix4f viewMatrix)
+	public void uploadMatrices(Matrix4f modelMatrix, Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f normalMatrix)
 	{
 		
 		bind();
@@ -180,7 +180,7 @@ public class Shader {
 		upload(modelMatrix, modelMatrixLoc);
 		upload(viewMatrix, viewMatrixLoc);
 		upload(projectionMatrix, projectionMatrixLoc);
-		upload(new Matrix4f(), normalMatrixLoc);
+		upload(normalMatrix, normalMatrixLoc);
 		
 		unbind();
 	}

@@ -1,6 +1,7 @@
 #version 330 core
 
 uniform sampler2D tex;
+uniform vec4 rgbaColor;
 
 uniform mat4 modelMatrix;
 

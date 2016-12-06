@@ -40,7 +40,7 @@ public abstract class LightObject {
 	protected Matrix4f modelMatrix = new Matrix4f();
 	protected Matrix4f viewMatrix = Camera.getViewMatrix();
 	protected Matrix4f projectionMatrix = Engine.projMatrix;
-	protected Matrix4f normalMatrix;
+	protected Matrix4f normalMatrix = new Matrix4f();
 	
 	// The update and render function
 	public abstract void update();

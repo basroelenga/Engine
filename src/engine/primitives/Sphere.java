@@ -30,6 +30,9 @@ public class Sphere extends EngineObjects{
 		
 		sphere = new UVSphere(subdivision);
 		
+		projectionMatrix = Engine.projMatrix;
+		viewMatrix = Camera.getViewMatrix();
+
 		// Define which shader to use
 		if(useLighting && LightManager.size() != 0)	shader = ShaderManager.getShader("light");
 		else shader = ShaderManager.getShader("basictex");
@@ -48,12 +51,12 @@ public class Sphere extends EngineObjects{
 	public void render()
 	{
 		
-		shader.uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix());
-		shader.uploadColor(new Vector4f(1.0f, 0.0f, 1.0f, 1.0f));
+		shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix, normalMatrix);
+		shader.uploadColor(new Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
 		
 		shader.uploadVector3f(new Vector3f(LightManager.getLight("light").getPosition()), shader.getLightPosLoc());
 		shader.uploadVector3f(new Vector3f(1f, 1f, 1f), shader.getAmbColorLoc());
-		shader.uploadVector3f(new Vector3f(0.5f, 0.5f, 0.5f), shader.getAmbIntensityLoc());
+		shader.uploadVector3f(new Vector3f(0.8f, 0.8f, 0.8f), shader.getAmbIntensityLoc());
 		
 		if(tex == null)
 		{

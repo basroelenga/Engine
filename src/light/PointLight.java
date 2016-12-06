@@ -47,7 +47,7 @@ public class PointLight extends LightObject{
 		if(show)
 		{
 			
-			shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix);
+			shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix, normalMatrix);
 			shader.uploadColor(new Vector4f(1, 1, 0, 1));
 			
 			DrawShapes.drawQuad(shader, vaoID, sphere.getAmountOfTriangles());

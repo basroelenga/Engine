@@ -78,7 +78,7 @@ public class Rectangle extends EngineObjects{
 	public void render()
 	{
 		
-		shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix);
+		shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix, normalMatrix);
 		shader.uploadColor(RGBAcolor);
 		
 		DrawShapes.drawQuad(shader ,vaoID, 2);

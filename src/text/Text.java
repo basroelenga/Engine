@@ -91,7 +91,7 @@ public class Text {
 			
 			modelMatrix.scale(scaling, scaling, 1f);
 			
-			textShader.uploadMatrices(modelMatrix, projMatrix, Camera.getViewMatrix());
+			textShader.uploadMatrices(modelMatrix, projMatrix, Camera.getViewMatrix(), new Matrix4f());
 			DrawShapes.drawQuad(textShader, TextManager.getFontTexture(), charList.get(i).getQuad().getVaoID());
 		}
 	}

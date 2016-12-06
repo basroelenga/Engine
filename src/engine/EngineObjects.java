@@ -43,7 +43,7 @@ public abstract class EngineObjects {
 	protected Matrix4f modelMatrix = new Matrix4f();
 	protected Matrix4f viewMatrix;
 	protected Matrix4f projectionMatrix;
-	protected Matrix4f normalMatrix;
+	protected Matrix4f normalMatrix = new Matrix4f();
 	
 	// The update and render function
 	public abstract void update();
