@@ -41,7 +41,7 @@ public class KeyboardInput {
 		// Check if the shift key is pressed
 		if(actionNow == 1 && keyNow == 340) shiftPressed = true;
 		if(actionNow == 0 && keyNow == 340) shiftPressed = false;
-		
+
 		actionPrev = actionNow;
 		keyPrev = keyNow;
 

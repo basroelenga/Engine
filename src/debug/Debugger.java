@@ -1,17 +1,19 @@
 package debug;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
-
-import engine.Engine;
-import engine.primitives.Rectangle;
 import input.KeyboardInput;
+
+import java.util.ArrayList;
+
 import math.Vector4f;
 import text.Text;
 import text.TextManager;
+import engine.Engine;
+import engine.primitives.Rectangle;
 
 public class Debugger {
 
-	private boolean debugState;
+	public static boolean debugState;
 	private boolean blinkShow;
 	
 	// Time in milliseconds
@@ -47,6 +49,10 @@ public class Debugger {
 	
 	// Show reply
 	private boolean showReply = false;
+	
+	// List of all commands
+	private ArrayList<String> commandList = new ArrayList<String>();
+	private int listIndex = 0;
 	
 	public Debugger()
 	{
@@ -109,6 +115,8 @@ public class Debugger {
 		if(debugState)
 		{
 			
+			System.out.println(listIndex);
+			
 			// This get the current key
 			char currentChar = (char) (KeyboardInput.getCurrentKey());
 			
@@ -143,6 +151,110 @@ public class Debugger {
 					// Reset command line
 					input = new StringBuilder();
 					windowBlinker.setX(20f);
+				}
+				// Handle the arrow keys
+				else if((int) currentChar == 262 || (int) currentChar == 263 || (int) currentChar == 264 || (int) currentChar == 265)
+				{
+					
+					switch(currentChar)
+					{
+					
+					// The left right keys
+					case 262:
+						
+						
+						
+						break;
+						
+					case 263:
+						
+						
+						break;
+					
+					// The down key
+					case 264:
+
+						if(listIndex < commandList.size())
+						{
+							
+							// Down the listindex
+							listIndex += 1;
+							
+							// Update the text
+							String temp = commandList.get(listIndex - 1);
+							input = new StringBuilder();
+							
+							for(int i = 0; i < temp.length(); i++) input.append(temp.charAt(i));
+							
+							// Set the blinker to the correct position
+							float tempBlink = 20f;
+							
+							for(int i = 0; i < temp.length(); i++)
+							{
+								
+								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * text.getScaling();
+								
+							}
+							
+							blinkerPosition = tempBlink;
+							windowBlinker.setX(blinkerPosition);
+						}
+						
+						break;
+					
+					// The up key
+					case 265:
+
+						if(listIndex > 1)
+						{
+							
+							// Update the text
+							String temp = commandList.get(listIndex - 1);
+							input = new StringBuilder();
+							
+							for(int i = 0; i < temp.length(); i++) input.append(temp.charAt(i));
+							
+							// Set the blinker to the correct position
+							float tempBlink = 20f;
+							
+							for(int i = 0; i < temp.length(); i++)
+							{
+								
+								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * text.getScaling();
+								
+							}
+							
+							blinkerPosition = tempBlink;
+							windowBlinker.setX(blinkerPosition);
+							
+							// Down the listindex
+							listIndex -= 1;
+						}
+						else if(listIndex == 1)
+						{
+							
+							// Update the text
+							String temp = commandList.get(0);
+							input = new StringBuilder();
+							
+							for(int i = 0; i < temp.length(); i++) input.append(temp.charAt(i));
+							
+							// Set the blinker to the correct position
+							float tempBlink = 20f;
+							
+							for(int i = 0; i < temp.length(); i++)
+							{
+								
+								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * text.getScaling();
+								
+							}
+							
+							blinkerPosition = tempBlink;
+							windowBlinker.setX(blinkerPosition);
+						}
+						
+						break;
+					}
 				}
 				else
 				{
@@ -180,27 +292,53 @@ public class Debugger {
 	{
 		
 		command = new Text("Command: " + commandS, "HUD", 20f, Engine.getHeight(), 0f);
+		String[] commandParts = commandS.split(" ");
 		
-		switch(commandS)
+		// Add the command to the list 
+		commandList.add(commandS);
+		listIndex = commandList.size();
+		
+		if(commandParts.length != 2)
 		{
 		
-		case "Show FPS":
+			reply = new Text("Command has to few arguments", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			showReply = true;
 			
-			if(Engine.showFPS) Engine.showFPS = false;
-			else Engine.showFPS = true;
+			return;
+		}
+		
+		switch(commandParts[0])
+		{
+		
+		case "show-fps":
+			
+			if(commandParts[1].equals("0")) Engine.showFPS = false;
+			else if(commandParts[1].equals("1")) Engine.showFPS = true;
+			else
+			{
+			
+				reply = new Text("Not a valid command", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+				break;
+			}
 			
 			reply = new Text("Show FPS: " + Engine.showFPS, "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
 			break;
 		
-		case "Show wireframe":
+		case "show-wireframe":
 			
-			if(Engine.wireframe) Engine.wireframe = false;
-			else Engine.wireframe = true;
+			if(commandParts[1].equals("0")) Engine.wireframe = false;
+			else if(commandParts[1].equals("1")) Engine.wireframe = true;
+			else
+			{
+			
+				reply = new Text("Not a valid command", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+				break;
+			}
 			
 			reply = new Text("Show wireframe: " + Engine.wireframe, "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
 			break;
 			
-		case "Exit":
+		case "exit":
 			
 			Engine.isRunning = false;
 			

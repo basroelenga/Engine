@@ -26,6 +26,8 @@ public class Sphere extends EngineObjects{
 		this.ys = scaling;
 		this.zs = scaling;
 		
+		this.za = 180;
+		
 		this.tex = tex;
 		
 		sphere = new UVSphere(subdivision);
@@ -44,7 +46,7 @@ public class Sphere extends EngineObjects{
 		modelMatrix.setIdentity();
 		
 		modelMatrix.transelate(x, y, z);
-		modelMatrix.rotateQ(0, 0, 180f, false);
+		modelMatrix.rotateQ(xa, ya, za, false);
 		modelMatrix.scale(xs, ys, zs);
 	}
 	

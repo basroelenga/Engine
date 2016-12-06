@@ -1,7 +1,7 @@
 package cam;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-
+import debug.Debugger;
 import input.KeyboardInput;
 import input.MouseInput;
 import math.Matrix4f;
@@ -80,27 +80,27 @@ public class Camera {
 			prevMouseY = 0f;
 		}
 		
-		if(KeyboardInput.getState("W") == GLFW_PRESS) 
+		if(KeyboardInput.getState("W") == GLFW_PRESS && !Debugger.debugState) 
 		{
 			
 			moveX(0.1f);
 			moveY(-0.1f);
 		}
 		
-		if(KeyboardInput.getState("S") == GLFW_PRESS) 
+		if(KeyboardInput.getState("S") == GLFW_PRESS && !Debugger.debugState) 
 		{
 				
 			moveX(-0.1f);
 			moveY(0.1f);
 		}
 
-		if(KeyboardInput.getState("A") == GLFW_PRESS) 
+		if(KeyboardInput.getState("A") == GLFW_PRESS && !Debugger.debugState) 
 		{	
 			
 			moveZ(0.1f);
 		}
 		
-		if(KeyboardInput.getState("D") == GLFW_PRESS) 
+		if(KeyboardInput.getState("D") == GLFW_PRESS && !Debugger.debugState) 
 		{
 				
 			moveZ(-0.1f);
