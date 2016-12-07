@@ -24,7 +24,7 @@ public class Particle extends EngineObjects{
 		
 		this.tex = tex;
 		
-		sphere = new Sphere(16, x, y, z, 1, tex, true);
+		sphere = new Sphere(20, x, y, z, 1, tex, true);
 	}
 	
 	public void update()

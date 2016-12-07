@@ -115,8 +115,6 @@ public class Debugger {
 		if(debugState)
 		{
 			
-			System.out.println(listIndex);
-			
 			// This get the current key
 			char currentChar = (char) (KeyboardInput.getCurrentKey());
 			

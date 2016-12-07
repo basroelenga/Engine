@@ -2,7 +2,6 @@ package text;
 
 import java.util.ArrayList;
 
-import cam.Camera;
 import engine.Engine;
 import math.Matrix4f;
 import shaders.Shader;
@@ -20,7 +19,7 @@ public class Text {
 	private Matrix4f modelMatrix;
 	private Matrix4f projMatrix;
 	
-	private Shader textShader;
+	private Shader shader;
 	
 	private String text;
 	
@@ -42,7 +41,7 @@ public class Text {
 		case "3D":
 			
 			projMatrix = Engine.projMatrix;
-			textShader = ShaderManager.getShader("basictex");
+			shader = ShaderManager.getShader("basictex");
 			
 			scaling = 1f;
 			
@@ -51,7 +50,7 @@ public class Text {
 		case "HUD":
 		
 			projMatrix = Engine.orthoMatrix;
-			textShader = ShaderManager.getShader("ui");
+			shader = ShaderManager.getShader("ui");
 			
 			scaling = 32f;
 			
@@ -91,8 +90,10 @@ public class Text {
 			
 			modelMatrix.scale(scaling, scaling, 1f);
 			
-			textShader.uploadMatrices(modelMatrix, projMatrix, Camera.getViewMatrix(), new Matrix4f());
-			DrawShapes.drawQuad(textShader, TextManager.getFontTexture(), charList.get(i).getQuad().getVaoID());
+			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
+			shader.uploadMatrix4f(projMatrix, shader.getProjectionMatrixLoc());
+			
+			DrawShapes.drawQuad(shader, TextManager.getFontTexture(), charList.get(i).getQuad().getVaoID());
 		}
 	}
 	

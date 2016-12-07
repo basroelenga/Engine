@@ -2,10 +2,8 @@ package terrain;
 
 import java.util.ArrayList;
 
-import cam.Camera;
 import engine.Engine;
 import generation.TerrainGenerator;
-import light.LightManager;
 import math.MathUtils;
 import math.Matrix4f;
 import math.SimplexNoise;
@@ -169,11 +167,8 @@ public class TerrainTile {
 	public void render()
 	{
 		
-		ShaderManager.getShader("basicT").uploadMatrices(modelMatrix, Engine.projMatrix, Camera.getViewMatrix(), new Matrix4f());
-		
-		ShaderManager.getShader("basicT").uploadVector3f(LightManager.getLight("light").getPosition(), ShaderManager.getShader("basicT").getLightPosLoc());
-		ShaderManager.getShader("basicT").uploadVector3f(new Vector3f(1f, 1f, 1f), ShaderManager.getShader("basicT").getAmbColorLoc());
-		ShaderManager.getShader("basicT").uploadVector3f(new Vector3f(0.0f, 0.0f, 0.0f), ShaderManager.getShader("basicT").getAmbIntensityLoc());
+		ShaderManager.getShader("basicT").uploadMatrix4f(modelMatrix, ShaderManager.getShader("basicT").getModelMatrixLoc());
+		ShaderManager.getShader("basicT").uploadMatrix4f(Engine.projMatrix, ShaderManager.getShader("basicT").getProjectionMatrixLoc());
 		
 		DrawShapes.drawQuad(ShaderManager.getShader("basicT") ,vaoID[0], vaoID[1]);
 	}

@@ -5,7 +5,6 @@ import engine.Engine;
 import engine.EngineObjects;
 import graphics.Texture;
 import light.LightManager;
-import math.Vector3f;
 import math.Vector4f;
 import shaders.ShaderManager;
 import shapes.UVSphere;
@@ -53,12 +52,11 @@ public class Sphere extends EngineObjects{
 	public void render()
 	{
 		
-		shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix, normalMatrix);
-		shader.uploadColor(new Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
-		
-		shader.uploadVector3f(new Vector3f(LightManager.getLight("light").getPosition()), shader.getLightPosLoc());
-		shader.uploadVector3f(new Vector3f(1f, 1f, 1f), shader.getAmbColorLoc());
-		shader.uploadVector3f(new Vector3f(0.4f, 0.4f, 0.4f), shader.getAmbIntensityLoc());
+		shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
+		shader.uploadMatrix4f(projectionMatrix, shader.getProjectionMatrixLoc());
+		shader.uploadMatrix4f(normalMatrix, shader.getNormalMatrixLoc());
+
+		shader.uploadVector4f(new Vector4f(1.0f, 0.0f, 0.0f, 1.0f), shader.getRgbaColorLoc());
 		
 		if(tex == null)
 		{

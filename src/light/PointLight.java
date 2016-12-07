@@ -1,6 +1,8 @@
 package light;
 
+import math.Vector3f;
 import math.Vector4f;
+import shaders.Shader;
 import shaders.ShaderManager;
 import shapes.UVSphere;
 import utils.DrawShapes;
@@ -28,17 +30,37 @@ public class PointLight extends LightObject{
 		sphere = new UVSphere(8);
 		vaoID = sphere.getVaoID();
 		
-		// The sphere should not be influenced by other lighting, thus shader
+		// The sphere should not be influenced by other lighting, thus use basic shader
 		shader = ShaderManager.getShader("basic");
+		
+		// Set light properties
+		lightColor = new Vector3f(1f, 1f, 1f);
+		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
+		
+		attenuationFactor = 0.1f;
 	}
 	
 	public void update()
 	{
 		
+		// Update the position of the light (for rendering)
 		modelMatrix.setIdentity();
 		
 		modelMatrix.transelate(x, y, z);
 		modelMatrix.scale(xs, ys, zs);
+		
+		lightPos = new Vector3f(x, y, z);
+		
+		// Upload the position (and other properties) of the light to all shaders
+		for(Shader shader : ShaderManager.getShaderList())
+		{
+			
+			shader.uploadFloat(attenuationFactor, shader.getAttenuationPosLoc());
+			
+			shader.uploadVector3f(lightPos, shader.getLightPosLoc());
+			shader.uploadVector3f(lightColor, shader.getLightColorLoc());
+			shader.uploadVector3f(ambIntensity, shader.getAmbIntensityLoc());
+		}
 	}
 	
 	public void render()
@@ -47,8 +69,10 @@ public class PointLight extends LightObject{
 		if(show)
 		{
 			
-			shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix, normalMatrix);
-			shader.uploadColor(new Vector4f(1, 1, 0, 1));
+			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
+			shader.uploadMatrix4f(projectionMatrix, shader.getProjectionMatrixLoc());
+			
+			shader.uploadVector4f(new Vector4f(1, 1, 0, 1), shader.getRgbaColorLoc());
 			
 			DrawShapes.drawQuad(shader, vaoID, sphere.getAmountOfTriangles());
 		}

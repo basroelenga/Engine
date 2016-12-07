@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ShaderManager {
 
-	private String[] shaders = {"basic", "basictex", "ui", "light"};
+	private String[] shaders = {"basic", "basictex", "ui", "light", "basicT"};
 	
 	private static ArrayList<Shader> shaderList = new ArrayList<Shader>();
 	
@@ -36,5 +36,10 @@ public class ShaderManager {
 		}
 		
 		throw new RuntimeException("The shader: " + shader + " does not exist");
+	}
+	
+	public static ArrayList<Shader> getShaderList()
+	{
+		return shaderList;
 	}
 }

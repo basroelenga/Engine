@@ -30,6 +30,14 @@ public abstract class LightObject {
 	// Should the position of the light be visible
 	protected boolean show = false;
 	
+	// Properties of the light
+	protected float attenuationFactor = 0f;
+	
+	protected Vector3f lightColor;
+	protected Vector3f ambIntensity;
+	
+	protected Vector3f lightPos;
+	
 	// Requirements for rendering (The objects VAO ID, shader, shader properties and matrices)
 	// This is for rendering the position of the light in the 3D space
 	protected int vaoID;

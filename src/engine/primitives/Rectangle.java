@@ -43,14 +43,13 @@ public class Rectangle extends EngineObjects{
 		
 		this.ya = ya;
 		this.RGBAcolor = RGBAcolor;
-
-		viewMatrix = new Matrix4f(); 
 		
 		// Define the shader to be used
 		shader = ShaderManager.getShader("basic");
 		
 		// If the projection matrix is the perspective matrix the view matrix should also be set.
 		if(projectionMatrix == Engine.projMatrix) viewMatrix = Camera.getViewMatrix();
+		else viewMatrix = new Matrix4f();
 		
 		// Create the points in the rectangle.
 		ArrayList<Vector3f> points = new ArrayList<Vector3f>();
@@ -77,10 +76,13 @@ public class Rectangle extends EngineObjects{
 	
 	public void render()
 	{
+
+		shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
+		shader.uploadMatrix4f(projectionMatrix, shader.getProjectionMatrixLoc());
+		shader.uploadMatrix4f(viewMatrix, shader.getViewMatrixLoc());
 		
-		shader.uploadMatrices(modelMatrix, projectionMatrix, viewMatrix, normalMatrix);
-		shader.uploadColor(RGBAcolor);
+		shader.uploadVector4f(RGBAcolor, shader.getRgbaColorLoc());
 		
-		DrawShapes.drawQuad(shader ,vaoID, 2);
+		DrawShapes.drawQuad(shader, vaoID, 2);
 	}
 }

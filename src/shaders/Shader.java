@@ -42,13 +42,16 @@ public class Shader {
 	private int normalMatrixLoc;
 	private int projectionMatrixLoc;
 	
+	private int cameraPosLoc;
+	
 	private int rgbColorLoc;
 	private int rgbaColorLoc;
 	
-	private int ambColorLoc;
+	private int lightColorLoc;
 	private int ambIntensityLoc;
 	
 	private int lightPosLoc;
+	private int attenuationFactorLoc;
 	
 	private int vertexID;
 	private int fragmentID;
@@ -88,13 +91,16 @@ public class Shader {
 		normalMatrixLoc = glGetUniformLocation(shaderProgram, "normalMatrix");
 		projectionMatrixLoc = glGetUniformLocation(shaderProgram, "projectionMatrix");
 		
+		cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
+		
 		rgbColorLoc = glGetUniformLocation(shaderProgram, "rgbColor");
 		rgbaColorLoc = glGetUniformLocation(shaderProgram, "rgbaColor");
 		
-		ambColorLoc = glGetUniformLocation(shaderProgram, "ambColor");
-		ambIntensityLoc = glGetUniformLocation(shaderProgram, "ambIntensity");
+		lightColorLoc = glGetUniformLocation(shaderProgram, "light.lightColor");
+		ambIntensityLoc = glGetUniformLocation(shaderProgram, "light.ambIntensity");
 		
-		lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
+		lightPosLoc = glGetUniformLocation(shaderProgram, "light.lightPos");
+		attenuationFactorLoc = glGetUniformLocation(shaderProgram, "light.attFactor");
 		
 		cutoffLoc = glGetUniformLocation(shaderProgram, "cutoff");
 	}
@@ -172,32 +178,12 @@ public class Shader {
 		}
 	}
 	
-	public void uploadMatrices(Matrix4f modelMatrix, Matrix4f projectionMatrix, Matrix4f viewMatrix, Matrix4f normalMatrix)
-	{
-		
-		bind();
-		
-		upload(modelMatrix, modelMatrixLoc);
-		upload(viewMatrix, viewMatrixLoc);
-		upload(projectionMatrix, projectionMatrixLoc);
-		upload(normalMatrix, normalMatrixLoc);
-		
-		unbind();
-	}
-	
-	private void upload(Matrix4f matrix, int loc)
+	public void uploadMatrix4f(Matrix4f matrix, int loc)
 	{	
 		
-		glUniformMatrix4fv(loc, true, matrix.toFloatBuffer());
-	}
-	
-	public void uploadColor(Vector4f color)
-	{
-		
 		bind();
 		
-		glUniform3f(rgbColorLoc, color.getX(), color.getY(), color.getZ());
-		glUniform4f(rgbaColorLoc, color.getX(), color.getY(), color.getZ(), color.getW());
+		glUniformMatrix4fv(loc, true, matrix.toFloatBuffer());
 		
 		unbind();
 	}
@@ -218,6 +204,16 @@ public class Shader {
 		bind();
 		
 		glUniform3f(loc, vector.getX(), vector.getY(), vector.getZ());
+		
+		unbind();
+	}
+	
+	public void uploadVector4f(Vector4f vector, int loc)
+	{
+		
+		bind();
+		
+		glUniform4f(loc, vector.getX(), vector.getY(), vector.getZ(), vector.getW());
 		
 		unbind();
 	}
@@ -262,6 +258,14 @@ public class Shader {
 		return projectionMatrixLoc;
 	}
 	
+	public int getNormalMatrixLoc() {
+		return normalMatrixLoc;
+	}
+	
+	public int getCameraPocLoc() {
+		return cameraPosLoc;
+	}
+	
 	public int getCutoffLoc() {
 		return cutoffLoc;
 	}
@@ -270,27 +274,27 @@ public class Shader {
 		return shaderName;
 	}
 
-	public int getAmbColorLoc() {
-		return ambColorLoc;
+	public int getRgbColorLoc() {
+		return rgbColorLoc;
 	}
 
-	public void setAmbColorLoc(int ambColorLoc) {
-		this.ambColorLoc = ambColorLoc;
+	public int getRgbaColorLoc() {
+		return rgbaColorLoc;
+	}
+
+	public int getLightColorLoc() {
+		return lightColorLoc;
 	}
 
 	public int getAmbIntensityLoc() {
 		return ambIntensityLoc;
 	}
 
-	public void setAmbIntensityLoc(int ambIntensityLoc) {
-		this.ambIntensityLoc = ambIntensityLoc;
-	}
-
 	public int getLightPosLoc() {
 		return lightPosLoc;
 	}
 
-	public void setLightPosLoc(int lightPosLoc) {
-		this.lightPosLoc = lightPosLoc;
+	public int getAttenuationPosLoc() {
+		return attenuationFactorLoc;
 	}
 }
