@@ -1,6 +1,7 @@
 package engine.primitives;
 
 import engine.EngineObjects;
+import graphics.Texture;
 
 public class Particle extends EngineObjects{
 
@@ -8,7 +9,7 @@ public class Particle extends EngineObjects{
 	
 	private float mass;
 	
-	public Particle(float x, float y, float z, float vx, float vy, float vz, float mass)
+	public Particle(float x, float y, float z, float vx, float vy, float vz, float mass, Texture tex)
 	{
 		
 		this.x = x;
@@ -21,7 +22,9 @@ public class Particle extends EngineObjects{
 		
 		this.mass = mass;
 		
-		sphere = new Sphere(10, x, y, z, 1, null, true);
+		this.tex = tex;
+		
+		sphere = new Sphere(16, x, y, z, 1, tex, true);
 	}
 	
 	public void update()

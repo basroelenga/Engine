@@ -1,11 +1,11 @@
-#version 300 es
+#version 330
 
 precision mediump float;
 
 uniform sampler2D tex;
-uniform vec4 rgbaColor;
 
 uniform mat4 modelMatrix;
+uniform vec3 cameraPos;
 
 uniform vec3 ambColor;
 uniform vec3 ambIntensity;

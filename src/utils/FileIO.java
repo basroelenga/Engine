@@ -17,7 +17,7 @@ public class FileIO {
 		
 		ArrayList<String> fileNames = new ArrayList<String>();
 		
-		File folder = new File("rsc/" + path);
+		File folder = new File("res/" + path);
 		File[] fileList = null;
 		if(folder.exists()){
 			

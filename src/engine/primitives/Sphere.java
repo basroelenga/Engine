@@ -58,7 +58,7 @@ public class Sphere extends EngineObjects{
 		
 		shader.uploadVector3f(new Vector3f(LightManager.getLight("light").getPosition()), shader.getLightPosLoc());
 		shader.uploadVector3f(new Vector3f(1f, 1f, 1f), shader.getAmbColorLoc());
-		shader.uploadVector3f(new Vector3f(0.8f, 0.8f, 0.8f), shader.getAmbIntensityLoc());
+		shader.uploadVector3f(new Vector3f(0.4f, 0.4f, 0.4f), shader.getAmbIntensityLoc());
 		
 		if(tex == null)
 		{

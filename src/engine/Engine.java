@@ -42,6 +42,7 @@ import org.lwjgl.opengl.GL;
 
 import debug.Debugger;
 import game.Simulation;
+import graphics.TextureManager;
 import math.Matrices;
 import math.Matrix4f;
 import shaders.ShaderManager;
@@ -156,6 +157,7 @@ public class Engine {
 	{
 		
 		// Create the engine fundamental managers
+		new TextureManager();
 		new TextManager(true);
 		new ShaderManager();
 		

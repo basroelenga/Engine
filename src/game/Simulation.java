@@ -3,7 +3,7 @@ package game;
 import light.LightManager;
 import cam.Camera;
 import engine.EngineObjectManager;
-import graphics.Texture;
+import graphics.TextureManager;
 
 public class Simulation {
 
@@ -14,7 +14,7 @@ public class Simulation {
 		
 		cam = new Camera();
 		// =========================
-		EngineObjectManager.addSphere(20, 0, 0, 0, 50, new Texture("bg"), false);
+		EngineObjectManager.addSphere(20, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
 		LightManager.addPointLight("light", 0, 5, 0, true);
 		createParticles();
@@ -29,7 +29,7 @@ public class Simulation {
 		{
 			for(int j = 0; j < particles; j++)
 			{
-				EngineObjectManager.addParticle(i, 0, j, 0, 0, 0, 1);
+				EngineObjectManager.addParticle(i, 0, j, 0, 0, 0, 1, TextureManager.getTexture("testtex"));
 			}
 		}
 	}

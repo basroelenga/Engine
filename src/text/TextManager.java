@@ -53,7 +53,7 @@ public class TextManager {
 	{
 		
 		// Load the configuration file in a ArrayObject
-		ArrayObject conf = FileIO.loadtxt("textures/font.dat", null, true, null);
+		ArrayObject conf = FileIO.loadtxt("textures/texdata/font.dat", null, true, null);
 		
 		// Need to find the maximum x width
 		xMax = 0f;
