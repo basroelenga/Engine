@@ -2,6 +2,8 @@ package light;
 
 import java.util.ArrayList;
 
+import math.Vector3f;
+
 public class LightManager {
 
 	private static ArrayList<LightObject> lightList = new ArrayList<LightObject>();
@@ -11,10 +13,10 @@ public class LightManager {
 	public static void update()	{for(LightObject light : lightList) light.update();}
 	public static void render()	{for(LightObject light : lightList) light.render();}
 	
-	public static void addPointLight(String name, float x, float y, float z, boolean show)
+	public static void addPointLight(String name, float x, float y, float z, Vector3f lightColor, boolean show)
 	{
 		
-		lightList.add(new PointLight(name, x, y, z, show));
+		lightList.add(new PointLight(name, x, y, z, lightColor, show));
 	}
 	
 	public static LightObject getLight(String id)

@@ -47,11 +47,17 @@ public class Shader {
 	private int rgbColorLoc;
 	private int rgbaColorLoc;
 	
-	private int lightColorLoc;
-	private int ambIntensityLoc;
+	private int lightColorLoc1;
+	private int ambIntensityLoc1;
 	
-	private int lightPosLoc;
-	private int attenuationFactorLoc;
+	private int lightPosLoc1;
+	private int attenuationFactorLoc1;
+	
+	private int lightColorLoc2;
+	private int ambIntensityLoc2;
+	
+	private int lightPosLoc2;
+	private int attenuationFactorLoc2;
 	
 	private int vertexID;
 	private int fragmentID;
@@ -96,11 +102,17 @@ public class Shader {
 		rgbColorLoc = glGetUniformLocation(shaderProgram, "rgbColor");
 		rgbaColorLoc = glGetUniformLocation(shaderProgram, "rgbaColor");
 		
-		lightColorLoc = glGetUniformLocation(shaderProgram, "light.lightColor");
-		ambIntensityLoc = glGetUniformLocation(shaderProgram, "light.ambIntensity");
+		lightColorLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].lightColor");
+		ambIntensityLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].ambIntensity");
 		
-		lightPosLoc = glGetUniformLocation(shaderProgram, "light.lightPos");
-		attenuationFactorLoc = glGetUniformLocation(shaderProgram, "light.attFactor");
+		lightPosLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].lightPos");
+		attenuationFactorLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].attFactor");
+		
+		lightColorLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].lightColor");
+		ambIntensityLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].ambIntensity");
+		
+		lightPosLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].lightPos");
+		attenuationFactorLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].attFactor");
 		
 		cutoffLoc = glGetUniformLocation(shaderProgram, "cutoff");
 	}
@@ -282,19 +294,35 @@ public class Shader {
 		return rgbaColorLoc;
 	}
 
-	public int getLightColorLoc() {
-		return lightColorLoc;
+	public int getLightColorLoc1() {
+		return lightColorLoc1;
 	}
 
-	public int getAmbIntensityLoc() {
-		return ambIntensityLoc;
+	public int getAmbIntensityLoc1() {
+		return ambIntensityLoc1;
 	}
 
-	public int getLightPosLoc() {
-		return lightPosLoc;
+	public int getLightPosLoc1() {
+		return lightPosLoc1;
 	}
 
-	public int getAttenuationPosLoc() {
-		return attenuationFactorLoc;
+	public int getAttenuationPosLoc1() {
+		return attenuationFactorLoc1;
+	}
+	
+	public int getLightColorLoc2() {
+		return lightColorLoc2;
+	}
+
+	public int getAmbIntensityLoc2() {
+		return ambIntensityLoc2;
+	}
+
+	public int getLightPosLoc2() {
+		return lightPosLoc2;
+	}
+
+	public int getAttenuationPosLoc2() {
+		return attenuationFactorLoc2;
 	}
 }

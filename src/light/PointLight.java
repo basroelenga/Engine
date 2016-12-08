@@ -11,7 +11,7 @@ public class PointLight extends LightObject{
 
 	private UVSphere sphere;
 
-	public PointLight(String name, float x, float y, float z, boolean show) 
+	public PointLight(String name, float x, float y, float z, Vector3f lightColor, boolean show) 
 	{
 		
 		this.name = name;
@@ -34,7 +34,7 @@ public class PointLight extends LightObject{
 		shader = ShaderManager.getShader("basic");
 		
 		// Set light properties
-		lightColor = new Vector3f(1f, 1f, 1f);
+		this.lightColor = lightColor;
 		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
 		
 		attenuationFactor = 0.1f;
@@ -55,11 +55,22 @@ public class PointLight extends LightObject{
 		for(Shader shader : ShaderManager.getShaderList())
 		{
 			
-			shader.uploadFloat(attenuationFactor, shader.getAttenuationPosLoc());
+			if(name.equals("light1"))
+			{
+				shader.uploadFloat(attenuationFactor, shader.getAttenuationPosLoc1());
+				
+				shader.uploadVector3f(lightPos, shader.getLightPosLoc1());
+				shader.uploadVector3f(lightColor, shader.getLightColorLoc1());
+				shader.uploadVector3f(ambIntensity, shader.getAmbIntensityLoc1());
+			}
+			else
+			{
+			shader.uploadFloat(attenuationFactor, shader.getAttenuationPosLoc2());
 			
-			shader.uploadVector3f(lightPos, shader.getLightPosLoc());
-			shader.uploadVector3f(lightColor, shader.getLightColorLoc());
-			shader.uploadVector3f(ambIntensity, shader.getAmbIntensityLoc());
+			shader.uploadVector3f(lightPos, shader.getLightPosLoc2());
+			shader.uploadVector3f(lightColor, shader.getLightColorLoc2());
+			shader.uploadVector3f(ambIntensity, shader.getAmbIntensityLoc2());
+			}
 		}
 	}
 	

@@ -4,6 +4,7 @@ import cam.Camera;
 import engine.EngineObjectManager;
 import graphics.TextureManager;
 import light.LightManager;
+import math.Vector3f;
 
 public class Simulation {
 
@@ -18,7 +19,8 @@ public class Simulation {
 		// =========================
 		EngineObjectManager.addSphere(20, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
-		LightManager.addPointLight("light", 0f, 2f, 0f, true);
+		LightManager.addPointLight("light1", 0f, 2f, 0f, new Vector3f(1, 1, 1), true);
+		LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
 		createParticles();
 	}
 	
@@ -40,8 +42,11 @@ public class Simulation {
 	{
 		angle += 0.1f;
 		
-		LightManager.getLight("light").setX((float) (3f * Math.cos(angle)));
-		LightManager.getLight("light").setZ((float) (3f * Math.sin(angle)));
+		LightManager.getLight("light1").setX((float) (3f * Math.cos(angle)));
+		LightManager.getLight("light1").setZ((float) (3f * Math.sin(angle)));
+		
+		LightManager.getLight("light2").setX((float) (3f * Math.cos(angle + 180f)));
+		LightManager.getLight("light2").setZ((float) (3f * Math.sin(angle + 180f)));
 		
 		cam.update();
 
