@@ -18,8 +18,10 @@ uniform struct PointLight {
 	float attFactor;
 } light;
 
-#define NR_POINT_LIGHTS 2  
-uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform int number_of_lights;
+uniform PointLight pointLights[10];
+
+layout(location = 0) out vec4 fragColor;
 
 vec3 calcPointLight(PointLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_Vertices, vec3 surfaceC)
 {
@@ -51,8 +53,6 @@ vec3 calcPointLight(PointLight light, vec4 textureColor, vec3 calcNorm, vec3 pas
 	return ambient + attenuation * (diffuse + specular);
 }
 
-layout(location = 0) out vec4 fragColor;
-
 void main() 
 {
 
@@ -70,7 +70,7 @@ void main()
 	vec3 color = vec3(0, 0, 0);
 
 	// Color before gamma correction (from every light)
-	for(int i = 0; i < NR_POINT_LIGHTS; i++)
+	for(int i = 0; i < number_of_lights; i++)
 	{
 		color += calcPointLight(pointLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
 	}
