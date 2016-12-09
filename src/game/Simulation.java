@@ -5,7 +5,6 @@ import engine.EngineObjectManager;
 import graphics.TextureManager;
 import light.LightManager;
 import math.Vector3f;
-import shaders.ShaderManager;
 
 public class Simulation {
 
@@ -28,9 +27,6 @@ public class Simulation {
 		
 		LightManager.addPointLight("light5", 0f, 4f, 0f, new Vector3f(0, 0, 1), true);
 		LightManager.addPointLight("light6", 0f, -4f, 0f, new Vector3f(1, 0, 1), true);
-		
-		// All shaders are construct after it is known how many lights there are
-		ShaderManager.loadLightShaders();
 		
 		createParticles();
 	}

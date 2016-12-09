@@ -42,6 +42,17 @@ public class LightManager {
 	{
 		
 		lightList.add(new PointLight(name, x, y, z, lightColor, show));
+		
+		// When a point light is added, the shaders should also know this
+		for(Shader shader : ShaderManager.getShaderList())
+		{
+			
+			if(shader.getUseLighting())
+			{
+				
+				shader.addLight();
+			}
+		}
 	}
 	
 	public static LightObject getLight(String id)

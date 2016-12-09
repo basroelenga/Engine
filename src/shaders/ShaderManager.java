@@ -8,25 +8,14 @@ public class ShaderManager {
 	
 	private static ArrayList<Shader> shaderList = new ArrayList<Shader>();
 	
-	private ShaderManager() {}
-	
-	public static void loadBasicShaders()
+	public ShaderManager()
 	{
 		
 		for(int i = 0; i < shaders.length; i++)
 		{
 			
 			if(!shaders[i].equals("light")) shaderList.add(new Shader(shaders[i], false));
-		}
-	}
-	
-	public static void loadLightShaders()
-	{
-		
-		for(int i = 0; i < shaders.length; i++)
-		{
-			
-			if(shaders[i].equals("light")) shaderList.add(new Shader(shaders[i], true));
+			else shaderList.add(new Shader(shaders[i], true));
 		}
 	}
 

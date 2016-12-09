@@ -107,31 +107,8 @@ public class Shader {
 		
 		cutoffLoc = glGetUniformLocation(shaderProgram, "cutoff");
 		
-		// The number of lights in the engine define the length of the lights arraylist properties
-		// These properties should also only be created if the use lights is true
-		if(useLights)
-		{
-			
-			lightsLoc = glGetUniformLocation(shaderProgram, "number_of_lights");
-
-			for(int i = 0; i < LightManager.getNumberOfLights(); i++)
-			{
-			
-				String color = "pointLights[" + i + "].lightColor";
-				String amb = "pointLights[" + i + "].ambIntensity";
-				
-				String position = "pointLights[" + i + "].lightPos";
-				String attenuation = "pointLights[" + i + "].attFactor";
-				
-				System.out.println(position);
-				
-				lightColorLocList.add(glGetUniformLocation(shaderProgram, color));
-				ambIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
-				
-				lightPosLocList.add(glGetUniformLocation(shaderProgram, position));
-				attenuationFactorLocList.add(glGetUniformLocation(shaderProgram, attenuation));
-			}
-		}
+		// If there are lights involved, get the light list
+		if(useLights) lightsLoc = glGetUniformLocation(shaderProgram, "number_of_lights");
 	}
 	
 	private int compileShader(String shaderSource, int shaderType, String key)
@@ -205,6 +182,24 @@ public class Shader {
 			
 			System.out.println("Shader: " + shaderName + " succesfully validated");
 		}
+	}
+	
+	public void addLight()
+	{
+		
+		int i = LightManager.getNumberOfLights() - 1;
+		
+		String color = "pointLights[" + i + "].lightColor";
+		String amb = "pointLights[" + i + "].ambIntensity";
+		
+		String position = "pointLights[" + i + "].lightPos";
+		String attenuation = "pointLights[" + i + "].attFactor";
+		
+		lightColorLocList.add(glGetUniformLocation(shaderProgram, color));
+		ambIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
+		
+		lightPosLocList.add(glGetUniformLocation(shaderProgram, position));
+		attenuationFactorLocList.add(glGetUniformLocation(shaderProgram, attenuation));
 	}
 	
 	public void uploadInt(int uniform, int uniformLocation)
