@@ -4,26 +4,32 @@ import java.util.ArrayList;
 
 public class ShaderManager {
 
-	private String[] shaders = {"basic", "basictex", "ui", "light", "basicT"};
+	private static String[] shaders = {"basic", "basictex", "ui", "light", "basicT"};
 	
 	private static ArrayList<Shader> shaderList = new ArrayList<Shader>();
 	
-	public ShaderManager()
-	{
-		
-		loadShaders();
-	}
+	private ShaderManager() {}
 	
-	private void loadShaders()
+	public static void loadBasicShaders()
 	{
 		
 		for(int i = 0; i < shaders.length; i++)
 		{
 			
-			shaderList.add(new Shader(shaders[i]));
+			if(!shaders[i].equals("light")) shaderList.add(new Shader(shaders[i], false));
 		}
 	}
 	
+	public static void loadLightShaders()
+	{
+		
+		for(int i = 0; i < shaders.length; i++)
+		{
+			
+			if(shaders[i].equals("light")) shaderList.add(new Shader(shaders[i], true));
+		}
+	}
+
 	public static Shader getShader(String shader)
 	{
 

@@ -6,8 +6,32 @@ import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
 import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glAttachShader;
+import static org.lwjgl.opengl.GL20.glBindAttribLocation;
+import static org.lwjgl.opengl.GL20.glCompileShader;
+import static org.lwjgl.opengl.GL20.glCreateProgram;
+import static org.lwjgl.opengl.GL20.glCreateShader;
+import static org.lwjgl.opengl.GL20.glDeleteProgram;
+import static org.lwjgl.opengl.GL20.glDeleteShader;
+import static org.lwjgl.opengl.GL20.glDetachShader;
+import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
+import static org.lwjgl.opengl.GL20.glGetProgrami;
+import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
+import static org.lwjgl.opengl.GL20.glGetShaderi;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glLinkProgram;
+import static org.lwjgl.opengl.GL20.glShaderSource;
+import static org.lwjgl.opengl.GL20.glUniform1f;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform3f;
+import static org.lwjgl.opengl.GL20.glUniform4f;
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
+import static org.lwjgl.opengl.GL20.glUseProgram;
+import static org.lwjgl.opengl.GL20.glValidateProgram;
 
+import java.util.ArrayList;
+
+import light.LightManager;
 import math.Matrix4f;
 import math.Vector3f;
 import math.Vector4f;
@@ -29,17 +53,11 @@ public class Shader {
 	
 	private int lightsLoc;
 	
-	private int lightColorLoc1;
-	private int ambIntensityLoc1;
+	private ArrayList<Integer> lightColorLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> ambIntensityLocList = new ArrayList<Integer>();
 	
-	private int lightPosLoc1;
-	private int attenuationFactorLoc1;
-	
-	private int lightColorLoc2;
-	private int ambIntensityLoc2;
-	
-	private int lightPosLoc2;
-	private int attenuationFactorLoc2;
+	private ArrayList<Integer> lightPosLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> attenuationFactorLocList = new ArrayList<Integer>();
 	
 	private int vertexID;
 	private int fragmentID;
@@ -48,10 +66,13 @@ public class Shader {
 
 	private String shaderName;
 	
-	public Shader(String shaderName)
+	private boolean useLights;
+	
+	public Shader(String shaderName, boolean useLights)
 	{
 		
 		this.shaderName = shaderName;
+		this.useLights = useLights;
 		
 		String shaderVertexSource = FileIO.loadShader(shaderName + "_vertex_shader");
 		String shaderFragmentSource = FileIO.loadShader(shaderName + "_fragment_shader");
@@ -84,21 +105,33 @@ public class Shader {
 		rgbColorLoc = glGetUniformLocation(shaderProgram, "rgbColor");
 		rgbaColorLoc = glGetUniformLocation(shaderProgram, "rgbaColor");
 		
-		lightsLoc = glGetUniformLocation(shaderProgram, "number_of_lights");
-		
-		lightColorLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].lightColor");
-		ambIntensityLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].ambIntensity");
-		
-		lightPosLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].lightPos");
-		attenuationFactorLoc1 = glGetUniformLocation(shaderProgram, "pointLights[0].attFactor");
-		
-		lightColorLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].lightColor");
-		ambIntensityLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].ambIntensity");
-		
-		lightPosLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].lightPos");
-		attenuationFactorLoc2 = glGetUniformLocation(shaderProgram, "pointLights[1].attFactor");
-		
 		cutoffLoc = glGetUniformLocation(shaderProgram, "cutoff");
+		
+		// The number of lights in the engine define the length of the lights arraylist properties
+		// These properties should also only be created if the use lights is true
+		if(useLights)
+		{
+			
+			lightsLoc = glGetUniformLocation(shaderProgram, "number_of_lights");
+
+			for(int i = 0; i < LightManager.getNumberOfLights(); i++)
+			{
+			
+				String color = "pointLights[" + i + "].lightColor";
+				String amb = "pointLights[" + i + "].ambIntensity";
+				
+				String position = "pointLights[" + i + "].lightPos";
+				String attenuation = "pointLights[" + i + "].attFactor";
+				
+				System.out.println(position);
+				
+				lightColorLocList.add(glGetUniformLocation(shaderProgram, color));
+				ambIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
+				
+				lightPosLocList.add(glGetUniformLocation(shaderProgram, position));
+				attenuationFactorLocList.add(glGetUniformLocation(shaderProgram, attenuation));
+			}
+		}
 	}
 	
 	private int compileShader(String shaderSource, int shaderType, String key)
@@ -276,8 +309,12 @@ public class Shader {
 		return cutoffLoc;
 	}
 	
-	public String getShaderName(){
+	public String getShaderName() {
 		return shaderName;
+	}
+	
+	public boolean getUseLighting() {
+		return useLights;
 	}
 
 	public int getRgbColorLoc() {
@@ -292,36 +329,21 @@ public class Shader {
 	{
 		return lightsLoc;
 	}
+
+	public ArrayList<Integer> getLightColorLocList() {
+		return lightColorLocList;
+	}
+
+	public ArrayList<Integer> getAmbIntensityLocList() {
+		return ambIntensityLocList;
+	}
+
+	public ArrayList<Integer> getLightPosLocList() {
+		return lightPosLocList;
+	}
+
+	public ArrayList<Integer> getAttenuationFactorLocList() {
+		return attenuationFactorLocList;
+	}
 	
-	public int getLightColorLoc1() {
-		return lightColorLoc1;
-	}
-
-	public int getAmbIntensityLoc1() {
-		return ambIntensityLoc1;
-	}
-
-	public int getLightPosLoc1() {
-		return lightPosLoc1;
-	}
-
-	public int getAttenuationPosLoc1() {
-		return attenuationFactorLoc1;
-	}
-	
-	public int getLightColorLoc2() {
-		return lightColorLoc2;
-	}
-
-	public int getAmbIntensityLoc2() {
-		return ambIntensityLoc2;
-	}
-
-	public int getLightPosLoc2() {
-		return lightPosLoc2;
-	}
-
-	public int getAttenuationPosLoc2() {
-		return attenuationFactorLoc2;
-	}
 }

@@ -50,28 +50,16 @@ public class PointLight extends LightObject{
 		modelMatrix.scale(xs, ys, zs);
 		
 		lightPos = new Vector3f(x, y, z);
+	}
+	
+	public void uploadToShader(int light, Shader uShader)
+	{
 		
-		// Upload the position (and other properties) of the light to all shaders
-		for(Shader shader : ShaderManager.getShaderList())
-		{
-			
-			if(name.equals("light1"))
-			{
-				shader.uploadFloat(attenuationFactor, shader.getAttenuationPosLoc1());
-				
-				shader.uploadVector3f(lightPos, shader.getLightPosLoc1());
-				shader.uploadVector3f(lightColor, shader.getLightColorLoc1());
-				shader.uploadVector3f(ambIntensity, shader.getAmbIntensityLoc1());
-			}
-			else
-			{
-			shader.uploadFloat(attenuationFactor, shader.getAttenuationPosLoc2());
-			
-			shader.uploadVector3f(lightPos, shader.getLightPosLoc2());
-			shader.uploadVector3f(lightColor, shader.getLightColorLoc2());
-			shader.uploadVector3f(ambIntensity, shader.getAmbIntensityLoc2());
-			}
-		}
+		uShader.uploadFloat(attenuationFactor, uShader.getAttenuationFactorLocList().get(light));
+		
+		uShader.uploadVector3f(lightPos, uShader.getLightPosLocList().get(light));
+		uShader.uploadVector3f(lightColor, uShader.getLightColorLocList().get(light));
+		uShader.uploadVector3f(ambIntensity, uShader.getAmbIntensityLocList().get(light));
 	}
 	
 	public void render()
@@ -83,7 +71,7 @@ public class PointLight extends LightObject{
 			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
 			shader.uploadMatrix4f(projectionMatrix, shader.getProjectionMatrixLoc());
 			
-			shader.uploadVector4f(new Vector4f(1, 1, 0, 1), shader.getRgbaColorLoc());
+			shader.uploadVector4f(new Vector4f(lightColor.getX(), lightColor.getY(), lightColor.getZ(), 1), shader.getRgbaColorLoc());
 			
 			DrawShapes.drawQuad(shader, vaoID, sphere.getAmountOfTriangles());
 		}

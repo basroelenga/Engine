@@ -54,6 +54,9 @@ public abstract class LightObject {
 	public abstract void update();
 	public abstract void render();
 	
+	// Upload lights to shader
+	public abstract void uploadToShader(int light, Shader uShader);
+	
 	// The setter functions for the position, velocities, scale
 	// The getter functions for the position, velocities, scale, rotation, name and render requirements
 	public float getX() {

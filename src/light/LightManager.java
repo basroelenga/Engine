@@ -15,15 +15,26 @@ public class LightManager {
 	public static void update()	
 	{
 		
+		// Update all the light sources (position)
+		for(LightObject light : lightList) light.update();
+		
 		// Tell the shaders how many lights there are going to be
 		for(Shader shader : ShaderManager.getShaderList())
 		{
 		
-			shader.uploadInt(lightList.size(), shader.getNumberOfLightsLoc());
+			if(shader.getUseLighting())
+			{
+				
+				shader.uploadInt(lightList.size(), shader.getNumberOfLightsLoc());
+				
+				// Upload all the light to the shaders that use lighting
+				for(int i = 0; i < getNumberOfLights(); i++)
+				{
+					
+					lightList.get(i).uploadToShader(i, shader);
+				}
+			}
 		}
-		
-		// Update all the light sources
-		for(LightObject light : lightList) light.update();
 	}
 	public static void render()	{for(LightObject light : lightList) light.render();}
 	
@@ -45,7 +56,7 @@ public class LightManager {
 		throw new RuntimeException("Light does not exist: " + id);
 	}
 	
-	public static int size()
+	public static int getNumberOfLights()
 	{
 		return lightList.size();
 	}
