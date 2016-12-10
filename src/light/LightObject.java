@@ -17,6 +17,11 @@ public abstract class LightObject {
 	protected float y;
 	protected float z;
 	
+	// Their normalized direction
+	protected float xDir;
+	protected float yDir;
+	protected float zDir;
+	
 	// Their velocities
 	protected float vx;
 	protected float vy;
@@ -26,6 +31,9 @@ public abstract class LightObject {
 	protected float xs;
 	protected float ys;
 	protected float zs;
+	
+	// The cone angle for spotlights
+	protected float coneAngle;
 	
 	// Should the position of the light be visible
 	protected boolean show = false;
@@ -77,6 +85,30 @@ public abstract class LightObject {
 	}
 	public void setZ(float z) {
 		this.z = z;
+	}
+	public float getxDir() {
+		return xDir;
+	}
+	public void setxDir(float xDir) {
+		this.xDir = xDir;
+	}
+	public float getyDir() {
+		return yDir;
+	}
+	public void setyDir(float yDir) {
+		this.yDir = yDir;
+	}
+	public float getzDir() {
+		return zDir;
+	}
+	public void setzDir(float zDir) {
+		this.zDir = zDir;
+	}
+	public float getConeAngle(){
+		return this.coneAngle;
+	}
+	public void setConeAngle(float angle){
+		this.coneAngle = angle;
 	}
 	public Vector3f getPosition() {
 		return new Vector3f(x, y, z);

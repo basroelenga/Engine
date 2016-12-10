@@ -10,13 +10,12 @@ public class DirectionalLight extends LightObject{
 		
 		this.name = name;
 		
-		this.x = xDir;
-		this.y = yDir;
-		this.z = zDir;
+		this.xDir = xDir;
+		this.yDir = yDir;
+		this.zDir = zDir;
 		
 		this.lightColor = lightColor;
 		
-		lightDir = new Vector3f(x, y, z);
 		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
 		
 		// There is no rendering of the light for now, so no shaders/spheres needed
@@ -25,6 +24,7 @@ public class DirectionalLight extends LightObject{
 	@Override
 	public void update() {
 		
+		lightDir = new Vector3f(xDir, yDir, zDir);
 	}
 
 	@Override

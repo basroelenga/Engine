@@ -15,6 +15,7 @@ uniform struct PointLight {
 	vec3 lightPos;
 	vec3 lightColor;
 	vec3 ambIntensity;
+	
 	float attFactor;
 } pointLight;
 
@@ -24,12 +25,24 @@ uniform struct DirectionalLight {
 	vec3 ambIntensity;
 } dirLight;
 
+uniform struct SpotLight {
+	vec3 lightPos;
+	vec3 lightColor;
+	vec3 ambIntensity;
+
+	vec3 lightDir;
+	float attFactor;
+	float coneAngle;
+} spotLight;
+
 uniform int number_of_point_lights;
 uniform int number_of_directional_lights;
+uniform int number_of_spot_lights;
 
 // There is a maximum of 10 lights
 uniform PointLight pointLights[10];
 uniform DirectionalLight dirLights[10];
+uniform SpotLight spotLights[10];
 
 layout(location = 0) out vec4 fragColor;
 

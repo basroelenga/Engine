@@ -53,17 +53,30 @@ public class Shader {
 	
 	private int pointLightsLoc;
 	private int directionalLightsLoc;
+	private int spotLightsLoc;
 	
+	// Lists storing all the properties for point lights
 	private ArrayList<Integer> pointLightColorLocList = new ArrayList<Integer>();
 	private ArrayList<Integer> pointAmbIntensityLocList = new ArrayList<Integer>();
 	
 	private ArrayList<Integer> pointLightPosLocList = new ArrayList<Integer>();
 	private ArrayList<Integer> pointAttenuationFactorLocList = new ArrayList<Integer>();
 	
+	// Lists storing all the properties for directional lights
 	private ArrayList<Integer> directionalLightDirectionLocList = new ArrayList<Integer>();
 	private ArrayList<Integer> directionalAmbIntensityLocList = new ArrayList<Integer>();
 	
 	private ArrayList<Integer> directionalLightColorLocList = new ArrayList<Integer>();
+	
+	// Lists stroing all the properties for spot lights
+	private ArrayList<Integer> spotLightColorLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> spotAmbIntensityLocList = new ArrayList<Integer>();
+	
+	private ArrayList<Integer> spotLightPosLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> spotAttenuationFactorLocList = new ArrayList<Integer>();
+	
+	private ArrayList<Integer> spotLightDirLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> spotConeAngleLocList = new ArrayList<Integer>();
 	
 	private int vertexID;
 	private int fragmentID;
@@ -119,6 +132,7 @@ public class Shader {
 			
 			pointLightsLoc = glGetUniformLocation(shaderProgram, "number_of_point_lights");
 			directionalLightsLoc = glGetUniformLocation(shaderProgram, "number_of_directional_lights");
+			spotLightsLoc = glGetUniformLocation(shaderProgram, "number_of_spot_lights");
 		}
 	}
 	
@@ -227,6 +241,30 @@ public class Shader {
 		directionalAmbIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
 		
 		directionalLightDirectionLocList.add(glGetUniformLocation(shaderProgram, direction));
+	}
+	
+	public void addSpotLight()
+	{
+		
+		int i = LightManager.getNumberOfSpotLights() - 1;
+		
+		String color = "pointLights[" + i + "].lightColor";
+		String amb = "pointLights[" + i + "].ambIntensity";
+		
+		String position = "pointLights[" + i + "].lightPos";
+		String attenuation = "pointLights[" + i + "].attFactor";
+		
+		String direction = "spotLights[" + i + "].lightDir";
+		String coneAngle = "spotLights[" + i + "].coneAngle";
+		
+		spotLightColorLocList.add(glGetUniformLocation(shaderProgram, color));
+		spotAmbIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
+		
+		spotLightPosLocList.add(glGetUniformLocation(shaderProgram, position));
+		spotAttenuationFactorLocList.add(glGetUniformLocation(shaderProgram, attenuation));
+		
+		spotLightDirLocList.add(glGetUniformLocation(shaderProgram, direction));
+		spotConeAngleLocList.add(glGetUniformLocation(shaderProgram, coneAngle));
 	}
 	
 	public void uploadInt(int uniform, int uniformLocation)
@@ -347,14 +385,16 @@ public class Shader {
 		return rgbaColorLoc;
 	}
 
-	public int getNumberOfPointLightsLoc()
-	{
+	public int getNumberOfPointLightsLoc() {
 		return pointLightsLoc;
 	}
 	
-	public int getNumberOfDirectionalLightsLoc()
-	{
+	public int getNumberOfDirectionalLightsLoc() {
 		return directionalLightsLoc;
+	}
+	
+	public int getNumberOfSpotLightsLoc() {
+		return spotLightsLoc;
 	}
 
 	public ArrayList<Integer> getPointLightColorLocList() {
@@ -383,5 +423,29 @@ public class Shader {
 
 	public ArrayList<Integer> getDirectionalLightColorLocList() {
 		return directionalLightColorLocList;
+	}
+
+	public ArrayList<Integer> getSpotLightColorLocList() {
+		return spotLightColorLocList;
+	}
+
+	public ArrayList<Integer> getSpotAmbIntensityLocList() {
+		return spotAmbIntensityLocList;
+	}
+
+	public ArrayList<Integer> getSpotLightPosLocList() {
+		return spotLightPosLocList;
+	}
+
+	public ArrayList<Integer> getSpotAttenuationFactorLocList() {
+		return spotAttenuationFactorLocList;
+	}
+
+	public ArrayList<Integer> getSpotLightDirLocList() {
+		return spotLightDirLocList;
+	}
+
+	public ArrayList<Integer> getSpotConeAngleLocList() {
+		return spotConeAngleLocList;
 	}
 }

@@ -10,6 +10,7 @@ public class LightManager {
 
 	private static ArrayList<LightObject> pointLightList = new ArrayList<LightObject>();
 	private static ArrayList<LightObject> directionalLightList = new ArrayList<LightObject>();
+	private static ArrayList<LightObject> spotLightList = new ArrayList<LightObject>();
 	
 	private LightManager(){}
 	
@@ -18,6 +19,8 @@ public class LightManager {
 		
 		// Update all the light sources (position)
 		for(LightObject light : pointLightList) light.update();
+		for(LightObject light : directionalLightList) light.update();
+		for(LightObject light : spotLightList) light.update();
 		
 		// Tell the shaders how many lights there are going to be
 		for(Shader shader : ShaderManager.getShaderList())
@@ -29,6 +32,7 @@ public class LightManager {
 				// Upload number of current lights
 				shader.uploadInt(getNumberOfPointLights(), shader.getNumberOfPointLightsLoc());
 				shader.uploadInt(getNumberOfDirectionalLights(), shader.getNumberOfDirectionalLightsLoc());
+				shader.uploadInt(getNumberOfSpotLights(), shader.getNumberOfSpotLightsLoc());
 				
 				// Upload all the light to the shaders that use lighting
 				for(int i = 0; i < getNumberOfPointLights(); i++)
@@ -41,6 +45,12 @@ public class LightManager {
 				{
 					
 					directionalLightList.get(i).uploadToShader(i, shader);
+				}
+				
+				for(int i = 0; i < getNumberOfSpotLights(); i++)
+				{
+					
+					spotLightList.get(i).uploadToShader(i, shader);
 				}
 			}
 		}
@@ -101,6 +111,11 @@ public class LightManager {
 	public static int getNumberOfDirectionalLights()
 	{
 		return directionalLightList.size();
+	}
+	
+	public static int getNumberOfSpotLights()
+	{
+		return spotLightList.size();
 	}
 	
 	public static int getNumberOfLights()
