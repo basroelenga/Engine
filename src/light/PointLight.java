@@ -35,7 +35,7 @@ public class PointLight extends LightObject{
 		
 		// Set light properties
 		this.lightColor = lightColor;
-		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
+		ambIntensity = new Vector3f(0.02f, 0.02f, 0.02f);
 		
 		attenuationFactor = 0.1f;
 	}
@@ -55,11 +55,11 @@ public class PointLight extends LightObject{
 	public void uploadToShader(int light, Shader uShader)
 	{
 		
-		uShader.uploadFloat(attenuationFactor, uShader.getAttenuationFactorLocList().get(light));
+		uShader.uploadFloat(attenuationFactor, uShader.getPointAttenuationFactorLocList().get(light));
 		
-		uShader.uploadVector3f(lightPos, uShader.getLightPosLocList().get(light));
-		uShader.uploadVector3f(lightColor, uShader.getLightColorLocList().get(light));
-		uShader.uploadVector3f(ambIntensity, uShader.getAmbIntensityLocList().get(light));
+		uShader.uploadVector3f(lightPos, uShader.getPointLightPosLocList().get(light));
+		uShader.uploadVector3f(lightColor, uShader.getPointLightColorLocList().get(light));
+		uShader.uploadVector3f(ambIntensity, uShader.getPointAmbIntensityLocList().get(light));
 	}
 	
 	public void render()

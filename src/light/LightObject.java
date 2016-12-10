@@ -37,6 +37,7 @@ public abstract class LightObject {
 	protected Vector3f ambIntensity;
 	
 	protected Vector3f lightPos;
+	protected Vector3f lightDir;
 	
 	// Requirements for rendering (The objects VAO ID, shader, shader properties and matrices)
 	// This is for rendering the position of the light in the 3D space
@@ -78,6 +79,9 @@ public abstract class LightObject {
 		this.z = z;
 	}
 	public Vector3f getPosition() {
+		return new Vector3f(x, y, z);
+	}
+	public Vector3f getDirection() {
 		return new Vector3f(x, y, z);
 	}
 	public float getVx() {

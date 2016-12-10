@@ -16,10 +16,20 @@ uniform struct PointLight {
 	vec3 lightColor;
 	vec3 ambIntensity;
 	float attFactor;
-} light;
+} pointLight;
 
-uniform int number_of_lights;
+uniform struct DirectionalLight {
+	vec3 lightDir;
+	vec3 lightColor;
+	vec3 ambIntensity;
+} dirLight;
+
+uniform int number_of_point_lights;
+uniform int number_of_directional_lights;
+
+// There is a maximum of 10 lights
 uniform PointLight pointLights[10];
+uniform DirectionalLight dirLights[10];
 
 layout(location = 0) out vec4 fragColor;
 
@@ -53,6 +63,35 @@ vec3 calcPointLight(PointLight light, vec4 textureColor, vec3 calcNorm, vec3 pas
 	return ambient + attenuation * (diffuse + specular);
 }
 
+vec3 calcDirLight(DirectionalLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_Vertices, vec3 surfaceC)
+{
+
+	// Get the direction of the light
+	vec3 lightDirection = light.lightDir;
+
+	// normalized direction of directional light
+	vec3 surfaceL = normalize(lightDirection);
+	
+	// Ambient light
+	vec3 ambient = light.ambIntensity * textureColor.xyz * light.lightColor;
+	
+	// Diffuse light
+	float diffuseC = max(0.0, dot(calcNorm, surfaceL));
+	vec3 diffuse = diffuseC * textureColor.xyz * light.lightColor;
+	
+	// Specular light
+	float specularC = 0.0;
+	
+	if(diffuseC > 0.0)
+	{
+		specularC = pow(max(0.0, dot(surfaceC, reflect(-surfaceL, calcNorm))), 256); 
+	}
+	
+	vec3 specular = specularC * light.lightColor;
+
+	return ambient + diffuse + specular;
+}
+
 void main() 
 {
 
@@ -70,9 +109,14 @@ void main()
 	vec3 color = vec3(0, 0, 0);
 
 	// Color before gamma correction (from every light)
-	for(int i = 0; i < number_of_lights; i++)
+	for(int i = 0; i < number_of_point_lights; i++)
 	{
 		color += calcPointLight(pointLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
+	}
+	
+	for(int i = 0; i < number_of_directional_lights; i++)
+	{
+		color += calcDirLight(dirLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
 	}
 
 	// Gamma correction

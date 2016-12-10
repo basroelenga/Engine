@@ -51,13 +51,19 @@ public class Shader {
 	private int rgbColorLoc;
 	private int rgbaColorLoc;
 	
-	private int lightsLoc;
+	private int pointLightsLoc;
+	private int directionalLightsLoc;
 	
-	private ArrayList<Integer> lightColorLocList = new ArrayList<Integer>();
-	private ArrayList<Integer> ambIntensityLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> pointLightColorLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> pointAmbIntensityLocList = new ArrayList<Integer>();
 	
-	private ArrayList<Integer> lightPosLocList = new ArrayList<Integer>();
-	private ArrayList<Integer> attenuationFactorLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> pointLightPosLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> pointAttenuationFactorLocList = new ArrayList<Integer>();
+	
+	private ArrayList<Integer> directionalLightDirectionLocList = new ArrayList<Integer>();
+	private ArrayList<Integer> directionalAmbIntensityLocList = new ArrayList<Integer>();
+	
+	private ArrayList<Integer> directionalLightColorLocList = new ArrayList<Integer>();
 	
 	private int vertexID;
 	private int fragmentID;
@@ -108,7 +114,12 @@ public class Shader {
 		cutoffLoc = glGetUniformLocation(shaderProgram, "cutoff");
 		
 		// If there are lights involved, get the light list
-		if(useLights) lightsLoc = glGetUniformLocation(shaderProgram, "number_of_lights");
+		if(useLights) 
+		{
+			
+			pointLightsLoc = glGetUniformLocation(shaderProgram, "number_of_point_lights");
+			directionalLightsLoc = glGetUniformLocation(shaderProgram, "number_of_directional_lights");
+		}
 	}
 	
 	private int compileShader(String shaderSource, int shaderType, String key)
@@ -184,10 +195,10 @@ public class Shader {
 		}
 	}
 	
-	public void addLight()
+	public void addPointLight()
 	{
 		
-		int i = LightManager.getNumberOfLights() - 1;
+		int i = LightManager.getNumberOfPointLights() - 1;
 		
 		String color = "pointLights[" + i + "].lightColor";
 		String amb = "pointLights[" + i + "].ambIntensity";
@@ -195,11 +206,27 @@ public class Shader {
 		String position = "pointLights[" + i + "].lightPos";
 		String attenuation = "pointLights[" + i + "].attFactor";
 		
-		lightColorLocList.add(glGetUniformLocation(shaderProgram, color));
-		ambIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
+		pointLightColorLocList.add(glGetUniformLocation(shaderProgram, color));
+		pointAmbIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
 		
-		lightPosLocList.add(glGetUniformLocation(shaderProgram, position));
-		attenuationFactorLocList.add(glGetUniformLocation(shaderProgram, attenuation));
+		pointLightPosLocList.add(glGetUniformLocation(shaderProgram, position));
+		pointAttenuationFactorLocList.add(glGetUniformLocation(shaderProgram, attenuation));
+	}
+	
+	public void addDirectionalLight()
+	{
+		
+		int i = LightManager.getNumberOfDirectionalLights() - 1;
+		
+		String color = "dirLights[" + i + "].lightColor";
+		String amb = "dirLights[" + i + "].ambIntensity";
+		
+		String direction = "dirLights[" + i + "].lightDir";
+		
+		directionalLightColorLocList.add(glGetUniformLocation(shaderProgram, color));
+		directionalAmbIntensityLocList.add(glGetUniformLocation(shaderProgram, amb));
+		
+		directionalLightDirectionLocList.add(glGetUniformLocation(shaderProgram, direction));
 	}
 	
 	public void uploadInt(int uniform, int uniformLocation)
@@ -320,25 +347,41 @@ public class Shader {
 		return rgbaColorLoc;
 	}
 
-	public int getNumberOfLightsLoc()
+	public int getNumberOfPointLightsLoc()
 	{
-		return lightsLoc;
-	}
-
-	public ArrayList<Integer> getLightColorLocList() {
-		return lightColorLocList;
-	}
-
-	public ArrayList<Integer> getAmbIntensityLocList() {
-		return ambIntensityLocList;
-	}
-
-	public ArrayList<Integer> getLightPosLocList() {
-		return lightPosLocList;
-	}
-
-	public ArrayList<Integer> getAttenuationFactorLocList() {
-		return attenuationFactorLocList;
+		return pointLightsLoc;
 	}
 	
+	public int getNumberOfDirectionalLightsLoc()
+	{
+		return directionalLightsLoc;
+	}
+
+	public ArrayList<Integer> getPointLightColorLocList() {
+		return pointLightColorLocList;
+	}
+
+	public ArrayList<Integer> getPointAmbIntensityLocList() {
+		return pointAmbIntensityLocList;
+	}
+
+	public ArrayList<Integer> getPointLightPosLocList() {
+		return pointLightPosLocList;
+	}
+
+	public ArrayList<Integer> getPointAttenuationFactorLocList() {
+		return pointAttenuationFactorLocList;
+	}
+
+	public ArrayList<Integer> getDirectionalLightDirectionLocList() {
+		return directionalLightDirectionLocList;
+	}
+
+	public ArrayList<Integer> getDirectionalAmbIntensityLocList() {
+		return directionalAmbIntensityLocList;
+	}
+
+	public ArrayList<Integer> getDirectionalLightColorLocList() {
+		return directionalLightColorLocList;
+	}
 }
