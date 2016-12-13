@@ -21,7 +21,7 @@ public class SpotLight extends LightObject{
 		this.coneAngle = coneAngle;
 		this.lightColor = lightColor;
 		
-		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
+		ambIntensity = new Vector3f(0.1f, 0.1f, 0.1f);
 	}
 
 	@Override
@@ -40,5 +40,12 @@ public class SpotLight extends LightObject{
 	@Override
 	public void uploadToShader(int light, Shader uShader) {
 		
+		uShader.uploadFloat(attenuationFactor, uShader.getSpotAttenuationFactorLocList().get(light));
+		uShader.uploadFloat(coneAngle, uShader.getSpotConeAngleLocList().get(light));
+		
+		uShader.uploadVector3f(ambIntensity, uShader.getSpotAmbIntensityLocList().get(light));
+		uShader.uploadVector3f(lightColor, uShader.getSpotLightColorLocList().get(light));
+		uShader.uploadVector3f(lightDir, uShader.getSpotLightDirLocList().get(light));
+		uShader.uploadVector3f(lightPos, uShader.getSpotLightPosLocList().get(light));
 	}	
 }

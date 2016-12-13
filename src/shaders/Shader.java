@@ -248,11 +248,11 @@ public class Shader {
 		
 		int i = LightManager.getNumberOfSpotLights() - 1;
 		
-		String color = "pointLights[" + i + "].lightColor";
-		String amb = "pointLights[" + i + "].ambIntensity";
+		String color = "spotLights[" + i + "].lightColor";
+		String amb = "spotLights[" + i + "].ambIntensity";
 		
-		String position = "pointLights[" + i + "].lightPos";
-		String attenuation = "pointLights[" + i + "].attFactor";
+		String position = "spotLights[" + i + "].lightPos";
+		String attenuation = "spotLights[" + i + "].attFactor";
 		
 		String direction = "spotLights[" + i + "].lightDir";
 		String coneAngle = "spotLights[" + i + "].coneAngle";

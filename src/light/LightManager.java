@@ -91,10 +91,39 @@ public class LightManager {
 		}
 	}
 	
+	public static void addSpotLight(String name, float x, float y, float z, float xDir, float yDir, float zDir, float coneAngle, Vector3f lightColor)
+	{
+		
+		spotLightList.add(new SpotLight(name, x, y, z, xDir, yDir, zDir, coneAngle, lightColor));
+		
+		// When a directional light is added, the shaders should also know this
+		for(Shader shader : ShaderManager.getShaderList())
+		{
+			
+			if(shader.getUseLighting())
+			{
+				
+				shader.addSpotLight();
+			}
+		}
+	}
+	
 	public static LightObject getLight(String id)
 	{
 		
 		for(LightObject light : pointLightList)
+		{
+			
+			if(light.getName().equals(id)) return light;
+		}
+		
+		for(LightObject light : directionalLightList)
+		{
+			
+			if(light.getName().equals(id)) return light;
+		}
+		
+		for(LightObject light : spotLightList)
 		{
 			
 			if(light.getName().equals(id)) return light;
@@ -120,6 +149,6 @@ public class LightManager {
 	
 	public static int getNumberOfLights()
 	{
-		return pointLightList.size() + directionalLightList.size();
+		return pointLightList.size() + directionalLightList.size() + spotLightList.size();
 	}
 }

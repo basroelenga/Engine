@@ -26,8 +26,9 @@ public class Simulation {
 		LightManager.addPointLight("light3", 0f, -2f, 0f, new Vector3f(1, 0, 1), true);
 		LightManager.addPointLight("light4", 0f, -2f, 0f, new Vector3f(0, 1, 1), true);
 		
-		
 		LightManager.addDirectionalLight("dir", 0, 1, 0, new Vector3f(1, 1, 1));
+		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
+		
 		createParticles();
 	}
 	

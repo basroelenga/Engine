@@ -1,4 +1,4 @@
-#version 330 core
+#version 300 es
 
 precision mediump float;
 
@@ -105,6 +105,49 @@ vec3 calcDirLight(DirectionalLight light, vec4 textureColor, vec3 calcNorm, vec3
 	return ambient + diffuse + specular;
 }
 
+vec3 calcSpotLight(SpotLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_Vertices, vec3 surfaceC)
+{
+
+	// Get the direction of the cone
+	vec3 coneDirection = light.lightDir;	
+
+	// normalized distances between sources
+	vec3 surfaceL = normalize(light.lightPos - pass_Vertices);
+
+	// Lighting is calculated in the same way as a point light, only now we take a piece of the point light via a cone
+	// Ambient light
+	vec3 ambient = light.ambIntensity * textureColor.xyz * light.lightColor;
+	
+	// Diffuse light
+	float diffuseC = max(0.0, dot(calcNorm, surfaceL));
+	vec3 diffuse = diffuseC * textureColor.xyz * light.lightColor;
+	
+	// Specular light
+	float specularC = 0.0;
+	
+	if(diffuseC > 0.0)
+	{
+		specularC = pow(max(0.0, dot(surfaceC, reflect(-surfaceL, calcNorm))), 256); 
+	}
+	
+	vec3 specular = specularC * light.lightColor;
+	
+	// Calculate the angle
+	float lightToSurfaceAngle = degrees(acos(dot(-surfaceL, normalize(coneDirection))));	
+
+	// Attenuation
+	float distanceToLight = length(light.lightPos - pass_Vertices);
+	float attenuation = 1.0 / (1.0 + light.attFactor * pow(distanceToLight, 2));
+
+	// Set the attenuation to zero if outside the cone
+	if(lightToSurfaceAngle > light.coneAngle)
+	{
+		attenuation = 0.0;	
+	}
+	
+	return ambient + attenuation * (diffuse + specular);
+}
+
 void main() 
 {
 
@@ -122,14 +165,22 @@ void main()
 	vec3 color = vec3(0, 0, 0);
 
 	// Color before gamma correction (from every light)
+	// First the point light contribution
 	for(int i = 0; i < number_of_point_lights; i++)
 	{
 		color += calcPointLight(pointLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
 	}
 	
+	// The directional light contribution
 	for(int i = 0; i < number_of_directional_lights; i++)
 	{
 		color += calcDirLight(dirLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
+	}
+
+	// The spot light contribution
+	for(int i = 0; i < number_of_spot_lights; i++)
+	{
+		color += calcSpotLight(spotLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
 	}
 
 	// Gamma correction
