@@ -35,8 +35,6 @@ public class DirectionalLight extends LightObject{
 
 	@Override
 	public void uploadToShader(int light, Shader uShader) {
-
-		System.out.println(uShader.getDirectionalLightDirectionLocList().get(light));
 		
 		uShader.uploadVector3f(lightDir, uShader.getDirectionalLightDirectionLocList().get(light));
 		uShader.uploadVector3f(lightColor, uShader.getDirectionalLightColorLocList().get(light));

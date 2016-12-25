@@ -1,15 +1,12 @@
-package engine.primitives;
-
-import java.util.ArrayList;
+package engine.objects;
 
 import cam.Camera;
 import engine.Engine;
+import engine.EngineObjectManager;
 import engine.EngineObjects;
 import math.Matrix4f;
-import math.Vector3f;
 import math.Vector4f;
 import shaders.ShaderManager;
-import shapes.Quad;
 import utils.DrawShapes;
 
 public class Rectangle extends EngineObjects{
@@ -50,18 +47,8 @@ public class Rectangle extends EngineObjects{
 		// If the projection matrix is the perspective matrix the view matrix should also be set.
 		if(projectionMatrix == Engine.projMatrix) viewMatrix = Camera.getViewMatrix();
 		else viewMatrix = new Matrix4f();
-		
-		// Create the points in the rectangle.
-		ArrayList<Vector3f> points = new ArrayList<Vector3f>();
-		
-		points.add(new Vector3f(0f, 0f, 0.0f));
-		points.add(new Vector3f(1f, 0f, 0.0f));
-		points.add(new Vector3f(1f, 1f, 0.0f));
-		points.add(new Vector3f(0f, 1f, 0.0f));
-		
-		// Create the quad which represents the rectangle as a cube/box.
-		Quad quad = new Quad(points, true);
-		vaoID = quad.getVaoID();
+
+		vaoID = EngineObjectManager.getQuad().getVaoID();
 	}
 	
 	public void update()

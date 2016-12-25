@@ -161,6 +161,9 @@ public class Engine {
 		new TextManager(true);
 		new ShaderManager();
 		
+		// Create primitives
+		EngineObjectManager.createPrimitives();
+		
 		// Create the debugger
 		debugger = new Debugger();
 		
@@ -185,6 +188,8 @@ public class Engine {
 		
 		glfwDestroyWindow(window);
 		glfwTerminate();
+		
+		System.exit(0);
 	}
 	
 	private void update()

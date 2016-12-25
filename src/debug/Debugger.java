@@ -9,7 +9,7 @@ import math.Vector4f;
 import text.Text;
 import text.TextManager;
 import engine.Engine;
-import engine.primitives.Rectangle;
+import engine.objects.Rectangle;
 
 public class Debugger {
 

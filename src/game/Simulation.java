@@ -1,10 +1,12 @@
 package game;
 
 import cam.Camera;
+import engine.Engine;
 import engine.EngineObjectManager;
 import graphics.TextureManager;
 import light.LightManager;
 import math.Vector3f;
+import math.Vector4f;
 
 public class Simulation {
 
@@ -19,7 +21,6 @@ public class Simulation {
 		// =========================
 		EngineObjectManager.addSphere(20, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
-		
 		LightManager.addPointLight("light1", 0f, 2f, 0f, new Vector3f(1, 0, 0), true);
 		LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
 		
@@ -28,6 +29,8 @@ public class Simulation {
 		
 		LightManager.addDirectionalLight("dir", 0, 1, 0, new Vector3f(1, 1, 1));
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
+		
+		EngineObjectManager.addRectangle(0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
 		
 		createParticles();
 	}
@@ -41,7 +44,7 @@ public class Simulation {
 		{
 			for(int j = -particles / 2; j < particles / 2; j++)
 			{
-				EngineObjectManager.addParticle(i, 0, j, 0, 0, 0, 1, TextureManager.getTexture("testtex"));
+				EngineObjectManager.addParticle(i, 0, j, 0, 0, 0, 1, "sphere", TextureManager.getTexture("testtex"));
 			}
 		}
 	}
@@ -49,7 +52,6 @@ public class Simulation {
 	public void update()
 	{
 		angle += 0.05f;
-		
 		
 		LightManager.getLight("light1").setX((float) (3f * Math.cos(angle)));
 		LightManager.getLight("light1").setZ((float) (3f * Math.sin(angle)));

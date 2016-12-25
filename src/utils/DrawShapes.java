@@ -1,15 +1,6 @@
 package utils;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -18,11 +9,30 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 import graphics.Texture;
 import shaders.Shader;
+import shapes.Point;
 import shapes.UVSphere;
 
 public class DrawShapes {
 
 	private DrawShapes(){}
+	
+	public static void drawPoint(Shader shader, Point point)
+	{
+		
+		shader.bind();
+		
+		glBindVertexArray(point.getVaoID());
+		
+		glEnableVertexAttribArray(0);
+		
+		glDrawArrays(GL_POINTS, 0, 1);
+		
+		glDisableVertexAttribArray(0);
+		
+		glBindVertexArray(0);
+		
+		shader.unbind();
+	}
 	
 	public static void drawTriangle(Shader shader, int vaoID){
 		

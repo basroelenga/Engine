@@ -31,6 +31,12 @@ public abstract class EngineObjects {
 	protected float ya;
 	protected float za;
 	
+	// Mass or weight of an object
+	protected float mass;
+	
+	// Particle type
+	protected String ptype;
+	
 	// Requirements for rendering (The objects VAO ID, shader, shader properties and matrices)
 	protected int vaoID;
 	
@@ -38,7 +44,8 @@ public abstract class EngineObjects {
 	
 	protected Texture tex;
 	
-	protected Vector4f RGBAcolor;
+	// The default color is white
+	protected Vector4f RGBAcolor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
 	protected Matrix4f modelMatrix = new Matrix4f();
 	protected Matrix4f viewMatrix = new Matrix4f();
@@ -122,6 +129,12 @@ public abstract class EngineObjects {
 	}
 	public void setZa(float za) {
 		this.za = za;
+	}
+	public float getMass() {
+		return mass;
+	}
+	public String getParticleType()	{
+		return ptype;
 	}
 	public String getName() {
 		return name;

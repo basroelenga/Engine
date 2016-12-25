@@ -19,10 +19,10 @@ public class UVSphere {
 	
 	private int vaoID;
 	
-	public UVSphere(float subdivision)
+	public UVSphere(int subdivision)
 	{
 		
-		this.subdivision = subdivision;
+		this.subdivision = (float) subdivision;
 		generateSphere();
 	}
 	
@@ -484,5 +484,10 @@ public class UVSphere {
 	public int getVaoID()
 	{
 		return vaoID;
+	}
+	
+	public int getSubdivision()
+	{
+		return (int) subdivision;
 	}
 }
