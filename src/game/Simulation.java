@@ -3,6 +3,7 @@ package game;
 import cam.Camera;
 import engine.Engine;
 import engine.EngineObjectManager;
+import engine.systems.ParticleSystem;
 import graphics.TextureManager;
 import light.LightManager;
 import math.Vector3f;
@@ -10,6 +11,8 @@ import math.Vector4f;
 
 public class Simulation {
 
+	private ParticleSystem pSys;
+	
 	public static Camera cam;
 	
 	private float angle = 0f;
@@ -31,6 +34,8 @@ public class Simulation {
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
 		
 		EngineObjectManager.addRectangle(0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
+		
+		pSys = new ParticleSystem("p1", 0, 1, 0, 1, 0, 0, 2);
 		
 		createParticles();
 	}
@@ -67,6 +72,8 @@ public class Simulation {
 		
 		cam.update();
 
+		pSys.update();
+		
 		EngineObjectManager.update();
 		LightManager.update();
 	}
@@ -74,6 +81,8 @@ public class Simulation {
 	public void render()
 	{
 
+		pSys.render();
+		
 		EngineObjectManager.render();
 		LightManager.render();
 	}

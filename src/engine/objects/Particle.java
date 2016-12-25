@@ -70,6 +70,15 @@ public class Particle extends EngineObjects{
 	public void update()
 	{
 		
+		// Update life
+		lifeTime += 1f;
+		
+		// Update positions (for now a per cycle update system)
+		x += vx;
+		y += vy;
+		z += vz;
+		
+		// Construct model matrix
 		modelMatrix.setIdentity();
 		
 		modelMatrix.transelate(x, y, z);

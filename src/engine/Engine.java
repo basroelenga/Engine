@@ -183,7 +183,7 @@ public class Engine {
 			update();
 			render();
 			
-			getFPS();
+			setFPS();
 		}
 		
 		glfwDestroyWindow(window);
@@ -222,7 +222,7 @@ public class Engine {
 		glfwPollEvents();
 	}
 
-	private void getFPS()
+	private void setFPS()
 	{
 		
 		if(time2 == 0)
@@ -267,5 +267,14 @@ public class Engine {
 	public static int getHeight()
 	{
 		return Engine.height;
+	}
+	
+	/**
+	 * Get the FPS of the current OpenGL window.
+	 * @return FPS.
+	 */
+	public static float getFPS()
+	{
+		return FPS;
 	}
 }

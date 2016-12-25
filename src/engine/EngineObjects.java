@@ -34,8 +34,13 @@ public abstract class EngineObjects {
 	// Mass or weight of an object
 	protected float mass;
 	
+	// Particle specific parameters
 	// Particle type
 	protected String ptype;
+	
+	// Lifetime and time out
+	protected float timeOut;
+	protected float lifeTime  = 0f;
 	
 	// Requirements for rendering (The objects VAO ID, shader, shader properties and matrices)
 	protected int vaoID;
@@ -135,6 +140,12 @@ public abstract class EngineObjects {
 	}
 	public String getParticleType()	{
 		return ptype;
+	}
+	public float getLifeTime() {
+		return lifeTime;
+	}
+	public float getTimeOut() {
+		return timeOut;
 	}
 	public String getName() {
 		return name;
