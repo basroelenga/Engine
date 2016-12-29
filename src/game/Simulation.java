@@ -3,15 +3,13 @@ package game;
 import cam.Camera;
 import engine.Engine;
 import engine.EngineObjectManager;
-import engine.systems.ParticleSystem;
+import engine.EngineSystemManager;
 import graphics.TextureManager;
 import light.LightManager;
 import math.Vector3f;
 import math.Vector4f;
 
 public class Simulation {
-
-	private ParticleSystem pSys;
 	
 	public static Camera cam;
 	
@@ -34,8 +32,7 @@ public class Simulation {
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
 		
 		EngineObjectManager.addRectangle(0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
-		
-		pSys = new ParticleSystem("p1", 0, 1, 0, 1, 0, 0, 2);
+		EngineSystemManager.addParticleSystem("p1", 0, 1, 0, 1, 1, 1, 180);
 		
 		createParticles();
 	}
@@ -49,7 +46,7 @@ public class Simulation {
 		{
 			for(int j = -particles / 2; j < particles / 2; j++)
 			{
-				EngineObjectManager.addParticle(i, 0, j, 0, 0, 0, 1, "sphere", TextureManager.getTexture("testtex"));
+				EngineObjectManager.addParticle(i, 0, j, 0, 0, 0, 0.2f, 1, "sphere", TextureManager.getTexture("testtex"));
 			}
 		}
 	}
@@ -71,19 +68,19 @@ public class Simulation {
 		LightManager.getLight("light4").setZ((float) (3f * Math.sin(angle + 180f)));
 		
 		cam.update();
-
-		pSys.update();
 		
 		EngineObjectManager.update();
+		EngineSystemManager.update();
+		
 		LightManager.update();
 	}
 	
 	public void render()
 	{
-
-		pSys.render();
 		
 		EngineObjectManager.render();
+		EngineSystemManager.render();
+		
 		LightManager.render();
 	}
 }

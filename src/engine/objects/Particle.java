@@ -15,16 +15,16 @@ public class Particle extends EngineObjects{
 	private UVSphere uvSphere;
 	private Point point;
 	
-	public Particle(float x, float y, float z, float vx, float vy, float vz, float mass, Texture tex, String type)
+	public Particle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, Texture tex, String type)
 	{
 		
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		
-		this.xs = 0.2f;
-		this.ys = 0.2f;
-		this.zs = 0.2f;
+		this.xs = scaling;
+		this.ys = scaling;
+		this.zs = scaling;
 		
 		this.vx = vx;
 		this.vy = vy;

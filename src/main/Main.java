@@ -6,6 +6,10 @@ public class Main {
 
 	public static void main(String[] args) {
 	
-		new Engine(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+		// Fixed temporary
+		int width = 1280;
+		int height = 720;
+		
+		new Engine(width, height);
 	}
 }

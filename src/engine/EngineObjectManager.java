@@ -106,9 +106,9 @@ public class EngineObjectManager {
 		engineObjectList.add(new Sphere(subdivision, x, y, z, scaling, tex, useLighting));
 	}
 	
-	public static void addParticle(float x, float y, float z, float vx, float vy, float vz, float mass, String type, Texture tex)
+	public static void addParticle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, String type, Texture tex)
 	{
-		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, mass, tex, type));
+		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, scaling, mass, tex, type));
 	}
 	
 	public static EngineObjects getEngineObject(String id)

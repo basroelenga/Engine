@@ -4,6 +4,8 @@ precision mediump float;
 
 uniform sampler2D tex;
 
+uniform vec4 rgbaColor;
+
 uniform mat4 modelMatrix;
 uniform vec3 cameraPos;
 
@@ -158,6 +160,11 @@ void main()
 
 	// Texture light
 	vec4 textureColor = texture(tex, pass_TexCoord);
+
+	if(textureColor.xyz == vec3(0.0, 0.0, 0.0))
+	{
+		textureColor = rgbaColor;
+	}
 
 	// Normalized distance between camera and vertex
 	vec3 surfaceC = normalize(cameraPos - pass_Vertices);
