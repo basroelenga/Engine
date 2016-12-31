@@ -35,8 +35,12 @@ public class Particle extends EngineObjects{
 		
 		this.ptype = type;
 		
-		this.viewMatrix = Camera.getViewMatrix();
-		this.projectionMatrix = Engine.projMatrix;
+		viewMatrix = Camera.getViewMatrix();
+		projectionMatrix = Engine.projMatrix;
+		
+		// Set the initial modelmatrix
+		modelMatrix.transelate(x, y, z);
+		modelMatrix.scale(xs, ys, zs);
 		
 		// Select the type of particle
 		switch(type)

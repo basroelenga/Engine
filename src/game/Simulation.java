@@ -20,7 +20,7 @@ public class Simulation {
 		
 		cam = new Camera();
 		// =========================
-		EngineObjectManager.addSphere(20, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
+		EngineObjectManager.addSphere(5, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
 		LightManager.addPointLight("light1", 0f, 2f, 0f, new Vector3f(1, 0, 0), true);
 		LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
@@ -32,7 +32,7 @@ public class Simulation {
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
 		
 		EngineObjectManager.addRectangle(0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
-		EngineSystemManager.addParticleSystem("p1", 0, 1, 0, 1, 1, 1, 180);
+		EngineSystemManager.addUniformParticleSystem("p1", 0, 1, 0, 180);
 		
 		createParticles();
 	}

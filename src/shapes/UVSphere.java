@@ -60,7 +60,6 @@ public class UVSphere {
 		
 		// =========================================================
 		// Generate normal coordinates for each vertices
-		
 		ArrayList<Vector3f> normalCoordinateList = new ArrayList<Vector3f>();
 		
 		for(int i = 0; i < xyz.size(); i++)
@@ -187,7 +186,7 @@ public class UVSphere {
 			trianglesTopList.add(topTri);
 		}
 		
-		// Putting the bottom intro triangles.
+		// Putting the bottom into triangles.
 		for(int i = 0; i < subdivision; i++)
 		{
 			
@@ -318,14 +317,20 @@ public class UVSphere {
 		// Generate texture coordinates for each triangle
 
 		ArrayList<Float> UVCoordinateList = new ArrayList<Float>();
+		System.out.println("Subdivision: " + subdivision);
+		System.out.println("=============================");
+		
+		
+		float uOffset = (getU(triangleList.get(1).getFirst().getZ(), triangleList.get(1).getFirst().getX()) - getU(triangleList.get(0).getFirst().getZ(), triangleList.get(0).getFirst().getX())) / 2f;
+		uOffset = 0f;
 		
 		// Per triangle texture coordinates
 		for(int i = 0; i < amountOfTriangles; i++)
 		{
 			
-			float uF = getU(triangleList.get(i).getFirst().getZ(), triangleList.get(i).getFirst().getX());
-			float uS = getU(triangleList.get(i).getSecond().getZ(), triangleList.get(i).getSecond().getX());
-			float uT = getU(triangleList.get(i).getThird().getZ(), triangleList.get(i).getThird().getX());
+			float uF = getU(triangleList.get(i).getFirst().getZ(), triangleList.get(i).getFirst().getX()) + uOffset;
+			float uS = getU(triangleList.get(i).getSecond().getZ(), triangleList.get(i).getSecond().getX()) + uOffset;
+			float uT = getU(triangleList.get(i).getThird().getZ(), triangleList.get(i).getThird().getX()) + uOffset;
 			
 			float vF = getV(triangleList.get(i).getFirst().getY());
 			float vS = getV(triangleList.get(i).getSecond().getY());

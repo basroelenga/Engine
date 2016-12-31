@@ -20,11 +20,13 @@ public class ParticleSystem extends EngineSystem{
 	private float timeOut;
 	private int particlesPerCycle;
 
-	private Random rand;
+	private Random rand = new Random();
+	
+	private String type = "";
 	
 	private ArrayList<Particle> pList = new ArrayList<Particle>();
 	private ArrayList<Integer> removeIndx = new ArrayList<Integer>();
-
+	
 	public ParticleSystem(String name, float x, float y, float z, float xDir, float yDir, float zDir, float timeOut)
 	{
 		
@@ -45,7 +47,23 @@ public class ParticleSystem extends EngineSystem{
 		this.speedVariation = 0.1f;
 		this.directionVariation = 2f;
 		
-		rand = new Random();
+		this.type = "Directional";
+	}
+	
+	public ParticleSystem(String name, float x, float y, float z, float timeOut)
+	{
+		
+		this.name = name;
+		
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		
+		this.timeOut = timeOut;
+		
+		this.particleSpeed = 0.002f;
+		
+		this.type = "Uniform";
 	}
 	
 	public void update()
@@ -61,11 +79,34 @@ public class ParticleSystem extends EngineSystem{
 		for(int i = 0; i < particlesPerCycle; i++)
 		{
 			
-			float vx = particleSpeed * xDir * (1 - (directionVariation / 2) + rand.nextFloat() * directionVariation);
-			float vy = particleSpeed * yDir * (1 - (directionVariation / 2) + rand.nextFloat() * directionVariation);
-			float vz = particleSpeed * zDir * (1 - (directionVariation / 2) + rand.nextFloat() * directionVariation);
+			float vx = 0;
+			float vy = 0;
+			float vz = 0;
 			
-			pList.add(new Particle(x, y, z, vx, vy, vz, 0.02f, 0, null, "sphere"));
+			switch(type)
+			{
+			
+			case "Directional":
+				
+				vx = particleSpeed * xDir * (1 - (directionVariation / 2) + rand.nextFloat() * directionVariation);
+				vy = particleSpeed * yDir * (1 - (directionVariation / 2) + rand.nextFloat() * directionVariation);
+				vz = particleSpeed * zDir * (1 - (directionVariation / 2) + rand.nextFloat() * directionVariation);
+				
+				pList.add(new Particle(x, y, z, vx, vy, vz, 0.02f, 0, null, "sphere"));
+				break;
+				
+			case "Uniform":
+				
+				vx = (float) (particleSpeed * Math.sin(Math.PI * rand.nextFloat()) * Math.cos(2 * Math.PI * rand.nextFloat()));
+				vy = (float) (particleSpeed * Math.sin(Math.PI * rand.nextFloat()) * Math.sin(2 * Math.PI * rand.nextFloat()));
+				vz = (float) (particleSpeed * Math.sin(Math.PI * rand.nextFloat()));
+				
+				pList.add(new Particle(x, y, z, vx, vy, vz, 0.02f, 0, null, "sphere"));
+				break;
+				
+			}
+			
+			
 		}
 		
 		// Remove particles

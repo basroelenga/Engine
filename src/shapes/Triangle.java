@@ -122,4 +122,16 @@ public class Triangle {
 	public Vector3f getThird() {
 		return third;
 	}
+
+	public Vector3f getFirstN() {
+		return firstN;
+	}
+
+	public Vector3f getSecondN() {
+		return secondN;
+	}
+
+	public Vector3f getThirdN() {
+		return thirdN;
+	}
 }
