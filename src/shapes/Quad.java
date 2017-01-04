@@ -62,9 +62,9 @@ public class Quad {
 					1f, 1f,
 					1f, 0f,
 					
-					1f, 0f,
+					0f, 1f,
 					0f, 0f,
-					0f, 1f
+					1f, 0f
 			};
 			
 			FloatBuffer textureData = BufferUtils.createFloatBuffer(texCoords.length);

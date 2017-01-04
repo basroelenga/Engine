@@ -15,8 +15,10 @@ public class Sphere extends EngineObjects{
 
 	private UVSphere sphere;
 	
-	public Sphere(int subdivision, float x, float y, float z, float scaling, Texture tex, boolean useLighting)
+	public Sphere(String name, int subdivision, float x, float y, float z, float scaling, Texture tex, boolean useLighting)
 	{
+		
+		this.name = name;
 		
 		this.x = x;
 		this.y = y;
@@ -35,6 +37,8 @@ public class Sphere extends EngineObjects{
 		projectionMatrix = Engine.projMatrix;
 		viewMatrix = Camera.getViewMatrix();
 
+		//fbo = FrameBufferObjectManager.getFrameBuffer("basic");
+		
 		// Define which shader to use
 		if(useLighting && LightManager.getNumberOfLights() != 0) shader = ShaderManager.getShader("light");
 		else shader = ShaderManager.getShader("basictex");
@@ -63,12 +67,12 @@ public class Sphere extends EngineObjects{
 		if(tex == null)
 		{
 			
-			DrawShapes.drawUVSphere(shader, sphere);
+			DrawShapes.drawUVSphere(shader, sphere, fbo);
 		}
 		else
 		{
 			
-			DrawShapes.drawUVSphere(shader, sphere, tex);
+			DrawShapes.drawUVSphere(shader, sphere, fbo, tex);
 		}
 	}
 }

@@ -62,6 +62,7 @@ public class ParticleSystem extends EngineSystem{
 		this.timeOut = timeOut;
 		
 		this.particleSpeed = 0.002f;
+		this.particlesPerCycle = 1;
 		
 		this.type = "Uniform";
 	}
@@ -83,6 +84,7 @@ public class ParticleSystem extends EngineSystem{
 			float vy = 0;
 			float vz = 0;
 			
+			// Select which type
 			switch(type)
 			{
 			
@@ -101,12 +103,9 @@ public class ParticleSystem extends EngineSystem{
 				vy = (float) (particleSpeed * Math.sin(Math.PI * rand.nextFloat()) * Math.sin(2 * Math.PI * rand.nextFloat()));
 				vz = (float) (particleSpeed * Math.sin(Math.PI * rand.nextFloat()));
 				
-				pList.add(new Particle(x, y, z, vx, vy, vz, 0.02f, 0, null, "sphere"));
+				pList.add(new Particle(x, y, z, vx, vy, vz, 0.02f, 0, null, "point"));
 				break;
-				
 			}
-			
-			
 		}
 		
 		// Remove particles

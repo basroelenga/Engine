@@ -93,7 +93,7 @@ public class Text {
 			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
 			shader.uploadMatrix4f(projMatrix, shader.getProjectionMatrixLoc());
 			
-			DrawShapes.drawQuad(shader, TextManager.getFontTexture(), charList.get(i).getQuad().getVaoID());
+			DrawShapes.drawQuad(shader, charList.get(i).getQuad(), TextManager.getFontTexture(), null);
 		}
 	}
 	

@@ -50,6 +50,73 @@ public class EngineObjectManager {
 		isInit = true;
 	}
 	
+	public static void update()	{for(EngineObjects obj : engineObjectList) obj.update();}
+	public static void render()	{for(EngineObjects obj : engineObjectList) obj.render();}
+	
+	/**
+	 * Create a quad based rectangle, this rectangle is automatically added to the engine object update and render list.
+	 * @param x The x-position of the rectangle.
+	 * @param y The y-position of the rectangle.
+	 * @param z The z-position of the rectangle.
+	 * @param xs The x-scaling of the rectangle.
+	 * @param ys The y-scaling of the rectangle.
+	 * @param zs The z-scaling of the rectangle.
+	 * @param ya The y-rotation of the rectangle.
+	 * @param projection The projection matrix to be used, can be orthographic or perspective.
+	 * @param RGBAcolor The color of the rectangle.
+	 */
+	public static void addRectangle(String name, float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
+	{
+		engineObjectList.add(new Rectangle(name, x, y, z, xs, ys, zs, ya, projection, RGBAcolor));
+	}
+	
+	/**
+	 * Add a sphere to the render list (only a UV sphere for now).
+	 * @param subdivision The amount of subdivisions of the sphere.
+	 * @param x The x-position of the sphere.
+	 * @param y The y-position of the sphere.
+	 * @param z The z-position of the sphere.
+	 * @param scaling The scaling of the sphere (same in all directions).
+	 * @param tex The texture to be used on the sphere.
+	 * @param useLighting Use the lighting system.
+	 */
+	public static void addSphere(String name, int subdivision, float x, float y, float z, float scaling, Texture tex, boolean useLighting)
+	{
+		engineObjectList.add(new Sphere(name, subdivision, x, y, z, scaling, tex, useLighting));
+	}
+	
+	public static void addParticle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, String type, Texture tex)
+	{
+		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, scaling, mass, tex, type));
+	}
+	
+	public static EngineObjects getEngineObject(String id)
+	{
+		
+		for(EngineObjects obj : engineObjectList)
+		{
+			
+			System.out.println(obj.getName());
+			if(obj.getName().equals(id)) return obj;
+		}
+		
+		throw new RuntimeException("Object does not exist: " + id);
+	}
+	
+	public static Point getPoint()
+	{
+		
+		if(isInit) return point;
+		throw new RuntimeException("Primitives have not yet been created");
+	}
+	
+	public static Quad getQuad()
+	{
+		
+		if(isInit) return quad;
+		throw new RuntimeException("Primitives have not yet been created");
+	}
+	
 	/**
 	 * Get the vaoID of a UV sphere, if the UV sphere does not exist one will be created.
 	 * For higher subdivision the engine can drop fps. This function is mostly used by the Sphere object or the Particle object.
@@ -69,71 +136,5 @@ public class EngineObjectManager {
 		uvSphereList.add(uvs);
 		
 		return uvs;
-	}
-	
-	public static void update()	{for(EngineObjects obj : engineObjectList) obj.update();}
-	public static void render()	{for(EngineObjects obj : engineObjectList) obj.render();}
-	
-	/**
-	 * Create a quad based rectangle, this rectangle is automatically added to the engine object update and render list.
-	 * @param x The x-position of the rectangle.
-	 * @param y The y-position of the rectangle.
-	 * @param z The z-position of the rectangle.
-	 * @param xs The x-scaling of the rectangle.
-	 * @param ys The y-scaling of the rectangle.
-	 * @param zs The z-scaling of the rectangle.
-	 * @param ya The y-rotation of the rectangle.
-	 * @param projection The projection matrix to be used, can be orthographic or perspective.
-	 * @param RGBAcolor The color of the rectangle.
-	 */
-	public static void addRectangle(float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
-	{
-		engineObjectList.add(new Rectangle(x, y, z, xs, ys, zs, ya, projection, RGBAcolor));
-	}
-	
-	/**
-	 * Add a sphere to the render list (only a UV sphere for now).
-	 * @param subdivision The amount of subdivisions of the sphere.
-	 * @param x The x-position of the sphere.
-	 * @param y The y-position of the sphere.
-	 * @param z The z-position of the sphere.
-	 * @param scaling The scaling of the sphere (same in all directions).
-	 * @param tex The texture to be used on the sphere.
-	 * @param useLighting Use the lighting system.
-	 */
-	public static void addSphere(int subdivision, float x, float y, float z, float scaling, Texture tex, boolean useLighting)
-	{
-		engineObjectList.add(new Sphere(subdivision, x, y, z, scaling, tex, useLighting));
-	}
-	
-	public static void addParticle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, String type, Texture tex)
-	{
-		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, scaling, mass, tex, type));
-	}
-	
-	public static EngineObjects getEngineObject(String id)
-	{
-		
-		for(EngineObjects obj : engineObjectList)
-		{
-			
-			if(obj.getName().equals(id)) return obj;
-		}
-		
-		throw new RuntimeException("Object does not exist: " + id);
-	}
-	
-	public static Point getPoint()
-	{
-		
-		if(isInit) return point;
-		throw new RuntimeException("Primitives have not yet been created");
-	}
-	
-	public static Quad getQuad()
-	{
-		
-		if(isInit) return quad;
-		throw new RuntimeException("Primitives have not yet been created");
 	}
 }

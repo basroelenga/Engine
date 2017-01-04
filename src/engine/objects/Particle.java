@@ -4,6 +4,7 @@ import cam.Camera;
 import engine.Engine;
 import engine.EngineObjectManager;
 import engine.EngineObjects;
+import fbo.FrameBufferObjectManager;
 import graphics.Texture;
 import shaders.ShaderManager;
 import shapes.Point;
@@ -41,6 +42,8 @@ public class Particle extends EngineObjects{
 		// Set the initial modelmatrix
 		modelMatrix.transelate(x, y, z);
 		modelMatrix.scale(xs, ys, zs);
+		
+		fbo = FrameBufferObjectManager.getFrameBuffer("basic");
 		
 		// Select the type of particle
 		switch(type)
@@ -104,14 +107,14 @@ public class Particle extends EngineObjects{
 		
 		case "sphere":
 			
-			if(tex != null)	DrawShapes.drawUVSphere(shader, uvSphere, tex);
-			else DrawShapes.drawUVSphere(shader, uvSphere);
+			if(tex != null)	DrawShapes.drawUVSphere(shader, uvSphere, fbo, tex);
+			else DrawShapes.drawUVSphere(shader, uvSphere, fbo);
 			
 			break;
 			
 		case "point":
 			
-			DrawShapes.drawPoint(shader, point);
+			DrawShapes.drawPoint(shader, point, fbo);
 		}
 	}
 }

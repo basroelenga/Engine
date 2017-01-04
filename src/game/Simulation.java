@@ -20,7 +20,7 @@ public class Simulation {
 		
 		cam = new Camera();
 		// =========================
-		EngineObjectManager.addSphere(5, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
+		EngineObjectManager.addSphere("sphere1", 5, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
 		LightManager.addPointLight("light1", 0f, 2f, 0f, new Vector3f(1, 0, 0), true);
 		LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
@@ -31,7 +31,7 @@ public class Simulation {
 		LightManager.addDirectionalLight("dir", 0, 1, 0, new Vector3f(1, 1, 1));
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
 		
-		EngineObjectManager.addRectangle(0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
+		EngineObjectManager.addRectangle("rect1", 0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
 		EngineSystemManager.addUniformParticleSystem("p1", 0, 1, 0, 180);
 		
 		createParticles();
@@ -66,6 +66,8 @@ public class Simulation {
 		
 		LightManager.getLight("light4").setX((float) (3f * Math.cos(angle + 180f)));
 		LightManager.getLight("light4").setZ((float) (3f * Math.sin(angle + 180f)));
+		
+		EngineObjectManager.getEngineObject("rect1").setYa(angle);;
 		
 		cam.update();
 		

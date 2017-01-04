@@ -41,6 +41,8 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import debug.Debugger;
+import fbo.FrameBufferObject;
+import fbo.FrameBufferObjectManager;
 import game.Simulation;
 import graphics.TextureManager;
 import math.Matrices;
@@ -160,6 +162,7 @@ public class Engine {
 		new TextureManager();
 		new TextManager(true);
 		new ShaderManager();
+		new FrameBufferObjectManager();
 		
 		// Create primitives
 		EngineObjectManager.createPrimitives();
@@ -206,6 +209,22 @@ public class Engine {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
+		// Temp test function
+		FrameBufferObjectManager.getFrameBuffer("basic").clearBuffer();
+		
+		firstPass();
+		secondPass();
+		
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+	
+	/**
+	 * This first render pass will render everything to either a FBO or the default FBO
+	 */
+	private void firstPass()
+	{
+		
 		if(wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		if(!wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		
@@ -215,11 +234,19 @@ public class Engine {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		
 		debugger.render();
-		
 		if(showFPS) engineFPS.updateAndRender();
+	}
+	
+	/**
+	 * Objects that are rendered to a FBO are rendered here back to the default FBO
+	 */
+	private void secondPass()
+	{
 		
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		for(FrameBufferObject fbo : FrameBufferObjectManager.getFBOList())
+		{
+			fbo.render();
+		}
 	}
 
 	private void setFPS()

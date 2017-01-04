@@ -170,7 +170,7 @@ public class TerrainTile {
 		ShaderManager.getShader("basicT").uploadMatrix4f(modelMatrix, ShaderManager.getShader("basicT").getModelMatrixLoc());
 		ShaderManager.getShader("basicT").uploadMatrix4f(Engine.projMatrix, ShaderManager.getShader("basicT").getProjectionMatrixLoc());
 		
-		DrawShapes.drawQuad(ShaderManager.getShader("basicT") ,vaoID[0], vaoID[1]);
+		DrawShapes.drawMultipleTriangles(ShaderManager.getShader("basicT") ,vaoID[0], vaoID[1], null);
 	}
 	
 	public int getX()

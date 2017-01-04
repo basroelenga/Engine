@@ -73,7 +73,7 @@ public class PointLight extends LightObject{
 			
 			shader.uploadVector4f(new Vector4f(lightColor.getX(), lightColor.getY(), lightColor.getZ(), 1), shader.getRgbaColorLoc());
 			
-			DrawShapes.drawQuad(shader, vaoID, sphere.getAmountOfTriangles());
+			DrawShapes.drawUVSphere(shader, sphere, null);
 		}
 	}
 }

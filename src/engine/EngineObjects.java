@@ -1,9 +1,13 @@
 package engine;
 
+import fbo.FrameBufferObject;
 import graphics.Texture;
 import math.Matrix4f;
 import math.Vector4f;
 import shaders.Shader;
+import shapes.Point;
+import shapes.Quad;
+import shapes.Triangle;
 
 public abstract class EngineObjects {
 
@@ -42,12 +46,18 @@ public abstract class EngineObjects {
 	protected float timeOut;
 	protected float lifeTime  = 0f;
 	
-	// Requirements for rendering (The objects VAO ID, shader, shader properties and matrices)
+	// Requirements for rendering (The objects VAO ID, FBO, shader, shader properties and matrices)
 	protected int vaoID;
 	
+	protected FrameBufferObject fbo;
 	protected Shader shader;
 	
 	protected Texture tex;
+	
+	// Default primitive objects
+	protected Point point;
+	protected Triangle triangle;
+	protected Quad quad;
 	
 	// The default color is white
 	protected Vector4f RGBAcolor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -152,6 +162,9 @@ public abstract class EngineObjects {
 	}
 	public int getVaoID() {
 		return vaoID;
+	}
+	public FrameBufferObject getFbo() {
+		return fbo;
 	}
 	public Shader getShader() {
 		return shader;
