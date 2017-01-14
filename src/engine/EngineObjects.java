@@ -40,7 +40,7 @@ public abstract class EngineObjects {
 	
 	// Particle specific parameters
 	// Particle type
-	protected String ptype;
+	protected String pType;
 	
 	// Lifetime and time out
 	protected float timeOut;
@@ -66,6 +66,8 @@ public abstract class EngineObjects {
 	protected Matrix4f viewMatrix = new Matrix4f();
 	protected Matrix4f projectionMatrix = new Matrix4f();
 	protected Matrix4f normalMatrix = new Matrix4f();
+	
+	protected Matrix4f MVP = new Matrix4f();
 	
 	// The update and render function
 	public abstract void update();
@@ -149,7 +151,7 @@ public abstract class EngineObjects {
 		return mass;
 	}
 	public String getParticleType()	{
-		return ptype;
+		return pType;
 	}
 	public float getLifeTime() {
 		return lifeTime;
@@ -165,6 +167,9 @@ public abstract class EngineObjects {
 	}
 	public FrameBufferObject getFbo() {
 		return fbo;
+	}
+	public void setFbo(FrameBufferObject fbo) {
+		this.fbo = fbo;
 	}
 	public Shader getShader() {
 		return shader;
@@ -186,5 +191,17 @@ public abstract class EngineObjects {
 	}
 	public Matrix4f getNormalMatrix() {
 		return normalMatrix;
+	}
+	public Matrix4f getMVP() {
+		
+		MVP.setIdentity();
+		
+		MVP.multiply(projectionMatrix);
+		MVP.multiply(viewMatrix);
+		MVP.multiply(modelMatrix);
+		
+		MVP.transpose();
+		
+		return MVP;
 	}
 }

@@ -4,8 +4,8 @@ import cam.Camera;
 import engine.Engine;
 import engine.EngineObjectManager;
 import engine.EngineObjects;
-import fbo.FrameBufferObjectManager;
 import graphics.Texture;
+import math.Matrix4f;
 import shaders.ShaderManager;
 import shapes.Point;
 import shapes.UVSphere;
@@ -34,7 +34,7 @@ public class Particle extends EngineObjects{
 		this.mass = mass;
 		this.tex = tex;
 		
-		this.ptype = type;
+		this.pType = type;
 		
 		viewMatrix = Camera.getViewMatrix();
 		projectionMatrix = Engine.projMatrix;
@@ -42,8 +42,6 @@ public class Particle extends EngineObjects{
 		// Set the initial modelmatrix
 		modelMatrix.transelate(x, y, z);
 		modelMatrix.scale(xs, ys, zs);
-		
-		fbo = FrameBufferObjectManager.getFrameBuffer("basic");
 		
 		// Select the type of particle
 		switch(type)
@@ -56,6 +54,13 @@ public class Particle extends EngineObjects{
 			
 			break;
 		
+		case "quad":
+			
+			quad = EngineObjectManager.getQuad();
+			shader = ShaderManager.getShader("basic");
+			
+			break;
+			
 		case "point":
 			
 			point = EngineObjectManager.getPoint();
@@ -102,7 +107,7 @@ public class Particle extends EngineObjects{
 		shader.uploadVector4f(RGBAcolor, shader.getRgbaColorLoc());
 		
 		// Depending on the type a different draw method is used
-		switch(ptype)
+		switch(pType)
 		{
 		
 		case "sphere":
@@ -112,9 +117,15 @@ public class Particle extends EngineObjects{
 			
 			break;
 			
+		case "quad":
+			
+			DrawShapes.drawQuad(shader, quad, fbo);
+			break;
+			
 		case "point":
 			
 			DrawShapes.drawPoint(shader, point, fbo);
+			break;
 		}
 	}
 }

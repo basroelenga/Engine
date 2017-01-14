@@ -32,7 +32,7 @@ public class Simulation {
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
 		
 		EngineObjectManager.addRectangle("rect1", 0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
-		EngineSystemManager.addUniformParticleSystem("p1", 0, 1, 0, 180);
+		//EngineSystemManager.addUniformParticleSystem("p1", "quad", 0, 1, 0, 180);
 		
 		createParticles();
 	}
@@ -82,7 +82,7 @@ public class Simulation {
 		
 		EngineObjectManager.render();
 		EngineSystemManager.render();
-		
+				
 		LightManager.render();
 	}
 }

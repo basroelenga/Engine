@@ -19,6 +19,12 @@ public class Matrix4f {
 		setIdentity();
 	}
 	
+	public Matrix4f(Matrix4f mat)
+	{
+		
+		matrixArray = mat.getElements();
+	}
+	
 	private void updateElements()
 	{
 		
@@ -77,7 +83,6 @@ public class Matrix4f {
 		matrixArray = temp;
 	}
 	
-	// NOT WORKING PROP
 	public void transpose()
 	{
 		
@@ -85,10 +90,8 @@ public class Matrix4f {
 		
 		for(int i = 0; i < 4; i++)
 		{
-			
 			for(int j = 0; j < 4; j++)
 			{
-				
 				temp[i * 4 + j] = matrixArray[j * 4 + i];
 			}
 		}

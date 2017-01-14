@@ -82,7 +82,6 @@ public class Engine {
 
 	private boolean fullScreen = false;
 	
-	
 	private Text engineFPS;
 	
 	private Simulation game;
@@ -132,7 +131,7 @@ public class Engine {
 		glfwSetWindowPos(window, (vidmode.width() - width) / 2,	(vidmode.height() - height) / 2);
 		
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 		
 		glfwShowWindow(window);
 		

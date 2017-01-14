@@ -50,6 +50,13 @@ public class EngineObjectManager {
 		isInit = true;
 	}
 	
+	public static Point createParticlePoint(int maxPoints)
+	{
+		
+		Point point = new Point(maxPoints);
+		return point;
+	}
+	
 	public static void update()	{for(EngineObjects obj : engineObjectList) obj.update();}
 	public static void render()	{for(EngineObjects obj : engineObjectList) obj.render();}
 	
@@ -71,7 +78,7 @@ public class EngineObjectManager {
 	}
 	
 	/**
-	 * Add a sphere to the render list (only a UV sphere for now).
+	 * Add a sphere to the engine object list (only a UV sphere for now).
 	 * @param subdivision The amount of subdivisions of the sphere.
 	 * @param x The x-position of the sphere.
 	 * @param y The y-position of the sphere.
@@ -85,24 +92,45 @@ public class EngineObjectManager {
 		engineObjectList.add(new Sphere(name, subdivision, x, y, z, scaling, tex, useLighting));
 	}
 	
+	/**
+	 * Add a particle to the engine object list
+	 * @param x The x-position of the particle.
+	 * @param y The y-position of the particle.
+	 * @param z The z-position of the particle.
+	 * @param vx The x-velocity of the particle.
+	 * @param vy The y-velocity of the particle.
+	 * @param vz The z-velocity of the particle.
+	 * @param scaling The scaling of the particle (same in all directions).
+	 * @param mass The mass of the particle (for physics purposes).
+	 * @param type The type of particle, either a point or a UV sphere.
+	 * @param tex The texture of the particle.
+	 */
 	public static void addParticle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, String type, Texture tex)
 	{
 		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, scaling, mass, tex, type));
 	}
 	
+	/**
+	 * Get an object which is currently in the engine.
+	 * @param id The name/"id" of the object.
+	 * @return The object.
+	 */
 	public static EngineObjects getEngineObject(String id)
 	{
 		
 		for(EngineObjects obj : engineObjectList)
 		{
 			
-			System.out.println(obj.getName());
 			if(obj.getName().equals(id)) return obj;
 		}
 		
 		throw new RuntimeException("Object does not exist: " + id);
 	}
 	
+	/**
+	 * Get the point.
+	 * @return The point.
+	 */
 	public static Point getPoint()
 	{
 		
@@ -110,6 +138,10 @@ public class EngineObjectManager {
 		throw new RuntimeException("Primitives have not yet been created");
 	}
 	
+	/**
+	 * Get the quad.
+	 * @return The quad.
+	 */
 	public static Quad getQuad()
 	{
 		
@@ -118,10 +150,10 @@ public class EngineObjectManager {
 	}
 	
 	/**
-	 * Get the vaoID of a UV sphere, if the UV sphere does not exist one will be created.
+	 * Get the UV sphere, if the UV sphere does not exist one will be created.
 	 * For higher subdivision the engine can drop fps. This function is mostly used by the Sphere object or the Particle object.
 	 * @param subdivision The amount of subdivision.
-	 * @return The vaoID of the requested UV sphere.
+	 * @return The requested UV sphere.
 	 */
 	public static UVSphere getUVSphere(int subdivision)
 	{

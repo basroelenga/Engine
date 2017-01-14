@@ -1,33 +1,7 @@
 package shaders;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
-import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
-import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL20.glAttachShader;
-import static org.lwjgl.opengl.GL20.glBindAttribLocation;
-import static org.lwjgl.opengl.GL20.glCompileShader;
-import static org.lwjgl.opengl.GL20.glCreateProgram;
-import static org.lwjgl.opengl.GL20.glCreateShader;
-import static org.lwjgl.opengl.GL20.glDeleteProgram;
-import static org.lwjgl.opengl.GL20.glDeleteShader;
-import static org.lwjgl.opengl.GL20.glDetachShader;
-import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL20.glGetProgrami;
-import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
-import static org.lwjgl.opengl.GL20.glGetShaderi;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glLinkProgram;
-import static org.lwjgl.opengl.GL20.glShaderSource;
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform1i;
-import static org.lwjgl.opengl.GL20.glUniform3f;
-import static org.lwjgl.opengl.GL20.glUniform4f;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL20.glValidateProgram;
+import static org.lwjgl.opengl.GL20.*;
 
 import java.util.ArrayList;
 
@@ -109,8 +83,7 @@ public class Shader {
 		glAttachShader(shaderProgram, vertexID);
 		glAttachShader(shaderProgram, fragmentID);
 		
-		glBindAttribLocation(shaderProgram, 0, "in_Position");
-		glBindAttribLocation(shaderProgram, 1, "in_TexCoord");
+		addAllAtributes();
 		
 		linkShaderProgram(shaderProgram);
 		
@@ -136,6 +109,13 @@ public class Shader {
 		}
 	}
 	
+	/**
+	 * Compile the shader code.
+	 * @param shaderSource The shader sources.
+	 * @param shaderType The type of shader.
+	 * @param key The name of the shader.
+	 * @return The compiled shader ID.
+	 */
 	private int compileShader(String shaderSource, int shaderType, String key)
 	{
 		
@@ -177,6 +157,10 @@ public class Shader {
 		return shaderID;
 	}
 	
+	/**
+	 * Link the shader program.
+	 * @param shaderProgram shader program.
+	 */
 	private void linkShaderProgram(int shaderProgram)
 	{
 		
@@ -207,6 +191,40 @@ public class Shader {
 			
 			System.out.println("Shader: " + shaderName + " succesfully validated");
 		}
+	}
+	
+	/**
+	 * Add all the default attributes to the shader.
+	 */
+	private void addAllAtributes()
+	{
+		
+		// Position, texture, normal
+		glBindAttribLocation(shaderProgram, 0, "in_Position");
+		glBindAttribLocation(shaderProgram, 1, "in_TexCoord");
+		glBindAttribLocation(shaderProgram, 2, "in_Normals");
+		
+		// MVP, this attribute is only used in the case of instanced rendering.
+		// Normally this will be done via a uniform upload.
+		glBindAttribLocation(shaderProgram, 3, "in_MVP");
+	}
+	
+	/**
+	 * Add an extra attribute to the shader (except for the position and texture coordinates).
+	 * Examples of attributes that can be added are the MVP in the case of instanced rendering.
+	 * @param name Name of the attribute in the shader.
+	 * @param index Index of the attribute (2 or higher).
+	 */
+	public void addAtribute(String name, int index)
+	{
+		
+		glBindAttribLocation(shaderProgram, index, name);
+		System.out.println(name + " , " + shaderProgram);
+	}
+	
+	public int getAttributeLocation(String name)
+	{
+		return glGetAttribLocation(shaderProgram, name);
 	}
 	
 	public void addPointLight()
