@@ -40,7 +40,7 @@ public class Particle extends EngineObjects{
 		projectionMatrix = Engine.projMatrix;
 		
 		// Set the initial modelmatrix
-		modelMatrix.transelate(x, y, z);
+		modelMatrix.translate(x, y, z);
 		modelMatrix.scale(xs, ys, zs);
 		
 		// Select the type of particle
@@ -93,7 +93,7 @@ public class Particle extends EngineObjects{
 		// Construct model matrix
 		modelMatrix.setIdentity();
 		
-		modelMatrix.transelate(x, y, z);
+		modelMatrix.translate(x, y, z);
 		modelMatrix.scale(xs, ys, zs);
 	}
 	

@@ -82,7 +82,7 @@ public class Text {
 
 			modelMatrix.setIdentity();
 			
-			modelMatrix.transelate(x + xTrans, y, z + (i * 0.01f));
+			modelMatrix.translate(x + xTrans, y, z + (i * 0.01f));
 			xTrans += charList.get(i).getXScaleCorrection() * scaling;
 			
 			modelMatrix.rotateQ(0f, 0f, 180f, false);

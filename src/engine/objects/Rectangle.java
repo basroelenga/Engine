@@ -61,7 +61,7 @@ public class Rectangle extends EngineObjects{
 		
 		modelMatrix.setIdentity();
 		
-		modelMatrix.transelate(x, y, z);
+		modelMatrix.translate(x, y, z);
 		modelMatrix.rotateQ(xa, ya, za, false);
 		modelMatrix.scale(xs, ys, zs);
 	}

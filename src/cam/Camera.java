@@ -115,7 +115,7 @@ public class Camera {
 	{
 	
 		Matrix4f posMatrix = new Matrix4f();
-		posMatrix.transelate(x, y, z);
+		posMatrix.translate(x, y, z);
 		
 		viewMatrix.multiply(posMatrix);
 		

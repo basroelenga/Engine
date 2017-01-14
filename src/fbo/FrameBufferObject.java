@@ -46,7 +46,7 @@ public class FrameBufferObject {
 
 		modelMatrix = new Matrix4f();
 		
-		modelMatrix.transelate(0, Engine.getHeight(), 0);
+		modelMatrix.translate(0, Engine.getHeight(), 0);
 		modelMatrix.scale(Engine.getWidth(), Engine.getHeight(), 0);
 		modelMatrix.rotateQ(180, 0, 0, false);
 		

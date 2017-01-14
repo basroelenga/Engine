@@ -46,7 +46,7 @@ public class PointLight extends LightObject{
 		// Update the position of the light (for rendering)
 		modelMatrix.setIdentity();
 		
-		modelMatrix.transelate(x, y, z);
+		modelMatrix.translate(x, y, z);
 		modelMatrix.scale(xs, ys, zs);
 		
 		lightPos = new Vector3f(x, y, z);

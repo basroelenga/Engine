@@ -6,6 +6,7 @@ import engine.EngineObjectManager;
 import engine.EngineSystemManager;
 import graphics.TextureManager;
 import light.LightManager;
+import math.Matrix4f;
 import math.Vector3f;
 import math.Vector4f;
 
@@ -33,6 +34,16 @@ public class Simulation {
 		
 		EngineObjectManager.addRectangle("rect1", 0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
 		//EngineSystemManager.addUniformParticleSystem("p1", "quad", 0, 1, 0, 180);
+		
+		Matrix4f test = new Matrix4f();
+		
+		test.translate(1, 2, 3);
+		test.scale(3, 3, 3);
+		
+		test.print();
+		System.out.println("==============");
+		Matrix4f inverse = test.inverse();
+		inverse.print();
 		
 		createParticles();
 	}

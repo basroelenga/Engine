@@ -131,7 +131,7 @@ public class Engine {
 		glfwSetWindowPos(window, (vidmode.width() - width) / 2,	(vidmode.height() - height) / 2);
 		
 		glfwMakeContextCurrent(window);
-		glfwSwapInterval(0);
+		glfwSwapInterval(1);
 		
 		glfwShowWindow(window);
 		

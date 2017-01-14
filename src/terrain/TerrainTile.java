@@ -160,7 +160,7 @@ public class TerrainTile {
 		
 		modelMatrix.setIdentity();
 
-		modelMatrix.transelate(x * 5f - ((1f / size) * x * 5), -5, z * 5f - ((1f / size) * z * 5));
+		modelMatrix.translate(x * 5f - ((1f / size) * x * 5), -5, z * 5f - ((1f / size) * z * 5));
 		modelMatrix.scale(1f, 1f, 1f);
 	}
 	
