@@ -143,6 +143,20 @@ public class Matrix4f {
 	}
 	
 	/**
+	 * Divide the current matrix with a float.
+	 * @param s Float to be divided with.
+	 */
+	public void divide(float s)
+	{
+		
+		for(int i = 0; i < matrixArray.length; i++)
+		{
+			
+			matrixArray[i] /= s;
+		}
+	}
+	
+	/**
 	 * Transpose the current matrix.
 	 */
 	public void transpose()
@@ -161,6 +175,25 @@ public class Matrix4f {
 		matrixArray = temp;
 	}
 	
+	public void normalize()
+	{
+		
+		float max = 0;
+		
+		for(int i = 0; i < matrixArray.length; i++)
+		{
+			
+			if(i == 0) max = matrixArray[i];
+			else
+			{
+				
+				if(matrixArray[i] > max) max = matrixArray[i];
+			}
+		}
+		
+		this.divide(max);
+	}
+	
 	/**
 	 * Calculate the inverse of the matrix.
 	 * @return The inverse of the matrix.
@@ -174,8 +207,11 @@ public class Matrix4f {
 		if(det == 0){
 			
 			System.err.println("Inverse of the following matrix does not exist");
-			this.print();
 			
+			System.out.println("=========================");
+			this.print();
+			System.out.println("=========================");
+
 			return this;
 		}
 		
@@ -206,8 +242,20 @@ public class Matrix4f {
 		adj.updateArray();
 		adj.multiply(1f / det);
 
-		
 		return adj;
+	}
+	
+	/**
+	 * Calculate the normal matrix.
+	 * @return The normal matrix.
+	 */
+	public Matrix4f normal()
+	{
+		
+		Matrix4f normal = this.inverse();
+		normal.transpose();
+		
+		return normal;
 	}
 	
 	/**

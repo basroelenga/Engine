@@ -1,14 +1,11 @@
 package game;
 
 import cam.Camera;
-import engine.Engine;
 import engine.EngineObjectManager;
 import engine.EngineSystemManager;
 import graphics.TextureManager;
 import light.LightManager;
-import math.Matrix4f;
 import math.Vector3f;
-import math.Vector4f;
 
 public class Simulation {
 	
@@ -21,31 +18,23 @@ public class Simulation {
 		
 		cam = new Camera();
 		// =========================
-		EngineObjectManager.addSphere("sphere1", 5, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
+		//EngineObjectManager.addSphere("sphere1", 5, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
 		LightManager.addPointLight("light1", 0f, 2f, 0f, new Vector3f(1, 0, 0), true);
 		LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
 		
-		LightManager.addPointLight("light3", 0f, -2f, 0f, new Vector3f(1, 0, 1), true);
-		LightManager.addPointLight("light4", 0f, -2f, 0f, new Vector3f(0, 1, 1), true);
+		//LightManager.addPointLight("light3", 0f, -2f, 0f, new Vector3f(1, 0, 1), true);
+		//LightManager.addPointLight("light4", 0f, -2f, 0f, new Vector3f(0, 1, 1), true);
 		
-		LightManager.addDirectionalLight("dir", 0, 1, 0, new Vector3f(1, 1, 1));
+		//LightManager.addDirectionalLight("dir", 0, 1, 0, new Vector3f(1, 1, 1));
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
 		
-		EngineObjectManager.addRectangle("rect1", 0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
+		//EngineObjectManager.addRectangle("rect1", 0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
 		//EngineSystemManager.addUniformParticleSystem("p1", "quad", 0, 1, 0, 180);
 		
-		Matrix4f test = new Matrix4f();
+		EngineObjectManager.addBunny();
 		
-		test.translate(1, 2, 3);
-		test.scale(3, 3, 3);
-		
-		test.print();
-		System.out.println("==============");
-		Matrix4f inverse = test.inverse();
-		inverse.print();
-		
-		createParticles();
+		//createParticles();
 	}
 	
 	private void createParticles()
@@ -71,7 +60,7 @@ public class Simulation {
 		
 		LightManager.getLight("light2").setX((float) (6f * Math.cos(angle + 180f)));
 		LightManager.getLight("light2").setZ((float) (3f * Math.sin(angle + 180f)));
-		
+		/*
 		LightManager.getLight("light3").setX((float) (3f * Math.cos(angle)));
 		LightManager.getLight("light3").setZ((float) (6f * Math.sin(angle)));
 		
@@ -79,7 +68,7 @@ public class Simulation {
 		LightManager.getLight("light4").setZ((float) (3f * Math.sin(angle + 180f)));
 		
 		EngineObjectManager.getEngineObject("rect1").setYa(angle);;
-		
+		**/
 		cam.update();
 		
 		EngineObjectManager.update();

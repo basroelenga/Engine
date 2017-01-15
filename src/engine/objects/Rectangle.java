@@ -4,6 +4,7 @@ import cam.Camera;
 import engine.Engine;
 import engine.EngineObjectManager;
 import engine.EngineObjects;
+import graphics.Texture;
 import graphics.TextureManager;
 import math.Matrix4f;
 import math.Vector4f;
@@ -26,7 +27,7 @@ public class Rectangle extends EngineObjects{
 	 * @param projection The projection matrix to use.
 	 * @param color The color of the rectangle (RGBA).
 	 */
-	public Rectangle(String name, float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
+	public Rectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
 	{
 		
 		this.name = name;
@@ -45,13 +46,13 @@ public class Rectangle extends EngineObjects{
 		this.RGBAcolor = RGBAcolor;
 		
 		// Define the shader to be used
-		shader = ShaderManager.getShader("basictex");
+		shader = ShaderManager.getShader("basic");
 		
 		// If the projection matrix is the perspective matrix the view matrix should also be set.
 		if(projectionMatrix == Engine.projMatrix) viewMatrix = Camera.getViewMatrix();
 		else viewMatrix = new Matrix4f();
 
-		tex = TextureManager.getTexture("bg");
+		this.tex = tex;
 		
 		quad = EngineObjectManager.getQuad();
 	}
@@ -75,6 +76,7 @@ public class Rectangle extends EngineObjects{
 		
 		shader.uploadVector4f(RGBAcolor, shader.getRgbaColorLoc());
 		
-		DrawShapes.drawQuad(shader, quad, tex, null);
+		if(tex == null) DrawShapes.drawQuad(shader, quad, fbo);
+		else DrawShapes.drawQuad(shader, quad, tex, fbo);
 	}
 }

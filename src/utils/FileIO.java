@@ -69,6 +69,33 @@ public class FileIO {
 		return array;
 	}
 	
+	public static String loadModel(String path)
+	{
+		
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader("res/models/" + path + ".obj"));
+
+			StringBuilder data = new StringBuilder();
+			String line = reader.readLine();
+			
+			while(line != null){
+				data.append(line).append("\n");
+				line = reader.readLine();
+			}
+			
+			reader.close();
+			
+			return data.toString();
+		} catch (IOException e) {
+			
+			System.err.println("Could not load or find file: " + path);
+			e.printStackTrace();
+		}
+
+		throw new NullPointerException("No shader data returned from: " + path);
+	}
+	
 	public static String loadShader(String path)
 	{
 		try {

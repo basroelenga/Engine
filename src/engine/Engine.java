@@ -47,6 +47,7 @@ import game.Simulation;
 import graphics.TextureManager;
 import math.Matrices;
 import math.Matrix4f;
+import models.ModelManager;
 import shaders.ShaderManager;
 import text.Text;
 import text.TextManager;
@@ -162,6 +163,7 @@ public class Engine {
 		new TextManager(true);
 		new ShaderManager();
 		new FrameBufferObjectManager();
+		new ModelManager();
 		
 		// Create primitives
 		EngineObjectManager.createPrimitives();

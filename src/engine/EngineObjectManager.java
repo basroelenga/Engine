@@ -2,6 +2,7 @@ package engine;
 
 import java.util.ArrayList;
 
+import engine.objects.TestObject;
 import engine.objects.Particle;
 import engine.objects.Rectangle;
 import engine.objects.Sphere;
@@ -50,13 +51,6 @@ public class EngineObjectManager {
 		isInit = true;
 	}
 	
-	public static Point createParticlePoint(int maxPoints)
-	{
-		
-		Point point = new Point(maxPoints);
-		return point;
-	}
-	
 	public static void update()	{for(EngineObjects obj : engineObjectList) obj.update();}
 	public static void render()	{for(EngineObjects obj : engineObjectList) obj.render();}
 	
@@ -72,9 +66,9 @@ public class EngineObjectManager {
 	 * @param projection The projection matrix to be used, can be orthographic or perspective.
 	 * @param RGBAcolor The color of the rectangle.
 	 */
-	public static void addRectangle(String name, float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
+	public static void addRectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
 	{
-		engineObjectList.add(new Rectangle(name, x, y, z, xs, ys, zs, ya, projection, RGBAcolor));
+		engineObjectList.add(new Rectangle(name, tex, x, y, z, xs, ys, zs, ya, projection, RGBAcolor));
 	}
 	
 	/**
@@ -108,6 +102,11 @@ public class EngineObjectManager {
 	public static void addParticle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, String type, Texture tex)
 	{
 		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, scaling, mass, tex, type));
+	}
+	
+	public static void addBunny()
+	{
+		engineObjectList.add(new TestObject());
 	}
 	
 	/**

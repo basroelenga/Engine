@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import fbo.FrameBufferObject;
 import graphics.Texture;
+import models.Model;
 import shaders.Shader;
 import shapes.Point;
 import shapes.Quad;
@@ -275,6 +276,33 @@ public class DrawShapes {
 		if(fbo != null) fbo.unbind();
 		
 		shader.unbind();
+	}
+	
+	public static void drawModel(Shader shader, Model model, FrameBufferObject fbo)
+	{
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		shader.bind();
+		
+		if(fbo != null) fbo.bind();
+		
+		glBindVertexArray(model.getVaoID());
+		
+		glEnableVertexAttribArray(0);
+		
+		glDrawArrays(GL_TRIANGLES, 0, model.getVertices());
+		
+		glDisableVertexAttribArray(0);
+		
+		glBindVertexArray(0);
+		
+		if(fbo != null) fbo.unbind();
+		
+		shader.unbind();
+		
+		glDisable(GL_BLEND);
 	}
 
 	public static void drawUVSphere(Shader shader, UVSphere sphere, FrameBufferObject fbo)
