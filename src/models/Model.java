@@ -96,6 +96,13 @@ public class Model {
 					
 					String[] lineSplitFaceData = splitLineData[j].split("//");
 					System.out.println(lineSplitFaceData.length);
+					StringBuilder builder = new StringBuilder();
+					
+					for(int k = 0; k < lineSplitFaceData.length; k++)
+					{
+						
+					}
+					
 					
 					// Should handle all kind of types of data.
 					if(lineSplitFaceData.length == 1)

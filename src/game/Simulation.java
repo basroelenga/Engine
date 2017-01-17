@@ -21,12 +21,12 @@ public class Simulation {
 		//EngineObjectManager.addSphere("sphere1", 5, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
 		LightManager.addPointLight("light1", 0f, 2f, 0f, new Vector3f(1, 0, 0), true);
-		LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
+		//LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
 		
 		//LightManager.addPointLight("light3", 0f, -2f, 0f, new Vector3f(1, 0, 1), true);
 		//LightManager.addPointLight("light4", 0f, -2f, 0f, new Vector3f(0, 1, 1), true);
 		
-		//LightManager.addDirectionalLight("dir", 0, 1, 0, new Vector3f(1, 1, 1));
+		//LightManager.addDirectionalLight("dir", 0, -1, 0, new Vector3f(1, 1, 1));
 		//LightManager.addSpotLight("spot", 0, 5, 0, 0, -1, 0, 45, new Vector3f(1, 1, 1));
 		
 		//EngineObjectManager.addRectangle("rect1", 0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
@@ -53,22 +53,24 @@ public class Simulation {
 	
 	public void update()
 	{
+		
 		angle += 0.05f;
 		
-		LightManager.getLight("light1").setX((float) (3f * Math.cos(angle)));
-		LightManager.getLight("light1").setZ((float) (3f * Math.sin(angle)));
 		
-		LightManager.getLight("light2").setX((float) (6f * Math.cos(angle + 180f)));
-		LightManager.getLight("light2").setZ((float) (3f * Math.sin(angle + 180f)));
-		/*
-		LightManager.getLight("light3").setX((float) (3f * Math.cos(angle)));
-		LightManager.getLight("light3").setZ((float) (6f * Math.sin(angle)));
+		//LightManager.getLight("light1").setX((float) (3f * Math.cos(angle)));
+		//LightManager.getLight("light1").setZ((float) (3f * Math.sin(angle)));
 		
-		LightManager.getLight("light4").setX((float) (3f * Math.cos(angle + 180f)));
-		LightManager.getLight("light4").setZ((float) (3f * Math.sin(angle + 180f)));
+		//LightManager.getLight("light2").setX((float) (6f * Math.cos(angle + 180f)));
+		//LightManager.getLight("light2").setZ((float) (3f * Math.sin(angle + 180f)));
 		
-		EngineObjectManager.getEngineObject("rect1").setYa(angle);;
-		**/
+		//LightManager.getLight("light3").setX((float) (3f * Math.cos(angle)));
+		//LightManager.getLight("light3").setZ((float) (6f * Math.sin(angle)));
+		
+		///LightManager.getLight("light4").setX((float) (3f * Math.cos(angle + 180f)));
+		//LightManager.getLight("light4").setZ((float) (3f * Math.sin(angle + 180f)));
+		
+		//EngineObjectManager.getEngineObject("rect1").setYa(angle);;
+		
 		cam.update();
 		
 		EngineObjectManager.update();

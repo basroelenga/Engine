@@ -58,7 +58,7 @@ vec3 calcPointLight(PointLight light, vec4 textureColor, vec3 calcNorm, vec3 pas
 	vec3 ambient = light.ambIntensity * textureColor.xyz * light.lightColor;
 	
 	// Diffuse light
-	float diffuseC = max(0.0, dot(calcNorm, surfaceL));
+	float diffuseC = max(dot(calcNorm, surfaceL), 0.0);
 	vec3 diffuse = diffuseC * textureColor.xyz * light.lightColor;
 	
 	// Specular light
@@ -153,17 +153,12 @@ vec3 calcSpotLight(SpotLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_
 void main() 
 {
 
-	// Calculate normal
-	mat4 normalMatrix = transpose(inverse(modelMatrix));
-	mat3 modelM = mat3(normalMatrix);
-	vec3 calcNorm = normalize(modelM * pass_Normal);
-
 	// Texture light
 	vec4 textureColor = texture(tex, pass_TexCoord);
 
 	if(textureColor.xyz == vec3(0.0, 0.0, 0.0))
 	{
-		textureColor = rgbaColor;
+		textureColor = vec4(1.0, 1.0, 1.0, 1.0);
 	}
 
 	// Normalized distance between camera and vertex
@@ -175,19 +170,19 @@ void main()
 	// First the point light contribution
 	for(int i = 0; i < number_of_point_lights; i++)
 	{
-		color += calcPointLight(pointLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
+		color += calcPointLight(pointLights[i], textureColor, pass_Normal, pass_Vertices, surfaceC);
 	}
 	
 	// The directional light contribution
 	for(int i = 0; i < number_of_directional_lights; i++)
 	{
-		color += calcDirLight(dirLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
+		color += calcDirLight(dirLights[i], textureColor, pass_Normal, pass_Vertices, surfaceC);
 	}
 
 	// The spot light contribution
 	for(int i = 0; i < number_of_spot_lights; i++)
 	{
-		color += calcSpotLight(spotLights[i], textureColor, calcNorm, pass_Vertices, surfaceC);
+		color += calcSpotLight(spotLights[i], textureColor, pass_Normal, pass_Vertices, surfaceC);
 	}
 
 	// Gamma correction

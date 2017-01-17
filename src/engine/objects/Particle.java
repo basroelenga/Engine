@@ -49,7 +49,7 @@ public class Particle extends EngineObjects{
 		
 		case "sphere":
 			
-			uvSphere = EngineObjectManager.getUVSphere(12);
+			uvSphere = EngineObjectManager.getUVSphere(15);
 			shader = ShaderManager.getShader("light");
 			
 			break;
@@ -72,7 +72,7 @@ public class Particle extends EngineObjects{
 		default:
 			
 			// A default of 5 subdivisions for a UV sphere
-			uvSphere = EngineObjectManager.getUVSphere(5);
+			uvSphere = EngineObjectManager.getUVSphere(15);
 			shader = ShaderManager.getShader("light");
 			
 			break;

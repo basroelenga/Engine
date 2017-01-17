@@ -17,7 +17,7 @@ public class TestObject extends EngineObjects{
 	{
 		
 		shader = ShaderManager.getShader("light");
-		model = ModelManager.getModel("bunny");
+		model = ModelManager.getModel("monkey");
 		
 		viewMatrix = Camera.getViewMatrix();
 		projectionMatrix = Engine.projMatrix;

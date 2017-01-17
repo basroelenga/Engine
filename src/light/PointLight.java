@@ -37,7 +37,7 @@ public class PointLight extends LightObject{
 		this.lightColor = lightColor;
 		ambIntensity = new Vector3f(0.02f, 0.02f, 0.02f);
 		
-		attenuationFactor = 0.1f;
+		attenuationFactor = 0.01f;
 	}
 	
 	public void update()
