@@ -29,7 +29,7 @@ public class TestObject extends EngineObjects{
 	
 		modelMatrix.setIdentity();
 		
-		modelMatrix.scale(1, 1, 1);
+		modelMatrix.scale(0.5f, 0.5f, 0.5f);
 	}
 
 	@Override

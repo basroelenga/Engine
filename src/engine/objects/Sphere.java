@@ -41,7 +41,7 @@ public class Sphere extends EngineObjects{
 		
 		// Define which shader to use
 		if(useLighting && LightManager.getNumberOfLights() != 0) shader = ShaderManager.getShader("light");
-		else shader = ShaderManager.getShader("basictex");
+		else shader = ShaderManager.getShader("basic");
 	}
 	
 	public void update()

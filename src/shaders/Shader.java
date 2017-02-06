@@ -21,6 +21,7 @@ public class Shader {
 	private int projectionMatrixLoc;
 	
 	private int cameraPosLoc;
+	private int lightPosLoc;
 	
 	private int rgbColorLoc;
 	private int rgbaColorLoc;
@@ -92,7 +93,8 @@ public class Shader {
 		normalMatrixLoc = glGetUniformLocation(shaderProgram, "normalMatrix");
 		projectionMatrixLoc = glGetUniformLocation(shaderProgram, "projectionMatrix");
 		
-		cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
+		cameraPosLoc = glGetUniformLocation(shaderProgram, "camera_Position");
+		lightPosLoc = glGetUniformLocation(shaderProgram, "light_Position");
 		
 		rgbColorLoc = glGetUniformLocation(shaderProgram, "rgbColor");
 		rgbaColorLoc = glGetUniformLocation(shaderProgram, "rgbaColor");
@@ -225,6 +227,11 @@ public class Shader {
 	public int getAttributeLocation(String name)
 	{
 		return glGetAttribLocation(shaderProgram, name);
+	}
+	
+	public int getUniform(String name)
+	{
+		return glGetUniformLocation(shaderProgram, name);
 	}
 	
 	public void addPointLight()
@@ -383,6 +390,10 @@ public class Shader {
 		return cameraPosLoc;
 	}
 	
+	public int getLightPosLoc() {
+		return lightPosLoc;
+	}
+	
 	public int getCutoffLoc() {
 		return cutoffLoc;
 	}
@@ -395,6 +406,10 @@ public class Shader {
 		return useLights;
 	}
 
+	public void setUseLighting(boolean useLights) {
+		this.useLights = useLights;
+	}
+	
 	public int getRgbColorLoc() {
 		return rgbColorLoc;
 	}

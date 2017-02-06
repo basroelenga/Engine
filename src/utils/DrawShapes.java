@@ -291,16 +291,51 @@ public class DrawShapes {
 		glBindVertexArray(model.getVaoID());
 		
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(2);
 		
 		glDrawArrays(GL_TRIANGLES, 0, model.getVertices());
 		
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(2);
 		
 		glBindVertexArray(0);
 		
 		if(fbo != null) fbo.unbind();
 		
 		shader.unbind();
+		
+		glDisable(GL_BLEND);
+	}
+	
+	public static void drawModel(Shader shader, Model model, FrameBufferObject fbo, Texture tex)
+	{
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		if(fbo != null) fbo.bind();
+		shader.bind();
+		
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, tex.getTexID());
+		
+		glBindVertexArray(model.getVaoID());
+		
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		
+		glDrawArrays(GL_TRIANGLES, 0, model.getVertices());
+		
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		shader.unbind();
+		if(fbo != null) fbo.unbind();
 		
 		glDisable(GL_BLEND);
 	}
@@ -315,10 +350,12 @@ public class DrawShapes {
 		glBindVertexArray(sphere.getVaoID());
 		
 		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(2);
 		
 		glDrawArrays(GL_TRIANGLES, 0, 3 * (int) sphere.getAmountOfTriangles());
 		
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(2);
 		
 		glBindVertexArray(0);
 		

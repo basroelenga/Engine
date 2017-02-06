@@ -11,6 +11,8 @@ public class PointLight extends LightObject{
 
 	private UVSphere sphere;
 
+	private float angle = 0f;
+	
 	public PointLight(String name, float x, float y, float z, Vector3f lightColor, boolean show) 
 	{
 		
@@ -42,7 +44,7 @@ public class PointLight extends LightObject{
 	
 	public void update()
 	{
-		
+				
 		// Update the position of the light (for rendering)
 		modelMatrix.setIdentity();
 		
@@ -56,7 +58,7 @@ public class PointLight extends LightObject{
 	{
 		
 		uShader.uploadFloat(attenuationFactor, uShader.getPointAttenuationFactorLocList().get(light));
-		
+
 		uShader.uploadVector3f(lightPos, uShader.getPointLightPosLocList().get(light));
 		uShader.uploadVector3f(lightColor, uShader.getPointLightColorLocList().get(light));
 		uShader.uploadVector3f(ambIntensity, uShader.getPointAmbIntensityLocList().get(light));

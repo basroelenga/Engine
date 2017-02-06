@@ -20,7 +20,7 @@ public class Simulation {
 		// =========================
 		//EngineObjectManager.addSphere("sphere1", 5, 0, 0, 0, 50, TextureManager.getTexture("bg"), false);
 		
-		LightManager.addPointLight("light1", 0f, 2f, 0f, new Vector3f(1, 0, 0), true);
+		LightManager.addPointLight("light1", 0f, 0f, -2f, new Vector3f(1, 0, 0), true);
 		//LightManager.addPointLight("light2", 0f, 2f, 0f, new Vector3f(0, 1, 0), true);
 		
 		//LightManager.addPointLight("light3", 0f, -2f, 0f, new Vector3f(1, 0, 1), true);
@@ -32,6 +32,8 @@ public class Simulation {
 		//EngineObjectManager.addRectangle("rect1", 0, 2, 0, 1, 1, 1, 0, Engine.projMatrix, new Vector4f(1, 1, 1, 1));
 		//EngineSystemManager.addUniformParticleSystem("p1", "quad", 0, 1, 0, 180);
 		
+		//EngineObjectManager.addSphere("test", 24, 0, 0, 0, 1f, null, true);
+		//EngineObjectManager.addSphere("test2", 12, 2, 0, 0, 0.2f, null, false);
 		EngineObjectManager.addBunny();
 		
 		//createParticles();
@@ -54,11 +56,10 @@ public class Simulation {
 	public void update()
 	{
 		
-		angle += 0.05f;
+		angle += 0.025f;
 		
-		
-		//LightManager.getLight("light1").setX((float) (3f * Math.cos(angle)));
-		//LightManager.getLight("light1").setZ((float) (3f * Math.sin(angle)));
+		LightManager.getLight("light1").setX((float) (3f * Math.cos(angle)));
+		LightManager.getLight("light1").setZ((float) (3f * Math.sin(angle)));
 		
 		//LightManager.getLight("light2").setX((float) (6f * Math.cos(angle + 180f)));
 		//LightManager.getLight("light2").setZ((float) (3f * Math.sin(angle + 180f)));
