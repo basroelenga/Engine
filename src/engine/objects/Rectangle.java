@@ -27,7 +27,7 @@ public class Rectangle extends EngineObjects{
 	 * @param projection The projection matrix to use.
 	 * @param color The color of the rectangle (RGBA).
 	 */
-	public Rectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
+	public Rectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, Matrix4f projection, Vector4f RGBAcolor)
 	{
 		
 		this.name = name;
@@ -42,7 +42,6 @@ public class Rectangle extends EngineObjects{
 		
 		this.projectionMatrix = projection;
 		
-		this.ya = ya;
 		this.RGBAcolor = RGBAcolor;
 		
 		// Define the shader to be used

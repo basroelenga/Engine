@@ -6,6 +6,7 @@ import engine.EngineObjects;
 import math.Vector4f;
 import models.Model;
 import models.ModelManager;
+import postprocessing.ShadowManager;
 import shaders.ShaderManager;
 import utils.DrawShapes;
 
@@ -15,6 +16,8 @@ public class TestObject extends EngineObjects{
 	
 	public TestObject()
 	{
+		
+		name = "bunny";
 		
 		shader = ShaderManager.getShader("light");
 		model = ModelManager.getModel("monkey");
@@ -42,5 +45,10 @@ public class TestObject extends EngineObjects{
 		shader.uploadVector4f(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f), shader.getRgbaColorLoc());
 		
 		DrawShapes.drawModel(shader, model, fbo);
+		
+		if(ShadowManager.requestDepthMap == true)
+		{
+			DrawShapes.drawModel(ShaderManager.getShader("basic"), model, ShadowManager.getShadowBuffer("shadow"));
+		}
 	}
 }

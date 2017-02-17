@@ -31,9 +31,9 @@ public abstract class EngineObjects {
 	protected float zs;
 	
 	// Their rotation
-	protected float xa;
-	protected float ya;
-	protected float za;
+	protected float xa = 0f;
+	protected float ya = 0f;
+	protected float za = 0f;
 	
 	// Mass or weight of an object
 	protected float mass;

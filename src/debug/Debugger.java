@@ -62,11 +62,11 @@ public class Debugger {
 		debugTimer = System.currentTimeMillis();
 		
 		// Set up the debug window (2 windows: input and output)
-		windowInput = new Rectangle("windowIn", null, 0f, Engine.getHeight() - 90f, 0f, Engine.getWidth(), 30f, 0f, 0f, Engine.orthoMatrix, new Vector4f(0f, 0f, 0f, 0.6f));
-		windowOutput = new Rectangle("windowOut", null, 0f, Engine.getHeight() - 60f, 0f, Engine.getWidth(), 60f, 0f, 0f, Engine.orthoMatrix, new Vector4f(0.8f, 0.8f, 0.8f, 0.6f));
+		windowInput = new Rectangle("windowIn", null, 0f, Engine.getHeight() - 90f, 0f, Engine.getWidth(), 30f, 0f, Engine.orthoMatrix, new Vector4f(0f, 0f, 0f, 0.6f));
+		windowOutput = new Rectangle("windowOut", null, 0f, Engine.getHeight() - 60f, 0f, Engine.getWidth(), 60f, 0f, Engine.orthoMatrix, new Vector4f(0.8f, 0.8f, 0.8f, 0.6f));
 		
 		// Blinker
-		windowBlinker = new Rectangle("blinker", null, 20, Engine.getHeight() - 90f, 0f, 5f, 30f, 0f, 0f, Engine.orthoMatrix, new Vector4f(1f, 1f, 1f, 1f));
+		windowBlinker = new Rectangle("blinker", null, 20, Engine.getHeight() - 90f, 0f, 5f, 30f, 0f, Engine.orthoMatrix, new Vector4f(1f, 1f, 1f, 1f));
 		
 		blinkShow = true;
 		blinkTimer = System.currentTimeMillis();

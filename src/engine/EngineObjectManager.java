@@ -66,9 +66,9 @@ public class EngineObjectManager {
 	 * @param projection The projection matrix to be used, can be orthographic or perspective.
 	 * @param RGBAcolor The color of the rectangle.
 	 */
-	public static void addRectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, float ya, Matrix4f projection, Vector4f RGBAcolor)
+	public static void addRectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, Matrix4f projection, Vector4f RGBAcolor)
 	{
-		engineObjectList.add(new Rectangle(name, tex, x, y, z, xs, ys, zs, ya, projection, RGBAcolor));
+		engineObjectList.add(new Rectangle(name, tex, x, y, z, xs, ys, zs, projection, RGBAcolor));
 	}
 	
 	/**
@@ -119,7 +119,7 @@ public class EngineObjectManager {
 		
 		for(EngineObjects obj : engineObjectList)
 		{
-			
+			System.out.println(obj.getName());
 			if(obj.getName().equals(id)) return obj;
 		}
 		

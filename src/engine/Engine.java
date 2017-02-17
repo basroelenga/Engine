@@ -44,13 +44,17 @@ import debug.Debugger;
 import fbo.FrameBufferObject;
 import fbo.FrameBufferObjectManager;
 import game.Simulation;
+import graphics.Texture;
 import graphics.TextureManager;
+import light.LightManager;
 import math.Matrices;
 import math.Matrix4f;
 import models.ModelManager;
+import postprocessing.ShadowManager;
 import shaders.ShaderManager;
 import text.Text;
 import text.TextManager;
+import utils.DrawShapes;
 
 public class Engine {
 	
@@ -199,7 +203,14 @@ public class Engine {
 	private void update()
 	{
 		
+		// This function will update changes to objects
 		game.update();
+		
+		// Update all matrices etc
+		EngineObjectManager.update();
+		EngineSystemManager.update();
+		
+		LightManager.update();
 		
 		debugger.update();
 		engineFPS.updateText("FPS:" + (int) FPS);
@@ -229,7 +240,11 @@ public class Engine {
 		if(wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		if(!wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		
-		game.render();
+		// Render all the objects
+		EngineObjectManager.render();
+		EngineSystemManager.render();
+				
+		LightManager.render();
 		
 		// The debugger will never be shown as a wireframe
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -248,6 +263,9 @@ public class Engine {
 		{
 			fbo.render();
 		}
+		
+		// Render depth map
+		DrawShapes.drawQuad(ShaderManager.getShader("basictex"), EngineObjectManager.getQuad(), new Texture("depthtex", ShadowManager.getShadowBuffer("shadow").getDepthTexID()), null);
 	}
 
 	private void setFPS()

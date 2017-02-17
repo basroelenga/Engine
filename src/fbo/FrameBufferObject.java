@@ -1,7 +1,8 @@
 package fbo;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT32;
+import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
@@ -28,12 +29,21 @@ public class FrameBufferObject {
 	private int depthTexID;
 	private int depthBufferID;
 	
+	private boolean isDefault = false;
+	
 	private Shader shader;
 	
 	private Matrix4f modelMatrix;
 	
 	private Texture tex;
 	
+	/**
+	 * Initialize a default frame buffer object.
+	 * @param name Name of the frame buffer.
+	 * @param shader Shader which to draw to.
+	 * @param WIDTH Width of the frame buffer.
+	 * @param HEIGHT Height of the frame buffer.
+	 */
 	public FrameBufferObject(String name, Shader shader, int WIDTH, int HEIGHT)
 	{
 		
@@ -50,11 +60,25 @@ public class FrameBufferObject {
 		modelMatrix.scale(Engine.getWidth(), Engine.getHeight(), 0);
 		modelMatrix.rotateQ(180, 0, 0, false);
 		
-		generateBuffer();
+		isDefault = true;
+		
+		generateDefaultBuffer();
 		checkBuffer();
 	}
 	
-	private void generateBuffer()
+	public FrameBufferObject(String name, int WIDTH, int HEIGHT)
+	{
+		
+		this.bufferName = name;
+		
+		this.WIDTH = WIDTH;
+		this.HEIGHT = HEIGHT;
+		
+		generateShadowBuffer();
+		checkBuffer();
+	}
+	
+	private void generateDefaultBuffer()
 	{
 		// Create the frame buffer object
 		fboID = glGenFramebuffers();
@@ -100,6 +124,32 @@ public class FrameBufferObject {
 		unbind();
 		
 		tex = new Texture(bufferName, texID);
+	}
+	
+	private void generateShadowBuffer()
+	{
+		
+		// Create the frame buffer object
+		fboID = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
+		
+		// The draw buffer is none because only the depth buffer is rendered.
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		
+		// Create the depth attachment
+		depthTexID = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, depthTexID);
+		
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+        
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexID, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	
 	private void checkBuffer()
@@ -157,14 +207,19 @@ public class FrameBufferObject {
 	
 	public void render()
 	{
-				
-		shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
-		shader.uploadMatrix4f(new Matrix4f(), shader.getViewMatrixLoc());
-		shader.uploadMatrix4f(Engine.orthoMatrix, shader.getProjectionMatrixLoc());
 		
-		//System.out.println(tex.getTexID());
-		
-		DrawShapes.drawQuad(shader, EngineObjectManager.getQuad(), tex, null);
+		// Shadow buffers should not be rendered.
+		if(isDefault)
+		{
+			
+			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
+			shader.uploadMatrix4f(new Matrix4f(), shader.getViewMatrixLoc());
+			shader.uploadMatrix4f(Engine.orthoMatrix, shader.getProjectionMatrixLoc());
+			
+			//System.out.println(tex.getTexID());
+			
+			DrawShapes.drawQuad(shader, EngineObjectManager.getQuad(), tex, null);
+		}
 	}
 	
 	public String getName()
@@ -175,5 +230,15 @@ public class FrameBufferObject {
 	public int getFboID()
 	{
 		return fboID;
+	}
+	
+	public int getTexID()
+	{
+		return texID;
+	}
+	
+	public int getDepthTexID()
+	{
+		return depthTexID;
 	}
 }
