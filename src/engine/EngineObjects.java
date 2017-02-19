@@ -1,13 +1,19 @@
 package engine;
 
 import fbo.FrameBufferObject;
+import fbo.FrameBufferObjectManager;
 import graphics.Texture;
+import light.LightManager;
+import light.LightObject;
 import math.Matrix4f;
 import math.Vector4f;
+import models.Model;
 import shaders.Shader;
+import shaders.ShaderManager;
 import shapes.Point;
 import shapes.Quad;
 import shapes.Triangle;
+import utils.DrawShapes;
 
 public abstract class EngineObjects {
 
@@ -49,15 +55,25 @@ public abstract class EngineObjects {
 	// Requirements for rendering (The objects VAO ID, FBO, shader, shader properties and matrices)
 	protected int vaoID;
 	
+	// Requirements for shadow rendering
+	protected boolean renderDepthMap = false;
+	protected FrameBufferObject depthBuffer = FrameBufferObjectManager.getFrameBuffer("shadow");
+	protected Shader depthShader = ShaderManager.getShader("depth");
+	
+	// Determine which fbo to render the scene
 	protected FrameBufferObject fbo;
 	protected Shader shader;
 	
+	// Texture to be used
 	protected Texture tex;
 	
 	// Default primitive objects
 	protected Point point;
 	protected Triangle triangle;
 	protected Quad quad;
+	
+	// A model object
+	protected Model model;
 	
 	// The default color is white
 	protected Vector4f RGBAcolor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -72,6 +88,25 @@ public abstract class EngineObjects {
 	// The update and render function
 	public abstract void update();
 	public abstract void render();
+	
+	// Should be the same for all objects
+	public void prerender()
+	{
+		
+		if(renderDepthMap)
+		{
+			
+			// Update the FBO of every directional light
+			for(LightObject dLight : LightManager.getDirectionalLightList())
+			{
+				
+				depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
+				depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
+				
+				DrawShapes.drawModel(depthShader, model, fbo);
+			}
+		}
+	}
 	
 	// The setter functions for the position, velocities, scale and rotation
 	// The getter functions for the position, velocities, scale, rotation, name and render requirements
@@ -171,11 +206,24 @@ public abstract class EngineObjects {
 	public void setFbo(FrameBufferObject fbo) {
 		this.fbo = fbo;
 	}
+	public boolean isRenderDepthMap() {
+		return renderDepthMap;
+	}
+	public void setRenderDepthMap(boolean renderDepthMap) {
+		this.renderDepthMap = renderDepthMap;
+	}
 	public Shader getShader() {
 		return shader;
 	}
+	public void setTexture(Texture tex)
+	{
+		this.tex = tex;
+	}
 	public Texture getTex() {
 		return tex;
+	}
+	public Model getModel() {
+		return model;
 	}
 	public Vector4f getRGBAcolor() {
 		return RGBAcolor;

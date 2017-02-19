@@ -1,23 +1,47 @@
 package postprocessing;
 
+import engine.Engine;
+import engine.objects.Rectangle;
 import fbo.FrameBufferObject;
-import fbo.FrameBufferObjectManager;
+import graphics.Texture;
+import math.Vector4f;
+import shaders.Shader;
+import shaders.ShaderManager;
 
 public class ShadowManager {
 
-	public static boolean requestDepthMap = false;
+	private static FrameBufferObject depthFBO;
+	private static boolean canRender = false;
+	
+	private static Rectangle rect;
+	private static Shader shader;
 	
 	private ShadowManager() {}
 	
-	public static void createDepthMap(String name)
+	/**
+	 * Bind a depth FBO to the shadow manager
+	 * @param depthFBO The FBO the bind.
+	 */
+	public static void setDepthFBO(FrameBufferObject depthFBO)
 	{
 		
-		FrameBufferObjectManager.addShadowFrameBufferObject(name, 1024, 1024);
-		requestDepthMap = true;
+		depthFBO = depthFBO;
+		canRender = true;
+		
+		shader = ShaderManager.getShader("basic");
+		rect = new Rectangle("depth", new Texture("depth", depthFBO.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, 0, Engine.getWidth() / 4, Engine.getHeight() / 4, 0, Engine.orthoMatrix, new Vector4f(1, 1, 1, 1));
 	}
 	
-	public static FrameBufferObject getShadowBuffer(String name)
+	/**
+	 * Render the current depthbuffer texture that is attached
+	 */
+	public static void render()
 	{
-		return FrameBufferObjectManager.getFrameBuffer(name);
+		
+		if(canRender)
+		{					
+			rect.update();
+			rect.render();
+		}
 	}
 }

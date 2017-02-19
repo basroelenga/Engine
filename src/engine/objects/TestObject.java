@@ -4,16 +4,12 @@ import cam.Camera;
 import engine.Engine;
 import engine.EngineObjects;
 import math.Vector4f;
-import models.Model;
 import models.ModelManager;
-import postprocessing.ShadowManager;
 import shaders.ShaderManager;
 import utils.DrawShapes;
 
 public class TestObject extends EngineObjects{
-	
-	private Model model;
-	
+		
 	public TestObject()
 	{
 		
@@ -25,7 +21,7 @@ public class TestObject extends EngineObjects{
 		viewMatrix = Camera.getViewMatrix();
 		projectionMatrix = Engine.projMatrix;
 	}
-
+	
 	@Override
 	public void update() 
 	{
@@ -46,9 +42,14 @@ public class TestObject extends EngineObjects{
 		
 		DrawShapes.drawModel(shader, model, fbo);
 		
-		if(ShadowManager.requestDepthMap == true)
+		// Render the object to the depth buffer
+		if(renderDepthMap)
 		{
-			DrawShapes.drawModel(ShaderManager.getShader("basic"), model, ShadowManager.getShadowBuffer("shadow"));
+			
+			depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
+			depthShader.uploadMatrix4f(projectionMatrix, depthShader.getProjectionMatrixLoc());
+			
+			DrawShapes.drawModel(depthShader, model, depthBuffer);
 		}
 	}
 }

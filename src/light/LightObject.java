@@ -2,6 +2,7 @@ package light;
 
 import cam.Camera;
 import engine.Engine;
+import fbo.FrameBufferObject;
 import math.Matrix4f;
 import math.Vector3f;
 import shaders.Shader;
@@ -53,11 +54,18 @@ public abstract class LightObject {
 	
 	protected Shader shader;
 	
-	// The light is always displayed in perspective space
+	// The light is always displayed(as a sphere) in perspective space
 	protected Matrix4f modelMatrix = new Matrix4f();
 	protected Matrix4f viewMatrix = Camera.getViewMatrix();
 	protected Matrix4f projectionMatrix = Engine.projMatrix;
 	protected Matrix4f normalMatrix = new Matrix4f();
+	
+	// Requirements for shadows, the view light matrix is the view matrix as seen in the direction of the light
+	// Only works for directional lights
+	protected FrameBufferObject depthBuffer;
+	
+	protected Matrix4f viewLightMatrix = new Matrix4f();
+	protected Matrix4f projectionLightMatrix = new Matrix4f();
 	
 	// The update and render function
 	public abstract void update();
@@ -178,5 +186,11 @@ public abstract class LightObject {
 	}
 	public Matrix4f getNormalMatrix() {
 		return normalMatrix;
+	}
+	public FrameBufferObject getDepthBuffer() {
+		return depthBuffer;
+	}
+	public Matrix4f getProjectionLightMatrix() {
+		return projectionLightMatrix;
 	}
 }

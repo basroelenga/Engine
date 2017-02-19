@@ -9,7 +9,7 @@ public class Matrices {
 	
 	private Matrices(){}
 	
-	public static Matrix4f projectionMatrix(float width, float height)
+	public static Matrix4f getProjectionMatrix(float width, float height)
 	{
 		
 		Matrix4f projMatrix = new Matrix4f();
@@ -29,7 +29,7 @@ public class Matrices {
 		return projMatrix;
 	}
 	
-	public static Matrix4f orthographicMatrix(float left, float right, float top, float bottom)
+	public static Matrix4f getOrthographicMatrix(float left, float right, float top, float bottom)
 	{
 		
 		Matrix4f orthoMatrix = new Matrix4f();

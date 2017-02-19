@@ -53,6 +53,8 @@ public class Rectangle extends EngineObjects{
 
 		this.tex = tex;
 		
+		if(tex != null) shader = ShaderManager.getShader("basictex");
+		
 		quad = EngineObjectManager.getQuad();
 	}
 	
@@ -77,5 +79,15 @@ public class Rectangle extends EngineObjects{
 		
 		if(tex == null) DrawShapes.drawQuad(shader, quad, fbo);
 		else DrawShapes.drawQuad(shader, quad, tex, fbo);
+		
+		// Render the object to the depth buffer
+		if(renderDepthMap)
+		{
+			
+			depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
+			depthShader.uploadMatrix4f(projectionMatrix, depthShader.getProjectionMatrixLoc());
+			
+			DrawShapes.drawQuad(depthShader, quad, depthBuffer);
+		}
 	}
 }

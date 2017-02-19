@@ -29,7 +29,7 @@ public class FrameBufferObject {
 	private int depthTexID;
 	private int depthBufferID;
 	
-	private boolean isDefault = false;
+	private boolean shouldRender = false;
 	
 	private Shader shader;
 	
@@ -60,7 +60,7 @@ public class FrameBufferObject {
 		modelMatrix.scale(Engine.getWidth(), Engine.getHeight(), 0);
 		modelMatrix.rotateQ(180, 0, 0, false);
 		
-		isDefault = true;
+		shouldRender = true;
 		
 		generateDefaultBuffer();
 		checkBuffer();
@@ -103,7 +103,7 @@ public class FrameBufferObject {
 		depthTexID = glGenTextures();
 		
 		glBindTexture(GL_TEXTURE_2D, depthTexID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
 		
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -133,7 +133,7 @@ public class FrameBufferObject {
 		fboID = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
 		
-		// The draw buffer is none because only the depth buffer is rendered.
+		// The draw and read buffers are none because only the depth buffer is rendered.
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		
@@ -141,7 +141,7 @@ public class FrameBufferObject {
 		depthTexID = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, depthTexID);
 		
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
         
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -209,7 +209,7 @@ public class FrameBufferObject {
 	{
 		
 		// Shadow buffers should not be rendered.
-		if(isDefault)
+		if(shouldRender)
 		{
 			
 			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());

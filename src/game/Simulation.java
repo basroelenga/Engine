@@ -7,6 +7,7 @@ import fbo.FrameBufferObjectManager;
 import light.LightManager;
 import math.Vector3f;
 import math.Vector4f;
+import postprocessing.ShadowManager;
 
 public class Simulation {
 	
@@ -24,14 +25,15 @@ public class Simulation {
 		
 		// Add a model
 		EngineObjectManager.addBunny();
+		EngineObjectManager.getEngineObject("bunny").setRenderDepthMap(true);
 		
 		// Add a surface
 		EngineObjectManager.addRectangle("surface", null, -5f, -1f, 5f, 10f, 10f, 0f, Engine.projMatrix, new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+		EngineObjectManager.getEngineObject("surface").setRenderDepthMap(true);
 		
 		EngineObjectManager.getEngineObject("surface").setXa(90f);
 		
-		// Add a shadow buffer
-		FrameBufferObjectManager.addShadowFrameBufferObject("shadow", 1024, 1024);
+		ShadowManager.setDepthFBO(FrameBufferObjectManager.getFrameBuffer("shadow"));
 	}
 	
 	

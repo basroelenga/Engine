@@ -44,7 +44,6 @@ import debug.Debugger;
 import fbo.FrameBufferObject;
 import fbo.FrameBufferObjectManager;
 import game.Simulation;
-import graphics.Texture;
 import graphics.TextureManager;
 import light.LightManager;
 import math.Matrices;
@@ -54,7 +53,6 @@ import postprocessing.ShadowManager;
 import shaders.ShaderManager;
 import text.Text;
 import text.TextManager;
-import utils.DrawShapes;
 
 public class Engine {
 	
@@ -155,8 +153,8 @@ public class Engine {
 		glEnable(GL_TEXTURE_2D);
 		
 		// Set up the projection matrices (these are configured at the width and height of the OpenGL window)
-		projMatrix = Matrices.projectionMatrix(width, height);
-		orthoMatrix = Matrices.orthographicMatrix(0f, width, height, 0f);
+		projMatrix = Matrices.getProjectionMatrix(width, height);
+		orthoMatrix = Matrices.getOrthographicMatrix(0f, width, height, 0f);
 	}
 	
 	private void engineResourceLoader()
@@ -166,11 +164,13 @@ public class Engine {
 		new TextureManager();
 		new TextManager(true);
 		new ShaderManager();
-		new FrameBufferObjectManager();
 		new ModelManager();
 		
 		// Create primitives
 		EngineObjectManager.createPrimitives();
+		
+		// Add a depth buffer, this is necessary for the debugger rectangle, should find better solution.
+		FrameBufferObjectManager.addShadowFrameBufferObject("shadow", 1024, 1024);
 		
 		// Create the debugger
 		debugger = new Debugger();
@@ -219,16 +219,46 @@ public class Engine {
 	private void render()
 	{
 		
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Clear buffers
+		clearBuffers();
 		
-		// Temp test function
-		FrameBufferObjectManager.getFrameBuffer("basic").clearBuffer();
+		// Prerender phase (rendering to depth maps)
+		prerenderPass();
 		
+		// Render the scene
 		firstPass();
+		
+		// Render postprocessing effects
 		secondPass();
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+	}
+	
+	/**
+	 * Function that clears all frame buffers
+	 */
+	private void clearBuffers()
+	{
+		
+		// Clear the default buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		// Clear all framebuffer objects
+		for(FrameBufferObject fbo : FrameBufferObjectManager.getFBOList())
+		{
+			fbo.clearBuffer();
+		}
+	}
+	
+	/**
+	 * The prerender phase will render the depth maps for every directional light in the scene
+	 */
+	private void prerenderPass()
+	{
+		
+		
+		
 	}
 	
 	/**
@@ -264,8 +294,8 @@ public class Engine {
 			fbo.render();
 		}
 		
-		// Render depth map
-		DrawShapes.drawQuad(ShaderManager.getShader("basictex"), EngineObjectManager.getQuad(), new Texture("depthtex", ShadowManager.getShadowBuffer("shadow").getDepthTexID()), null);
+		// Render depth texture
+		ShadowManager.render();
 	}
 
 	private void setFPS()

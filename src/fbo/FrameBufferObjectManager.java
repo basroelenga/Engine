@@ -2,25 +2,13 @@ package fbo;
 
 import java.util.ArrayList;
 
-import engine.Engine;
 import shaders.Shader;
-import shaders.ShaderManager;
 
 public class FrameBufferObjectManager {
 
 	private static ArrayList<FrameBufferObject> frameBufferList = new ArrayList<FrameBufferObject>();
 	
-	private String[] frameBuffers = {"basic"};
-	
-	public FrameBufferObjectManager()
-	{
-		
-		for(int i = 0; i < frameBuffers.length; i++)
-		{
-			frameBufferList.add(new FrameBufferObject(frameBuffers[i], ShaderManager.getShader("basictex"), Engine.getWidth(), Engine.getHeight()));
-		}
-	}
-	
+	private FrameBufferObjectManager() {}
 	
 	public static void addDefaultFrameBufferObject(String name, Shader shader, int WIDTH, int HEIGHT)
 	{

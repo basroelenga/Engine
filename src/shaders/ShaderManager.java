@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ShaderManager {
 
-	private static String[] shaders = {"basic", "basicInstance", "basictex", "ui", "light", "basicT"};
+	private static String[] shaders = {"basic", "basicInstance", "basictex", "ui", "light", "basicT", "depth"};
 	
 	private static ArrayList<Shader> shaderList = new ArrayList<Shader>();
 	

@@ -132,9 +132,19 @@ public class LightManager {
 		throw new RuntimeException("Light does not exist: " + id);
 	}
 	
+	public static ArrayList<LightObject> getPointLightList()
+	{
+		return pointLightList;
+	}
+	
 	public static int getNumberOfPointLights()
 	{
 		return pointLightList.size();
+	}
+	
+	public static ArrayList<LightObject> getDirectionalLightList()
+	{
+		return directionalLightList;
 	}
 	
 	public static int getNumberOfDirectionalLights()
@@ -142,9 +152,30 @@ public class LightManager {
 		return directionalLightList.size();
 	}
 	
+	public static ArrayList<LightObject> getSpotLightList()
+	{
+		return spotLightList;
+	}
+	
 	public static int getNumberOfSpotLights()
 	{
 		return spotLightList.size();
+	}
+	
+	/**
+	 * Return a list of all lights, order is point to directional to spot
+	 * @return The list containing all lightobjects
+	 */
+	public static ArrayList<LightObject> getLightList()
+	{
+		
+		ArrayList<LightObject> tempLightList = new ArrayList<LightObject>();
+		
+		tempLightList.addAll(pointLightList);
+		tempLightList.addAll(directionalLightList);
+		tempLightList.addAll(spotLightList);
+		
+		return tempLightList;
 	}
 	
 	public static int getNumberOfLights()
