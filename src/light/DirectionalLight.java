@@ -1,14 +1,13 @@
 package light;
 
+import cam.Camera;
 import fbo.FrameBufferObjectManager;
-import math.Matrices;
-import math.Matrix4f;
 import math.Vector3f;
 import shaders.Shader;
 
 public class DirectionalLight extends LightObject{
 
-	public DirectionalLight(String name, float xDir, float yDir, float zDir, Vector3f lightColor)
+	public DirectionalLight(String name, Camera cam, float xDir, float yDir, float zDir, Vector3f lightColor)
 	{
 		
 		this.name = name;
@@ -17,6 +16,7 @@ public class DirectionalLight extends LightObject{
 		this.yDir = yDir;
 		this.zDir = zDir;
 		
+		this.cam = cam;
 		this.lightColor = lightColor;
 		
 		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
@@ -25,39 +25,39 @@ public class DirectionalLight extends LightObject{
 		FrameBufferObjectManager.addShadowFrameBufferObject(name, 1024, 1024);
 		depthBuffer = FrameBufferObjectManager.getFrameBuffer(name);
 		
-		// The view matrix for the light needs to be calculated, this can be done by using the direction of the light
-		viewLightMatrix = getLightViewMatrix();
-		
-		// The projection matrix determines how large of an area the light sees, an orthographic matrix is used for this
-		// This orthographic matrix is constructed by using the properties of the projection matrix from the camera
-		projectionLightMatrix = Matrices.getOrthographicMatrix(10, 10, 10, 10);
-		
-		// There is no rendering of the light for now, so no shaders/spheres needed
+		// Calculate the initial direction of the light in polar coordinates
+		getPolarDirection();
 	}
 	
-	private Matrix4f getLightViewMatrix()
+	/**
+	 * Get the direction of the light in polar coordinates
+	 */
+	private void getPolarDirection()
 	{
 		
+		// Convert it to polar coordinates, this gives us the direction the light is looking at
 		float radius = (float) Math.sqrt(Math.pow(xDir, 2) + Math.pow(yDir, 2) + Math.pow(zDir, 2));
-		float theta = (float) (Math.acos(zDir / radius) * (180f / Math.PI));
-		float phi = (float) (Math.atan2(xDir, yDir) * (180f / Math.PI));
+		float theta = (float) (Math.acos(yDir / radius) * (180f / Math.PI));
+		float phi = (float) (Math.atan2(xDir, zDir) * (180f / Math.PI));
 		
-		Matrix4f tempMatrix = new Matrix4f();
-		tempMatrix.rotateQ(theta, 0, phi, false);
-		
-		return tempMatrix;
+		this.setRadius(radius);
+		this.setTheta(theta);
+		this.setPhi(phi);
 	}
 
 	@Override
 	public void update() {
 		
+		// Calculate the 8 points which contain the camera view
+		
+		
+		
 		lightDir = new Vector3f(xDir, yDir, zDir);
 	}
-
-	@Override
-	public void render() {
+	
+	private void calculateShadowBox()
+	{
 		
-		// A direction light is not shown
 	}
 
 	@Override
@@ -67,4 +67,7 @@ public class DirectionalLight extends LightObject{
 		uShader.uploadVector3f(lightColor, uShader.getDirectionalLightColorLocList().get(light));
 		uShader.uploadVector3f(ambIntensity, uShader.getDirectionalAmbIntensityLocList().get(light));
 	}
+
+	@Override
+	public void render() {}
 }

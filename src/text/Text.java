@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import engine.Engine;
 import math.Matrix4f;
+import matrices.MatrixObjectManager;
 import shaders.Shader;
 import shaders.ShaderManager;
 import utils.DrawShapes;
@@ -40,7 +41,7 @@ public class Text {
 		
 		case "3D":
 			
-			projMatrix = Engine.projMatrix;
+			projMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 			shader = ShaderManager.getShader("basictex");
 			
 			scaling = 1f;
@@ -49,7 +50,7 @@ public class Text {
 			
 		case "HUD":
 		
-			projMatrix = Engine.orthoMatrix;
+			projMatrix = MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix();
 			shader = ShaderManager.getShader("ui");
 			
 			scaling = 32f;

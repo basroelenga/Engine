@@ -7,6 +7,7 @@ import engine.EngineObjects;
 import graphics.Texture;
 import light.LightManager;
 import math.Vector4f;
+import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
 import shapes.UVSphere;
 import utils.DrawShapes;
@@ -34,7 +35,7 @@ public class Sphere extends EngineObjects{
 		
 		sphere = EngineObjectManager.getUVSphere(subdivision);
 		
-		projectionMatrix = Engine.projMatrix;
+		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 		viewMatrix = Camera.getViewMatrix();
 
 		//fbo = FrameBufferObjectManager.getFrameBuffer("basic");

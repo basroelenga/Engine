@@ -5,6 +5,7 @@ import engine.objects.Rectangle;
 import fbo.FrameBufferObject;
 import graphics.Texture;
 import math.Vector4f;
+import matrices.MatrixObjectManager;
 import shaders.Shader;
 import shaders.ShaderManager;
 
@@ -29,7 +30,7 @@ public class ShadowManager {
 		canRender = true;
 		
 		shader = ShaderManager.getShader("basic");
-		rect = new Rectangle("depth", new Texture("depth", depthFBO.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, 0, Engine.getWidth() / 4, Engine.getHeight() / 4, 0, Engine.orthoMatrix, new Vector4f(1, 1, 1, 1));
+		rect = new Rectangle("depth", new Texture("depth", depthFBO.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, 0, Engine.getWidth() / 4, Engine.getHeight() / 4, 0, MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), new Vector4f(1, 1, 1, 1));
 	}
 	
 	/**

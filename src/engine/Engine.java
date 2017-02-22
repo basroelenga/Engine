@@ -46,8 +46,7 @@ import fbo.FrameBufferObjectManager;
 import game.Simulation;
 import graphics.TextureManager;
 import light.LightManager;
-import math.Matrices;
-import math.Matrix4f;
+import matrices.MatrixObjectManager;
 import models.ModelManager;
 import postprocessing.ShadowManager;
 import shaders.ShaderManager;
@@ -55,9 +54,6 @@ import text.Text;
 import text.TextManager;
 
 public class Engine {
-	
-	public static Matrix4f projMatrix;
-	public static Matrix4f orthoMatrix;
 	
 	public static int keyInput;
 	public static int keyAction;
@@ -96,7 +92,7 @@ public class Engine {
 		Engine.height = height;
 		
 		System.out.println("Engine started");
-		System.out.println("Resolution: " + Engine.width + " x " + Engine.height);
+		System.out.println("Resolution: " + Engine.getWidth() + " x " + Engine.getHeight());
 		
 		setUpGLFWAndOpenGL();
 		engineResourceLoader();
@@ -153,8 +149,9 @@ public class Engine {
 		glEnable(GL_TEXTURE_2D);
 		
 		// Set up the projection matrices (these are configured at the width and height of the OpenGL window)
-		projMatrix = Matrices.getProjectionMatrix(width, height);
-		orthoMatrix = Matrices.getOrthographicMatrix(0f, width, height, 0f);
+		// These are the default projection matrices and used for camera and GUI rendering
+		MatrixObjectManager.generateProjectionMatrix("projectionMatrixDefault", 70, 0.1f, 1000f, Engine.getWidth(), Engine.getHeight());
+		MatrixObjectManager.generateOrthographicMatrix("orthographicMatrixDefault", -1f, 1f, 0f, Engine.getWidth(), Engine.getHeight(), 0f);
 	}
 	
 	private void engineResourceLoader()

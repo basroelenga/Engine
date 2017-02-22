@@ -2,6 +2,7 @@ package light;
 
 import java.util.ArrayList;
 
+import cam.Camera;
 import math.Vector3f;
 import shaders.Shader;
 import shaders.ShaderManager;
@@ -74,10 +75,10 @@ public class LightManager {
 		}
 	}
 	
-	public static void addDirectionalLight(String name, float xDir, float yDir, float zDir, Vector3f lightColor)
+	public static void addDirectionalLight(String name, Camera cam, float xDir, float yDir, float zDir, Vector3f lightColor)
 	{
 		
-		directionalLightList.add(new DirectionalLight(name, xDir, yDir, zDir, lightColor));
+		directionalLightList.add(new DirectionalLight(name, cam, xDir, yDir, zDir, lightColor));
 		
 		// When a directional light is added, the shaders should also know this
 		for(Shader shader : ShaderManager.getShaderList())

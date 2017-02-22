@@ -8,6 +8,7 @@ import graphics.Texture;
 import graphics.TextureManager;
 import math.Matrix4f;
 import math.Vector4f;
+import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
 import utils.DrawShapes;
 
@@ -48,7 +49,7 @@ public class Rectangle extends EngineObjects{
 		shader = ShaderManager.getShader("basic");
 		
 		// If the projection matrix is the perspective matrix the view matrix should also be set.
-		if(projectionMatrix == Engine.projMatrix) viewMatrix = Camera.getViewMatrix();
+		if(projectionMatrix == MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix()) viewMatrix = Camera.getViewMatrix();
 		else viewMatrix = new Matrix4f();
 
 		this.tex = tex;

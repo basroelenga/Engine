@@ -12,6 +12,7 @@ import engine.Engine;
 import engine.EngineObjectManager;
 import graphics.Texture;
 import math.Matrix4f;
+import matrices.MatrixObjectManager;
 import shaders.Shader;
 import utils.DrawShapes;
 
@@ -214,7 +215,7 @@ public class FrameBufferObject {
 			
 			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
 			shader.uploadMatrix4f(new Matrix4f(), shader.getViewMatrixLoc());
-			shader.uploadMatrix4f(Engine.orthoMatrix, shader.getProjectionMatrixLoc());
+			shader.uploadMatrix4f(MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), shader.getProjectionMatrixLoc());
 			
 			//System.out.println(tex.getTexID());
 			

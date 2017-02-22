@@ -6,6 +6,7 @@ import engine.EngineObjectManager;
 import engine.EngineObjects;
 import graphics.Texture;
 import math.Matrix4f;
+import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
 import shapes.Point;
 import shapes.UVSphere;
@@ -37,7 +38,7 @@ public class Particle extends EngineObjects{
 		this.pType = type;
 		
 		viewMatrix = Camera.getViewMatrix();
-		projectionMatrix = Engine.projMatrix;
+		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 		
 		// Set the initial modelmatrix
 		modelMatrix.translate(x, y, z);

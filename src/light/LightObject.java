@@ -5,6 +5,7 @@ import engine.Engine;
 import fbo.FrameBufferObject;
 import math.Matrix4f;
 import math.Vector3f;
+import matrices.MatrixObjectManager;
 import shaders.Shader;
 
 public abstract class LightObject {
@@ -33,6 +34,17 @@ public abstract class LightObject {
 	protected float ys;
 	protected float zs;
 	
+	// Direction in polar coordinates
+	protected float radius;
+	protected float theta;
+	protected float phi;
+	
+	// Toggle shadows (default is false)
+	protected boolean renderShadows = false;
+	
+	// A camera is needed to do the shadow calculation from
+	protected Camera cam;
+	
 	// The cone angle for spotlights
 	protected float coneAngle;
 	
@@ -57,7 +69,7 @@ public abstract class LightObject {
 	// The light is always displayed(as a sphere) in perspective space
 	protected Matrix4f modelMatrix = new Matrix4f();
 	protected Matrix4f viewMatrix = Camera.getViewMatrix();
-	protected Matrix4f projectionMatrix = Engine.projMatrix;
+	protected Matrix4f projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 	protected Matrix4f normalMatrix = new Matrix4f();
 	
 	// Requirements for shadows, the view light matrix is the view matrix as seen in the direction of the light
@@ -159,6 +171,33 @@ public abstract class LightObject {
 	}
 	public void setZs(float zs) {
 		this.zs = zs;
+	}
+	public float getRadius() {
+		return radius;
+	}
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+	public float getTheta() {
+		return theta;
+	}
+	public void setTheta(float theta) {
+		this.theta = theta;
+	}
+	public float getPhi() {
+		return phi;
+	}
+	public void setPhi(float phi) {
+		this.phi = phi;
+	}
+	public Camera getCam() {
+		return cam;
+	}
+	public boolean isRenderShadows() {
+		return renderShadows;
+	}
+	public void setRenderShadows(boolean renderShadows) {
+		this.renderShadows = renderShadows;
 	}
 	public boolean isShow() {
 		return show;

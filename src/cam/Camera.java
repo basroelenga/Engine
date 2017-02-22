@@ -25,8 +25,8 @@ public class Camera {
 	private static float y = 0f;
 	private static float z = 0f;
 	
-	private static float Rx = 0f;
-	private static float Ry = 0f;
+	private static float theta = 0f;
+	private static float phi = 0f;
 	//private static float Rz = 0f;
 	
 	private static Matrix4f viewMatrix;
@@ -74,8 +74,8 @@ public class Camera {
 				prevMouseY = mouseY;
 			}
 			
-			Ry += -mouseDX;
-			Rx += mouseDY;
+			phi += -mouseDX;
+			theta += mouseDY;
 		}
 		else
 		{
@@ -131,28 +131,28 @@ public class Camera {
 	private void moveX(float dir)
 	{
 		
-		x -= dir * Math.sin(Math.toRadians(Ry));
-		z += dir * Math.cos(Math.toRadians(Ry));
+		x -= dir * Math.sin(Math.toRadians(phi));
+		z += dir * Math.cos(Math.toRadians(phi));
 	}
 	
 	private void moveY(float dir)
 	{
 		
-		y += dir * Math.sin(Math.toRadians(Rx));
+		y += dir * Math.sin(Math.toRadians(theta));
 	}
 	
 	private void moveZ(float dir)
 	{
 		
-		x -= dir * Math.sin(Math.toRadians(Ry - 90));
-		z += dir * Math.cos(Math.toRadians(Ry - 90));
+		x -= dir * Math.sin(Math.toRadians(phi - 90));
+		z += dir * Math.cos(Math.toRadians(phi - 90));
 	}
 	
 	private void uRotationX()
 	{
 		
 		Matrix4f rotMatrix = new Matrix4f();
-		rotMatrix.rotateQ(Rx, 0, 0, true);
+		rotMatrix.rotateQ(theta, 0, 0, true);
 	
 		viewMatrix.multiply(rotMatrix);
 	}
@@ -161,7 +161,7 @@ public class Camera {
 	{
 		
 		Matrix4f rotMatrix = new Matrix4f();
-		rotMatrix.rotateQ(0, Ry, 0, true);
+		rotMatrix.rotateQ(0, phi, 0, true);
 	
 		viewMatrix.multiply(rotMatrix);
 	}
@@ -184,5 +184,15 @@ public class Camera {
 	public static float getZ()
 	{
 		return z;
+	}
+	
+	public static float getPhi()
+	{
+		return phi;
+	}
+	
+	public static float getTheta()
+	{
+		return theta;
 	}
 }
