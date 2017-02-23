@@ -33,17 +33,25 @@ public class Vector3f {
 	public void add(Vector3f v)
 	{
 		
-		this.x += v.getX();
-		this.y += v.getY();
-		this.z += v.getZ();
+		x += v.getX();
+		y += v.getY();
+		z += v.getZ();
+	}
+	
+	public void scale(float s)
+	{
+		
+		x *= s;
+		y *= s;
+		z *= s;
 	}
 	
 	public void dotProduct(Vector3f v)
 	{
 		
-		this.x = this.x * v.getX();
-		this.y = this.y * v.getY();
-		this.z = this.z * v.getZ();
+		x *= v.getX();
+		y *= v.getY();
+		z *= v.getZ();
 	}
 	
 	public void crossProduct(Vector3f v)
@@ -53,9 +61,9 @@ public class Vector3f {
 		float tempY = y;
 		float tempZ = z;
 		
-		this.x = tempY * v.getZ() - tempZ * v.getY();
-		this.y = tempZ * v.getX() - tempX * v.getZ();
-		this.z = tempX * v.getY() - tempY * v.getX();
+		x = tempY * v.getZ() - tempZ * v.getY();
+		y = tempZ * v.getX() - tempX * v.getZ();
+		z = tempX * v.getY() - tempY * v.getX();
 	}
 	
 	public Vector3f crossProductR(Vector3f v)
@@ -73,11 +81,11 @@ public class Vector3f {
 	public void normalize()
 	{
 		
-		float length = (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+		float length = (float) Math.sqrt(x * x + y * y + z * z);
 		
-		this.x = this.x / length;
-		this.y = this.y / length;
-		this.z = this.z / length;
+		x = x / length;
+		y = y / length;
+		z = z / length;
 	}
 	
 	public void print()
@@ -85,6 +93,30 @@ public class Vector3f {
 		System.out.println(x + " , " + y + " , " + z);
 	}
 
+	// Some static methods
+	
+	public static Vector3f add(Vector3f vec1, Vector3f vec2)
+	{
+		
+		Vector3f vect1 = new Vector3f(vec1);
+		Vector3f vect2 = new Vector3f(vec2);
+		
+		vect1.add(vect2);
+		
+		return vect1;
+	}
+	
+	public static Vector3f cross(Vector3f vec1, Vector3f vec2)
+	{
+		
+		Vector3f vect1 = new Vector3f(vec1);
+		Vector3f vect2 = new Vector3f(vec2);
+		
+		vect1.crossProduct(vect2);
+		
+		return vect1;
+	}
+	
 	public float getX() {
 		return x;
 	}

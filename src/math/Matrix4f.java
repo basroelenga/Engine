@@ -157,6 +157,30 @@ public class Matrix4f {
 	}
 	
 	/**
+	 * Multiply a vector with a matrix.
+	 * @param vector Vector to multiply the matrix with.
+	 * @return The resulting vector.
+	 */
+	public Vector4f multiply(Vector4f vector)
+	{
+		
+		Vector4f retVector = new Vector4f();
+		updateElements();
+				
+		float x = m00 * vector.getX() + m01 * vector.getY() + m02 * vector.getZ() + m03 * vector.getW();
+		float y = m10 * vector.getX() + m11 * vector.getY() + m12 * vector.getZ() + m13 * vector.getW();
+		float z = m20 * vector.getX() + m21 * vector.getY() + m22 * vector.getZ() + m23 * vector.getW();
+		float w = m30 * vector.getX() + m31 * vector.getY() + m32 * vector.getZ() + m33 * vector.getW();
+		
+		retVector.setX(x);
+		retVector.setY(y);
+		retVector.setZ(z);
+		retVector.setW(w);
+				
+		return retVector;
+	}
+	
+	/**
 	 * Transpose the current matrix.
 	 */
 	public void transpose()
@@ -175,6 +199,9 @@ public class Matrix4f {
 		matrixArray = temp;
 	}
 	
+	/**
+	 * Normalize the current matrix.
+	 */
 	public void normalize()
 	{
 		

@@ -1,4 +1,4 @@
-package cam;
+package camera;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 
@@ -12,6 +12,8 @@ import shaders.ShaderManager;
 
 public class Camera {
 
+	private String name;
+	
 	private float mouseX = 0f;
 	private float mouseY = 0f;
 	
@@ -21,30 +23,35 @@ public class Camera {
 	private float mouseDX = 0f;
 	private float mouseDY = 0f;
 	
-	private static float x = 0f;
-	private static float y = 0f;
-	private static float z = 0f;
+	private float x;
+	private float y;
+	private float z;
 	
-	private static float theta = 0f;
-	private static float phi = 0f;
-	//private static float Rz = 0f;
+	private float theta = 0f;
+	private float phi = 0f;
 	
-	private static Matrix4f viewMatrix;
+	private Matrix4f viewMatrix;
 	
-	public Camera()
+	public Camera(String name, float x, float y, float z)
 	{
+	
+		this.name = name;
+		
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		
 		viewMatrix = new Matrix4f();
 	}
 	
 	public void update()
 	{
-		viewMatrix.setIdentity();
 		
+		viewMatrix.setIdentity();
 		updatePositionAndRotation();
 		
-		uRotationX();
-		uRotationY();
+		uRotationTheta();
+		uRotationPhi();
 		
 		uPosition();
 	}
@@ -148,7 +155,7 @@ public class Camera {
 		z += dir * Math.cos(Math.toRadians(phi - 90));
 	}
 	
-	private void uRotationX()
+	private void uRotationTheta()
 	{
 		
 		Matrix4f rotMatrix = new Matrix4f();
@@ -157,7 +164,7 @@ public class Camera {
 		viewMatrix.multiply(rotMatrix);
 	}
 	
-	private void uRotationY()
+	private void uRotationPhi()
 	{
 		
 		Matrix4f rotMatrix = new Matrix4f();
@@ -166,32 +173,42 @@ public class Camera {
 		viewMatrix.multiply(rotMatrix);
 	}
 	
-	public static Matrix4f getViewMatrix()
+	public String getName()
+	{
+		return name;
+	}
+	
+	public Matrix4f getViewMatrix()
 	{
 		return viewMatrix;
 	}
 	
-	public static float getX()
+	public float getX()
 	{
 		return x;
 	}
 	
-	public static float getY()
+	public float getY()
 	{
 		return y;
 	}
 	
-	public static float getZ()
+	public float getZ()
 	{
 		return z;
 	}
 	
-	public static float getPhi()
+	public Vector3f getPosition()
+	{
+		return new Vector3f(x, y, z);
+	}
+	
+	public float getPhi()
 	{
 		return phi;
 	}
 	
-	public static float getTheta()
+	public float getTheta()
 	{
 		return theta;
 	}

@@ -1,11 +1,9 @@
 package engine.objects;
 
-import cam.Camera;
-import engine.Engine;
+import camera.CameraManager;
 import engine.EngineObjectManager;
 import engine.EngineObjects;
 import graphics.Texture;
-import math.Matrix4f;
 import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
 import shapes.Point;
@@ -37,7 +35,7 @@ public class Particle extends EngineObjects{
 		
 		this.pType = type;
 		
-		viewMatrix = Camera.getViewMatrix();
+		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 		
 		// Set the initial modelmatrix

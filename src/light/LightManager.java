@@ -2,7 +2,7 @@ package light;
 
 import java.util.ArrayList;
 
-import cam.Camera;
+import camera.Camera;
 import math.Vector3f;
 import shaders.Shader;
 import shaders.ShaderManager;

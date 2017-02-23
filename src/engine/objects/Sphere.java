@@ -1,7 +1,6 @@
 package engine.objects;
 
-import cam.Camera;
-import engine.Engine;
+import camera.CameraManager;
 import engine.EngineObjectManager;
 import engine.EngineObjects;
 import graphics.Texture;
@@ -36,7 +35,7 @@ public class Sphere extends EngineObjects{
 		sphere = EngineObjectManager.getUVSphere(subdivision);
 		
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
-		viewMatrix = Camera.getViewMatrix();
+		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
 
 		//fbo = FrameBufferObjectManager.getFrameBuffer("basic");
 		

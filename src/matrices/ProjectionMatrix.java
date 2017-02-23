@@ -4,6 +4,16 @@ import math.Matrix4f;
 
 public class ProjectionMatrix extends MatrixObject{
 	
+	/**
+	 * Create a projection matrix object, this object contains the various properties of the projection matrix
+	 * and also contains the matrix itself.
+	 * @param name The name of the object.
+	 * @param fov The field of view.
+	 * @param zNear Distance zNear.
+	 * @param zFar Distance zFar. 
+	 * @param width Width of the window.
+	 * @param height Height of the window.
+	 */
 	public ProjectionMatrix(String name, float fov, float zNear, float zFar, float width, float height)
 	{
 				
@@ -24,6 +34,9 @@ public class ProjectionMatrix extends MatrixObject{
 		calculateProjectionMatrix();
 	}
 	
+	/**
+	 * Calculate the projection matrix.
+	 */
 	private void calculateProjectionMatrix()
 	{
 	

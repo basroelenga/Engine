@@ -1,7 +1,7 @@
 package light;
 
-import cam.Camera;
-import engine.Engine;
+import camera.Camera;
+import camera.CameraManager;
 import fbo.FrameBufferObject;
 import math.Matrix4f;
 import math.Vector3f;
@@ -42,6 +42,9 @@ public abstract class LightObject {
 	// Toggle shadows (default is false)
 	protected boolean renderShadows = false;
 	
+	// Shadow render distance, this is the distance that will be used as zFar.
+	protected float shadowDistance = 10f;
+	
 	// A camera is needed to do the shadow calculation from
 	protected Camera cam;
 	
@@ -68,7 +71,7 @@ public abstract class LightObject {
 	
 	// The light is always displayed(as a sphere) in perspective space
 	protected Matrix4f modelMatrix = new Matrix4f();
-	protected Matrix4f viewMatrix = Camera.getViewMatrix();
+	protected Matrix4f viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
 	protected Matrix4f projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 	protected Matrix4f normalMatrix = new Matrix4f();
 	

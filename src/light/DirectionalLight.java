@@ -1,8 +1,12 @@
 package light;
 
-import cam.Camera;
+import camera.Camera;
+import camera.CameraManager;
 import fbo.FrameBufferObjectManager;
+import math.Matrix4f;
 import math.Vector3f;
+import math.Vector4f;
+import matrices.MatrixObjectManager;
 import shaders.Shader;
 
 public class DirectionalLight extends LightObject{
@@ -27,6 +31,10 @@ public class DirectionalLight extends LightObject{
 		
 		// Calculate the initial direction of the light in polar coordinates
 		getPolarDirection();
+		
+		// Calculate the width and height of the projection matrix used for the shadow calculation
+		// Now the correct widths and heights can be obtained from the projection matrix.
+		MatrixObjectManager.getMatrixObject("projectionMatrixDefault").calculateWidthAndHeights(shadowDistance);
 	}
 	
 	/**
@@ -48,18 +56,63 @@ public class DirectionalLight extends LightObject{
 	@Override
 	public void update() {
 		
-		// Calculate the 8 points which contain the camera view
-		
-		
-		
+		// Update direction of light
 		lightDir = new Vector3f(xDir, yDir, zDir);
+		getPolarDirection();
+		
+		// First calculate the rotation of the camera
+		Matrix4f cameraRotationMatrix = new Matrix4f();
+		
+		cameraRotationMatrix.rotate("y", CameraManager.getCamera("cam").getTheta());
+		cameraRotationMatrix.rotate("x", CameraManager.getCamera("cam").getPhi());
+				
+		// Calculate the forward vector
+		Vector3f forwardVector = cameraRotationMatrix.multiply(new Vector4f(0, 0, -1, 0)).toVector3f();
+		
+		// Scale the forward vector with the far plane
+		Vector3f toFarPlane = new Vector3f(forwardVector);
+		toFarPlane.scale(shadowDistance);
+
+		// Scale the forward vector with the near plane
+		Vector3f toNearPlane = new Vector3f(forwardVector);
+		toNearPlane.scale(MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getzNear());
+		
+		// Calculate the centers by adding the forward vectors to the camera position
+		Vector3f centerFar = Vector3f.add(toFarPlane, CameraManager.getCamera("cam").getPosition());
+		Vector3f centerNear = Vector3f.add(toNearPlane, CameraManager.getCamera("cam").getPosition());
+		
+		// Calculate the up, down, left and right vectors
+		Vector3f upVector = cameraRotationMatrix.multiply(new Vector4f(0, 1, 0, 0)).toVector3f();
+		Vector3f downVector = new Vector3f(-upVector.getX(), -upVector.getY(), -upVector.getZ());
+		
+		Vector3f rightVector = Vector3f.cross(forwardVector, upVector);
+		Vector3f leftVector = new Vector3f(-rightVector.getX(), -rightVector.getY(), -rightVector.getZ());
+		
+		float farHeight = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getFarHeight();
+		float nearHeight = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getNearHeight();
+		
+		float farWidth = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getFarWidth();
+		float nearWidth = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getNearWidth();
+		
+		// Calculate the far top, far bottom, near top and near bottom vectors
+		Vector3f farTop = Vector3f.add(centerFar, new Vector3f(upVector.getX() * farHeight / 2, upVector.getY() * farHeight / 2, upVector.getZ() * farHeight / 2));
+		Vector3f nearTop = Vector3f.add(centerNear, new Vector3f(upVector.getX() * nearHeight / 2, upVector.getY() * nearHeight / 2, upVector.getZ() * nearHeight / 2));
+
+		Vector3f farBottom = Vector3f.add(centerFar, new Vector3f(downVector.getX() * farHeight / 2, downVector.getY() * farHeight / 2, downVector.getZ() * farHeight / 2));
+		Vector3f nearBottom = Vector3f.add(centerNear, new Vector3f(downVector.getX() * nearHeight / 2, downVector.getY() * nearHeight / 2, downVector.getZ() * nearHeight / 2));
+
 	}
 	
-	private void calculateShadowBox()
+	private Vector4f calculateLightCorner(Vector3f startPoint, Vector3f direction, float width)
 	{
 		
+		Vector3f point3f = Vector3f.add(startPoint, new Vector3f(direction.getX() * width, direction.getY() * width, direction.getZ() * width));
+		Vector4f point4f = new Vector4f(point3f.getX(), point3f.getY(), point3f.getZ(), 1f);
+		
+		return new Vector4f();
+		
 	}
-
+	
 	@Override
 	public void uploadToShader(int light, Shader uShader) {
 		

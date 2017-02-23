@@ -1,6 +1,6 @@
 package engine.objects;
 
-import cam.Camera;
+import camera.CameraManager;
 import engine.EngineObjects;
 import math.Vector4f;
 import matrices.MatrixObjectManager;
@@ -18,7 +18,7 @@ public class TestObject extends EngineObjects{
 		shader = ShaderManager.getShader("light");
 		model = ModelManager.getModel("monkey");
 		
-		viewMatrix = Camera.getViewMatrix();
+		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 	}
 	

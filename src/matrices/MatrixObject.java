@@ -27,6 +27,15 @@ public abstract class MatrixObject {
 	protected float top;
 	protected float bottom;
 	
+	// This is only applicable for a projection matrix, since the width and height for an orthographic matrix are the same in the near and far plane
+	// which means that they are already described by the width and height variables in this interface. These values can be used to construct a box
+	// around the projection matrix and so construct an orthographic matrix which can be used to render the depth maps of light.
+	protected float farHeight;
+	protected float farWidth;
+	
+	protected float nearHeight;
+	protected float nearWidth;
+	
 	protected void generateHashMap()
 	{
 		
@@ -52,6 +61,20 @@ public abstract class MatrixObject {
 	{
 		
 		matrixMap.put(key, value);
+	}
+	
+	/**
+	 * Calculate the width and heights of the projection matrix.
+	 * @param shadowDistance The shadow distance, this is taken as zFar.
+	 */
+	public void calculateWidthAndHeights(float shadowDistance)
+	{
+		
+		farWidth = 2 * shadowDistance * (float) Math.tan(Math.toRadians(fov / 2));
+		nearWidth = 2 * zNear * (float) Math.tan(Math.toRadians(fov / 2));
+		
+		farHeight = farWidth / aspect;
+		nearHeight = nearWidth / aspect;
 	}
 	
 	public abstract void update();
@@ -103,5 +126,21 @@ public abstract class MatrixObject {
 
 	public float getBottom() {
 		return matrixMap.get("bottom");
+	}
+
+	public float getFarHeight() {
+		return farHeight;
+	}
+
+	public float getFarWidth() {
+		return farWidth;
+	}
+
+	public float getNearHeight() {
+		return nearHeight;
+	}
+
+	public float getNearWidth() {
+		return nearWidth;
 	}
 }

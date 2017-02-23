@@ -1,6 +1,7 @@
 package game;
 
-import cam.Camera;
+import camera.Camera;
+import camera.CameraManager;
 import engine.Engine;
 import engine.EngineObjectManager;
 import fbo.FrameBufferObjectManager;
@@ -19,7 +20,7 @@ public class Simulation {
 	public Simulation()
 	{
 		
-		cam = new Camera();
+		CameraManager.addCamera("cam", 0, 0, 0);
 		// =========================
 		
 		LightManager.addDirectionalLight("dir", cam, 0, 1, -1, new Vector3f(1.0f, 0.0f, 0.0f));
@@ -45,6 +46,6 @@ public class Simulation {
 		
 		angle += 0.025f;
 
-		cam.update();
+		CameraManager.update();
 	}
 }

@@ -2,7 +2,8 @@ package terrain;
 
 import java.util.ArrayList;
 
-import cam.Camera;
+import camera.Camera;
+import camera.CameraManager;
 
 public class Terrain {
 
@@ -41,10 +42,9 @@ public class Terrain {
 	private void updateTiles()
 	{
 		
-		x = Camera.getX();
-		y = Camera.getY();
-		z = Camera.getZ();
-		
+		x = CameraManager.getCamera("cam").getX();
+		y = CameraManager.getCamera("cam").getY();
+		z = CameraManager.getCamera("cam").getZ();
 	}
 	
 	public void update()
