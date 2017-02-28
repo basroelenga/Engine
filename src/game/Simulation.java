@@ -1,8 +1,6 @@
 package game;
 
-import camera.Camera;
 import camera.CameraManager;
-import engine.Engine;
 import engine.EngineObjectManager;
 import fbo.FrameBufferObjectManager;
 import light.LightManager;
@@ -12,18 +10,16 @@ import matrices.MatrixObjectManager;
 import postprocessing.ShadowManager;
 
 public class Simulation {
-	
-	public static Camera cam;
-	
+		
 	private float angle = 0f;
 	
 	public Simulation()
 	{
 		
-		CameraManager.addCamera("cam", 0, 0, 0);
+		CameraManager.addCamera("cam", new Vector3f(0, 0, -2), new Vector3f());
 		// =========================
 		
-		LightManager.addDirectionalLight("dir", cam, 0, 1, -1, new Vector3f(1.0f, 0.0f, 0.0f));
+		LightManager.addDirectionalLight("dir", CameraManager.getCamera("cam"), 0, 1, -1, new Vector3f(1.0f, 0.0f, 0.0f));
 		
 		// Add a model
 		EngineObjectManager.addBunny();
@@ -44,8 +40,7 @@ public class Simulation {
 	public void update()
 	{
 		
-		angle += 0.025f;
-
-		CameraManager.update();
+		angle += 0.0025f;
+		EngineObjectManager.getEngineObject("bunny").setZ(angle);
 	}
 }

@@ -42,9 +42,9 @@ public class Terrain {
 	private void updateTiles()
 	{
 		
-		x = CameraManager.getCamera("cam").getX();
-		y = CameraManager.getCamera("cam").getY();
-		z = CameraManager.getCamera("cam").getZ();
+		x = CameraManager.getCamera("cam").getPosition().getX();
+		y = CameraManager.getCamera("cam").getPosition().getY();
+		z = CameraManager.getCamera("cam").getPosition().getZ();
 	}
 	
 	public void update()

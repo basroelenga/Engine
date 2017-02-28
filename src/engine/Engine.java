@@ -40,6 +40,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import camera.CameraManager;
 import debug.Debugger;
 import fbo.FrameBufferObject;
 import fbo.FrameBufferObjectManager;
@@ -202,6 +203,8 @@ public class Engine {
 		
 		// This function will update changes to objects
 		game.update();
+		
+		CameraManager.update();
 		
 		// Update all matrices etc
 		EngineObjectManager.update();

@@ -323,6 +323,22 @@ public class Matrix4f {
 	}
 	
 	/**
+	 * Translate the current matrix.
+	 * @param vec1 Translation vector.
+	 */
+	public void translate(Vector3f vec1)
+	{
+		
+		Matrix4f transMatrix = new Matrix4f();
+		
+		transMatrix.getElements()[3] = vec1.getX();
+		transMatrix.getElements()[7] = vec1.getY();
+		transMatrix.getElements()[11] = vec1.getZ();
+		
+		this.multiply(transMatrix);
+	}
+	
+	/**
 	 * Scale the current matrix.
 	 * @param x Scaling in x-direction.
 	 * @param y Scaling in y-direction.
@@ -340,56 +356,49 @@ public class Matrix4f {
 		this.multiply(scaleMatrix);
 	}
 	
-	/**
-	 * Rotate the current matrix.
-	 * @param axis Axis of rotation (x, y, z).
-	 * @param angle The angle of rotation.
-	 */
-	public void rotate(String axis, float angle)
+	public void rotateEulerX(float angle)
 	{
 		
 		Matrix4f rotation = new Matrix4f();
 		angle = (float) Math.toRadians(angle);
 		
-		switch(axis)
-		{
+		rotation.getElements()[5] = (float) Math.cos(angle);
+		rotation.getElements()[6] = (float) -Math.sin(angle);
 		
-			case "x":
+		rotation.getElements()[9] = (float) Math.sin(angle);
+		rotation.getElements()[10] = (float) Math.cos(angle);
 		
-				rotation.getElements()[5] = (float) Math.cos(angle);
-				rotation.getElements()[6] = (float) -Math.sin(angle);
-				
-				rotation.getElements()[9] = (float) Math.sin(angle);
-				rotation.getElements()[10] = (float) Math.cos(angle);
-				
-				this.multiply(rotation);
-				
-				break;
-			
-			case "y":
-				
-				rotation.getElements()[0] = (float) Math.cos(angle);
-				rotation.getElements()[2] = (float) Math.sin(angle);
-				
-				rotation.getElements()[8] = (float) -Math.sin(angle);
-				rotation.getElements()[10] = (float) Math.cos(angle);
-				
-				this.multiply(rotation);
-				
-				break;
-				
-			case "z":
-				
-				rotation.getElements()[0] = (float) Math.cos(angle);
-				rotation.getElements()[1] = (float) -Math.sin(angle);
-				
-				rotation.getElements()[4] = (float) Math.sin(angle);
-				rotation.getElements()[5] = (float) Math.cos(angle);
-				
-				this.multiply(rotation);
-				
-				break;
-		}
+		this.multiply(rotation);
+	}
+	
+	public void rotateEulerY(float angle)
+	{
+		
+		Matrix4f rotation = new Matrix4f();
+		angle = (float) Math.toRadians(angle);
+		
+		rotation.getElements()[0] = (float) Math.cos(angle);
+		rotation.getElements()[2] = (float) Math.sin(angle);
+		
+		rotation.getElements()[8] = (float) -Math.sin(angle);
+		rotation.getElements()[10] = (float) Math.cos(angle);
+		
+		this.multiply(rotation);
+	}
+	
+	public void rotateEulerZ(float angle)
+	{
+		
+		Matrix4f rotation = new Matrix4f();
+		angle = (float) Math.toRadians(angle);
+		
+		rotation.getElements()[0] = (float) Math.cos(angle);
+		rotation.getElements()[1] = (float) -Math.sin(angle);
+		
+		rotation.getElements()[4] = (float) Math.sin(angle);
+		rotation.getElements()[5] = (float) Math.cos(angle);
+		
+		this.multiply(rotation);
 	}
 	
 	/**

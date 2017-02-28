@@ -28,6 +28,7 @@ public class TestObject extends EngineObjects{
 	
 		modelMatrix.setIdentity();
 		
+		modelMatrix.translate(x, y, z);
 		modelMatrix.scale(0.5f, 0.5f, 0.5f);
 	}
 

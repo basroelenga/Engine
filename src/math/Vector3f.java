@@ -38,6 +38,14 @@ public class Vector3f {
 		z += v.getZ();
 	}
 	
+	public void add(float f)
+	{
+		
+		x += f;
+		y += f;
+		z += f;
+	}
+	
 	public void scale(float s)
 	{
 		
@@ -94,7 +102,6 @@ public class Vector3f {
 	}
 
 	// Some static methods
-	
 	public static Vector3f add(Vector3f vec1, Vector3f vec2)
 	{
 		
@@ -102,6 +109,18 @@ public class Vector3f {
 		Vector3f vect2 = new Vector3f(vec2);
 		
 		vect1.add(vect2);
+		
+		return vect1;
+	}
+	
+	public static Vector3f multiply(Vector3f vec, float f)
+	{
+		
+		Vector3f vect1 = new Vector3f();
+		
+		vect1.setX(vec.getX() * f);
+		vect1.setY(vec.getY() * f);
+		vect1.setZ(vec.getZ() * f);
 		
 		return vect1;
 	}

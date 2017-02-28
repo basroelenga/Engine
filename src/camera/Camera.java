@@ -6,6 +6,7 @@ import debug.Debugger;
 import input.KeyboardInput;
 import input.MouseInput;
 import math.Matrix4f;
+import math.Quaternion;
 import math.Vector3f;
 import shaders.Shader;
 import shaders.ShaderManager;
@@ -23,42 +24,75 @@ public class Camera {
 	private float mouseDX = 0f;
 	private float mouseDY = 0f;
 	
-	private float x;
-	private float y;
-	private float z;
+	// Ordering: xyz
+	private Vector3f position;
 	
-	private float theta = 0f;
-	private float phi = 0f;
+	// Ordering: yaw pitch roll
+	private Vector3f angles;
+	
+	private Quaternion rotateTheta;
+	private Quaternion rotatePhi;
 	
 	private Matrix4f viewMatrix;
+
+	/**
+	 * Create a FPS camera at the default location (position = 0, 0, 0 and orientation = 0, 0, 0).
+	 * @param name The name of the camera object.
+	 */
+	public Camera(String name)
+	{
+		
+		this.name = name;
+		
+		this.position = new Vector3f();
+		this.angles = new Vector3f();
+		
+		viewMatrix = new Matrix4f();
+		
+		rotateTheta = new Quaternion(angles.getY(), new Vector3f(0, -1, 0));
+		rotatePhi = new Quaternion(angles.getX(), new Vector3f(-1, 0, 0));
+	}
 	
-	public Camera(String name, float x, float y, float z)
+	/**
+	 * Create a FPS camera at the specified position and angle.
+	 * @param name The name of the camera object.
+	 * @param position The position of the camera object.
+	 * @param angles The orientation of the camera object.
+	 */
+	public Camera(String name, Vector3f position, Vector3f angles)
 	{
 	
 		this.name = name;
 		
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.position = position;
+		this.angles = angles;
 		
 		viewMatrix = new Matrix4f();
+		
+		rotateTheta = new Quaternion(angles.getY(), new Vector3f(0, -1, 0));
+		rotatePhi = new Quaternion(angles.getX(), new Vector3f(-1, 0, 0));
 	}
 	
+	/**
+	 * Update the viewmatrix of the camera object.
+	 */
 	public void update()
 	{
-		
+				
 		viewMatrix.setIdentity();
-		updatePositionAndRotation();
+		getInputData();
 		
-		uRotationTheta();
-		uRotationPhi();
-		
-		uPosition();
+		updateOrientation();
+		updatePosition();
 	}
 	
-	private void updatePositionAndRotation()
+	/**
+	 * Get input from the keyboard and mouse and process this information to update the right parameters.
+	 */
+	private void getInputData()
 	{
 		
+		// Get the rotation input data
 		if(MouseInput.getState("LB") == GLFW_PRESS)
 		{
 			
@@ -81,8 +115,8 @@ public class Camera {
 				prevMouseY = mouseY;
 			}
 			
-			phi += -mouseDX;
-			theta += mouseDY;
+			angles.setX(angles.getX() + mouseDX);
+			angles.setY(angles.getY() + mouseDY);
 		}
 		else
 		{
@@ -91,125 +125,141 @@ public class Camera {
 			prevMouseY = 0f;
 		}
 		
+		// Get the position input data
 		if(KeyboardInput.getState("W") == GLFW_PRESS && !Debugger.debugState) 
 		{
 			
-			moveX(0.1f);
-			moveY(-0.1f);
+			float tx = 0.1f * (float) Math.sin(Math.toRadians(angles.getX())) * (float) Math.cos(Math.toRadians(-angles.getY()));
+			float ty = 0.1f * (float) Math.sin(-Math.toRadians(angles.getY()));
+			float tz = 0.1f * (float) Math.cos(Math.toRadians(angles.getX())) * (float) Math.cos(Math.toRadians(-angles.getY()));
+			
+			position.setX(position.getX() + tx);
+			position.setY(position.getY() + ty);
+			position.setZ(position.getZ() + tz);
 		}
 		
 		if(KeyboardInput.getState("S") == GLFW_PRESS && !Debugger.debugState) 
 		{
 				
-			moveX(-0.1f);
-			moveY(0.1f);
+			float tx = -0.1f * (float) Math.sin(Math.toRadians(angles.getX())) * (float) Math.cos(Math.toRadians(-angles.getY()));
+			float ty = -0.1f * (float) Math.sin(-Math.toRadians(angles.getY()));
+			float tz = -0.1f * (float) Math.cos(Math.toRadians(angles.getX())) * (float) Math.cos(Math.toRadians(-angles.getY()));
+			
+			position.setX(position.getX() + tx);
+			position.setY(position.getY() + ty);
+			position.setZ(position.getZ() + tz);
 		}
 
+		// The strave keys
 		if(KeyboardInput.getState("A") == GLFW_PRESS && !Debugger.debugState) 
 		{	
 			
-			moveZ(0.1f);
+			float tx = 0.1f * (float) Math.cos(Math.toRadians(angles.getX()));
+			float tz = 0.1f * (float) Math.sin(Math.toRadians(-angles.getX()));
+			
+			position.setX(position.getX() + tx);
+			position.setZ(position.getZ() + tz);
 		}
 		
 		if(KeyboardInput.getState("D") == GLFW_PRESS && !Debugger.debugState) 
 		{
 				
-			moveZ(-0.1f);
+			float tx = -0.1f * (float) Math.cos(Math.toRadians(angles.getX()));
+			float tz = -0.1f * (float) Math.sin(Math.toRadians(-angles.getX()));
+			
+			position.setX(position.getX() + tx);
+			position.setZ(position.getZ() + tz);
 		}
+		
 	}
-	
-	private void uPosition()
+
+	/**
+	 * Update the position of the camera object to the view matrix.
+	 */
+	private void updatePosition()
 	{
 	
 		Matrix4f posMatrix = new Matrix4f();
-		posMatrix.translate(x, y, z);
-		
+		posMatrix.translate(position);
+
 		viewMatrix.multiply(posMatrix);
 		
 		// Upload the view matrix and the position of the camera to all shaders
 		for(Shader shader : ShaderManager.getShaderList())
 		{
 			
-			shader.uploadVector3f(new Vector3f(x, y, z), shader.getCameraPocLoc());
+			shader.uploadVector3f(position, shader.getCameraPocLoc());
 			shader.uploadMatrix4f(viewMatrix, shader.getViewMatrixLoc());
 		}
 	}
 	
-	private void moveX(float dir)
+	/**
+	 * Update the orientation of the camera object to the view matrix using quaternions.
+	 */
+	private void updateOrientation()
 	{
 		
-		x -= dir * Math.sin(Math.toRadians(phi));
-		z += dir * Math.cos(Math.toRadians(phi));
-	}
-	
-	private void moveY(float dir)
-	{
+		// Update quaternions and multiply them
+		rotatePhi.updateQuaternion(angles.getX(), new Vector3f(0, -1, 0));
+		rotateTheta.updateQuaternion(angles.getY(), new Vector3f(-1, 0, 0));
 		
-		y += dir * Math.sin(Math.toRadians(theta));
-	}
-	
-	private void moveZ(float dir)
-	{
+		Quaternion result = Quaternion.multiply(rotatePhi, rotateTheta);
+		result.normalize();
 		
-		x -= dir * Math.sin(Math.toRadians(phi - 90));
-		z += dir * Math.cos(Math.toRadians(phi - 90));
+		// Obtain the rotation matrix from the final quaternion
+		Matrix4f rotationMatrix = result.toMatrix4f();
+		viewMatrix.multiply(rotationMatrix);
 	}
 	
-	private void uRotationTheta()
+	/**
+	 * Print the current orientation of the camera object.
+	 */
+	public void printOrientation()
 	{
-		
-		Matrix4f rotMatrix = new Matrix4f();
-		rotMatrix.rotateQ(theta, 0, 0, true);
-	
-		viewMatrix.multiply(rotMatrix);
+		System.out.println("theta: " + angles.getY() + " ," + "phi: " + angles.getX());
 	}
 	
-	private void uRotationPhi()
+	/**
+	 * Print the current position of the camera object.
+	 */
+	public void printPosition()
 	{
-		
-		Matrix4f rotMatrix = new Matrix4f();
-		rotMatrix.rotateQ(0, phi, 0, true);
-	
-		viewMatrix.multiply(rotMatrix);
+		System.out.println("x: " + position.getX() + " ," + "y: " + position.getY() + " ," + "z:" + position.getZ());
 	}
 	
+	/**
+	 * Get the name of the camera object.
+	 * @return The name of the camera object.
+	 */
 	public String getName()
 	{
 		return name;
 	}
 	
+	/**
+	 * Get the view matrix of the camera object.
+	 * @return The view matrix of the camera object.
+	 */
 	public Matrix4f getViewMatrix()
 	{
 		return viewMatrix;
 	}
 	
-	public float getX()
-	{
-		return x;
-	}
-	
-	public float getY()
-	{
-		return y;
-	}
-	
-	public float getZ()
-	{
-		return z;
-	}
-	
+	/**
+	 * Get the position of the camera object.
+	 * @return The position of the camera object.
+	 */
 	public Vector3f getPosition()
 	{
-		return new Vector3f(x, y, z);
+		return position;
 	}
 	
-	public float getPhi()
+	/**
+	 * Get the orientation of the camera object.
+	 * @return The orientation of the camera object.
+	 */
+	public Vector3f getOrientation()
 	{
-		return phi;
-	}
-	
-	public float getTheta()
-	{
-		return theta;
+		return angles;
 	}
 }

@@ -63,8 +63,8 @@ public class DirectionalLight extends LightObject{
 		// First calculate the rotation of the camera
 		Matrix4f cameraRotationMatrix = new Matrix4f();
 		
-		cameraRotationMatrix.rotate("y", CameraManager.getCamera("cam").getTheta());
-		cameraRotationMatrix.rotate("x", CameraManager.getCamera("cam").getPhi());
+		cameraRotationMatrix.rotateEulerY(CameraManager.getCamera("cam").getOrientation().getY());
+		cameraRotationMatrix.rotateEulerX(CameraManager.getCamera("cam").getOrientation().getX());
 				
 		// Calculate the forward vector
 		Vector3f forwardVector = cameraRotationMatrix.multiply(new Vector4f(0, 0, -1, 0)).toVector3f();
