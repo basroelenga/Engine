@@ -27,7 +27,7 @@ public class ShadowManager {
 	{
 		
 		depthFBO = depthFBO;
-		canRender = true;
+		canRender = false;
 		
 		shader = ShaderManager.getShader("basic");
 		rect = new Rectangle("depth", new Texture("depth", depthFBO.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, 0, Engine.getWidth() / 4, Engine.getHeight() / 4, 0, MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), new Vector4f(1, 1, 1, 1));

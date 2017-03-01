@@ -75,4 +75,10 @@ public class Sphere extends EngineObjects{
 			DrawShapes.drawUVSphere(shader, sphere, fbo, tex);
 		}
 	}
+
+	@Override
+	public void prerender() {
+		// TODO Auto-generated method stub
+		
+	}
 }

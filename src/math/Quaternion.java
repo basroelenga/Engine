@@ -10,6 +10,13 @@ public class Quaternion {
 	private float z;
 	private float w;
 	
+	/**
+	 * Create a quaternion.
+	 * @param w 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public Quaternion(float w, float x, float y, float z)
 	{
 		
@@ -19,6 +26,11 @@ public class Quaternion {
 		this.z = z;
 	}
 	
+	/**
+	 * Create a quaternion.
+	 * @param a The scalar rotation.
+	 * @param axis The axis of rotation.
+	 */
 	public Quaternion(float a, Vector3f axis)
 	{
 		
@@ -28,6 +40,9 @@ public class Quaternion {
 		setQuaternion();
 	}
 	
+	/**
+	 * Set the data to the quaternion
+	 */
 	private void setQuaternion()
 	{
 		
@@ -38,6 +53,11 @@ public class Quaternion {
 		z = axis.getZ() * (float) Math.sin(a / 2);
 	}
 	
+	/**
+	 * Update an existing quaternion with new values.
+	 * @param a The scalar rotation.
+	 * @param axis The axis of rotation.
+	 */
 	public void updateQuaternion(float a, Vector3f axis)
 	{
 		
@@ -47,13 +67,20 @@ public class Quaternion {
 		setQuaternion();
 	}
 	
-	public Quaternion inverse()
+	/**
+	 * Get the conjugate of the quaternion.
+	 */
+	public void conjugate()
 	{
 		
-		Quaternion q = new Quaternion(w, -x, -y, -z);
-		return q;
+		x = -x;
+		y = -y;
+		z = -z;
 	}
 	
+	/**
+	 * Normalize the quaternion.
+	 */
 	public void normalize()
 	{
 		float length = (float) Math.sqrt(Math.pow(w, 2) + Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
@@ -65,6 +92,10 @@ public class Quaternion {
 		z = z / length;
 	}
 	
+	/**
+	 * Generate a matrix from this quaternion.
+	 * @return A matrix4f obtained from the quaternion.
+	 */
 	public Matrix4f toMatrix4f()
 	{
 		
@@ -111,6 +142,13 @@ public class Quaternion {
 		
 		Quaternion q = new Quaternion(tempW, tempX, tempY, tempZ);
 		return q;
+	}
+	
+	public static Quaternion conjugate(Quaternion q1)
+	{
+		
+		Quaternion q2 = new Quaternion(q1.getW(), -q1.getX(), -q1.getY(), -q1.getZ());
+		return q2;
 	}
 
 	public float getX() {

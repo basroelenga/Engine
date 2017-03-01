@@ -257,8 +257,7 @@ public class Engine {
 	private void prerenderPass()
 	{
 		
-		
-		
+		EngineObjectManager.prerender();
 	}
 	
 	/**

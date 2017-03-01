@@ -127,4 +127,10 @@ public class Particle extends EngineObjects{
 			break;
 		}
 	}
+
+	@Override
+	public void prerender() {
+		// TODO Auto-generated method stub
+		
+	}
 }

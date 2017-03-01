@@ -1,10 +1,7 @@
 package engine;
 
 import fbo.FrameBufferObject;
-import fbo.FrameBufferObjectManager;
 import graphics.Texture;
-import light.LightManager;
-import light.LightObject;
 import math.Matrix4f;
 import math.Vector4f;
 import models.Model;
@@ -13,7 +10,6 @@ import shaders.ShaderManager;
 import shapes.Point;
 import shapes.Quad;
 import shapes.Triangle;
-import utils.DrawShapes;
 
 public abstract class EngineObjects {
 
@@ -57,7 +53,6 @@ public abstract class EngineObjects {
 	
 	// Requirements for shadow rendering
 	protected boolean renderDepthMap = false;
-	protected FrameBufferObject depthBuffer = FrameBufferObjectManager.getFrameBuffer("shadow");
 	protected Shader depthShader = ShaderManager.getShader("depth");
 	
 	// Determine which fbo to render the scene
@@ -66,6 +61,7 @@ public abstract class EngineObjects {
 	
 	// Texture to be used
 	protected Texture tex;
+	protected Texture depthTex;
 	
 	// Default primitive objects
 	protected Point point;
@@ -89,23 +85,21 @@ public abstract class EngineObjects {
 	public abstract void update();
 	public abstract void render();
 	
-	// Should be the same for all objects
-	public void prerender()
-	{
+	// Prerender function which renders depth maps from the objects for all directional lights
+	public abstract void prerender();
+	
+	// Calculate the MVP on the CPU
+	public Matrix4f getMVP() {
 		
-		if(renderDepthMap)
-		{
-			
-			// Update the FBO of every directional light
-			for(LightObject dLight : LightManager.getDirectionalLightList())
-			{
-				
-				depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
-				depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
-				
-				DrawShapes.drawModel(depthShader, model, fbo);
-			}
-		}
+		MVP.setIdentity();
+		
+		MVP.multiply(projectionMatrix);
+		MVP.multiply(viewMatrix);
+		MVP.multiply(modelMatrix);
+		
+		MVP.transpose();
+		
+		return MVP;
 	}
 	
 	// The setter functions for the position, velocities, scale and rotation
@@ -239,17 +233,5 @@ public abstract class EngineObjects {
 	}
 	public Matrix4f getNormalMatrix() {
 		return normalMatrix;
-	}
-	public Matrix4f getMVP() {
-		
-		MVP.setIdentity();
-		
-		MVP.multiply(projectionMatrix);
-		MVP.multiply(viewMatrix);
-		MVP.multiply(modelMatrix);
-		
-		MVP.transpose();
-		
-		return MVP;
 	}
 }

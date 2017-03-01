@@ -1,9 +1,11 @@
 package light;
 
 import camera.Camera;
-import camera.CameraManager;
+import engine.Engine;
+import engine.objects.Rectangle;
 import fbo.FrameBufferObjectManager;
-import math.Matrix4f;
+import graphics.Texture;
+import math.Quaternion;
 import math.Vector3f;
 import math.Vector4f;
 import matrices.MatrixObjectManager;
@@ -11,6 +13,8 @@ import shaders.Shader;
 
 public class DirectionalLight extends LightObject{
 
+	private Rectangle rect;
+	
 	public DirectionalLight(String name, Camera cam, float xDir, float yDir, float zDir, Vector3f lightColor)
 	{
 		
@@ -29,12 +33,15 @@ public class DirectionalLight extends LightObject{
 		FrameBufferObjectManager.addShadowFrameBufferObject(name, 1024, 1024);
 		depthBuffer = FrameBufferObjectManager.getFrameBuffer(name);
 		
+		// Rendering the depth map
+		rect = new Rectangle("depth", new Texture("depth", depthBuffer.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, 0, Engine.getWidth() / 4, Engine.getHeight() / 4, 0, MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), new Vector4f(1, 1, 1, 1));
+		
 		// Calculate the initial direction of the light in polar coordinates
 		getPolarDirection();
 		
 		// Calculate the width and height of the projection matrix used for the shadow calculation
 		// Now the correct widths and heights can be obtained from the projection matrix.
-		MatrixObjectManager.getMatrixObject("projectionMatrixDefault").calculateWidthAndHeights(shadowDistance);
+		//MatrixObjectManager.getMatrixObject("projectionMatrixDefault").calculateWidthAndHeights(shadowDistance);
 	}
 	
 	/**
@@ -59,13 +66,21 @@ public class DirectionalLight extends LightObject{
 		// Update direction of light
 		lightDir = new Vector3f(xDir, yDir, zDir);
 		getPolarDirection();
-		
-		// First calculate the rotation of the camera
-		Matrix4f cameraRotationMatrix = new Matrix4f();
-		
-		cameraRotationMatrix.rotateEulerY(CameraManager.getCamera("cam").getOrientation().getY());
-		cameraRotationMatrix.rotateEulerX(CameraManager.getCamera("cam").getOrientation().getX());
 				
+		// First calculate the rotation of the camera from the lights point of view
+		Quaternion firstRotation = new Quaternion(getPhi(), new Vector3f(0, 1, 0));
+		Quaternion secondRotation = new Quaternion(getTheta(), new Vector3f(1, 0, 0));
+		
+		// Assume that only the orientation of the light is important
+		// This means that shadows will only be casted around the zero point and will not be dynamic
+		Quaternion result = Quaternion.multiply(firstRotation, secondRotation);
+		viewLightMatrix = result.toMatrix4f();
+		
+		// This means that the projection matrix is also constant
+		MatrixObjectManager.generateOrthographicMatrix("lightdirmatrix", -5, 10, -5, 5, -5, 5);
+		projectionLightMatrix = MatrixObjectManager.getMatrixObject("lightdirmatrix").getMatrix();
+		
+		/**
 		// Calculate the forward vector
 		Vector3f forwardVector = cameraRotationMatrix.multiply(new Vector4f(0, 0, -1, 0)).toVector3f();
 		
@@ -100,7 +115,7 @@ public class DirectionalLight extends LightObject{
 
 		Vector3f farBottom = Vector3f.add(centerFar, new Vector3f(downVector.getX() * farHeight / 2, downVector.getY() * farHeight / 2, downVector.getZ() * farHeight / 2));
 		Vector3f nearBottom = Vector3f.add(centerNear, new Vector3f(downVector.getX() * nearHeight / 2, downVector.getY() * nearHeight / 2, downVector.getZ() * nearHeight / 2));
-
+		*/
 	}
 	
 	private Vector4f calculateLightCorner(Vector3f startPoint, Vector3f direction, float width)
@@ -122,5 +137,9 @@ public class DirectionalLight extends LightObject{
 	}
 
 	@Override
-	public void render() {}
+	public void render() {
+		
+		rect.update();
+		rect.render();
+	}
 }

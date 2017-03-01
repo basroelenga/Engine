@@ -13,8 +13,7 @@ import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
@@ -280,8 +279,10 @@ public class DrawShapes {
 		{
 			
 			// This indicates which texture to use, 33984 corresponds to GL_TEXTURE0.
-			glActiveTexture(33984 + i);
+			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, texList.get(i).getTexID());
+			
+			glUniform1i(shader.getTextureLocList().get(i), i);
 		}
 		
 		glBindVertexArray(quad.getVaoID());
@@ -295,7 +296,11 @@ public class DrawShapes {
 		glDisableVertexAttribArray(1);
 		
 		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		for(int i = 0; i <texList.size(); i++)
+		{
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 		
 		if(fbo != null) fbo.unbind();
 		
@@ -405,6 +410,53 @@ public class DrawShapes {
 		
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		shader.unbind();
+		if(fbo != null) fbo.unbind();
+		
+		glDisable(GL_BLEND);
+	}
+	
+	public static void drawModel(Shader shader, Model model, FrameBufferObject fbo, ArrayList<Texture> texList)
+	{
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		if(fbo != null) fbo.bind();
+		shader.bind();
+		
+		for(int i = 0; i < texList.size(); i++)
+		{
+			
+			// This indicates which texture to use
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, texList.get(i).getTexID());
+			
+			glUniform1i(shader.getTextureLocList().get(i), i);
+		}
+		
+		System.out.println(shader.getDepthTextureSampleLoc());
+
+		
+		glBindVertexArray(model.getVaoID());
+		
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		
+		glDrawArrays(GL_TRIANGLES, 0, model.getVertices());
+		
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		
+		glBindVertexArray(0);
+		
+		for(int i = 0; i <texList.size(); i++)
+		{
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 		
 		shader.unbind();
 		if(fbo != null) fbo.unbind();

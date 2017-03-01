@@ -2,7 +2,8 @@
 
 precision mediump float;
 
-uniform sampler2D tex;
+uniform sampler2D textureSample;
+uniform sampler2D depthTextureSample;
 
 uniform vec4 rgbaColor;
 
@@ -12,6 +13,8 @@ uniform vec3 cameraPos;
 in vec2 pass_TexCoord;
 in vec3 pass_Normal;
 in vec3 pass_Vertices;
+
+in vec4 depth_Coords;
 
 uniform struct PointLight {
 	vec3 lightPos;
@@ -78,7 +81,7 @@ vec3 calcPointLight(PointLight light, vec4 textureColor, vec3 calcNorm, vec3 pas
 	return ambient + attenuation * (diffuse + specular);
 }
 
-vec3 calcDirLight(DirectionalLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_Vertices, vec3 surfaceC)
+vec3 calcDirLight(DirectionalLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_Vertices, vec3 surfaceC, float visibility)
 {
 
 	// Get the direction of the light
@@ -104,7 +107,7 @@ vec3 calcDirLight(DirectionalLight light, vec4 textureColor, vec3 calcNorm, vec3
 	
 	vec3 specular = specularC * light.lightColor;
 
-	return ambient + diffuse + specular;
+	return ambient + visibility * (diffuse + specular);
 }
 
 vec3 calcSpotLight(SpotLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_Vertices, vec3 surfaceC)
@@ -154,11 +157,15 @@ void main()
 {
 
 	// Texture light
-	vec4 textureColor = texture(tex, pass_TexCoord);
+	vec4 textureColor = vec4(1.0, 1.0, 1.0, 1.0);
 
-	if(textureColor.xyz == vec3(0.0, 0.0, 0.0))
+	vec4 depthTexture = texture(depthTextureSample, depth_Coords.xy);
+	float visibility = 1.0;
+	float bias = 0.005;
+
+	if(depthTexture.z < depth_Coords.z-bias)
 	{
-		textureColor = vec4(1.0, 1.0, 1.0, 1.0);
+		visibility = 0.5;
 	}
 
 	// Normalized distance between camera and vertex
@@ -176,7 +183,7 @@ void main()
 	// The directional light contribution
 	for(int i = 0; i < number_of_directional_lights; i++)
 	{
-		color += calcDirLight(dirLights[i], textureColor, pass_Normal, pass_Vertices, surfaceC);
+		color += calcDirLight(dirLights[i], textureColor, pass_Normal, pass_Vertices, surfaceC, visibility);
 	}
 
 	// The spot light contribution

@@ -1,9 +1,15 @@
 package engine.objects;
 
+import java.util.ArrayList;
+
 import camera.CameraManager;
 import engine.EngineObjectManager;
 import engine.EngineObjects;
+import fbo.FrameBufferObjectManager;
 import graphics.Texture;
+import graphics.TextureManager;
+import light.LightManager;
+import light.LightObject;
 import math.Matrix4f;
 import math.Vector4f;
 import matrices.MatrixObjectManager;
@@ -78,15 +84,28 @@ public class Rectangle extends EngineObjects{
 		
 		if(tex == null) DrawShapes.drawQuad(shader, quad, fbo);
 		else DrawShapes.drawQuad(shader, quad, tex, fbo);
+	}
+
+	@Override
+	public void prerender() {
 		
-		// Render the object to the depth buffer
 		if(renderDepthMap)
 		{
 			
-			depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
-			depthShader.uploadMatrix4f(projectionMatrix, depthShader.getProjectionMatrixLoc());
-			
-			DrawShapes.drawQuad(depthShader, quad, depthBuffer);
+			// Update the FBO depth map of every directional light
+			for(LightObject dLight : LightManager.getDirectionalLightList())
+			{
+				
+				if(dLight.isRenderShadows())
+				{
+					
+					depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
+					depthShader.uploadMatrix4f(dLight.getViewLightMatrix(), depthShader.getViewMatrixLoc());
+					depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
+
+					DrawShapes.drawQuad(depthShader, quad, dLight.getDepthBuffer());
+				}
+			}
 		}
 	}
 }

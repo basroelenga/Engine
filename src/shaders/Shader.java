@@ -20,6 +20,10 @@ public class Shader {
 	private int normalMatrixLoc;
 	private int projectionMatrixLoc;
 	
+	private int lightProjectionMatrixLoc;
+	private int lightViewMatrixLoc;
+	private int biasMatrixLoc;
+	
 	private int cameraPosLoc;
 	private int lightPosLoc;
 	
@@ -29,6 +33,12 @@ public class Shader {
 	private int pointLightsLoc;
 	private int directionalLightsLoc;
 	private int spotLightsLoc;
+	
+	private int textureSampleLoc;
+	private int depthTextureSampleLoc;
+	
+	// List storing all the texture locations
+	private ArrayList<Integer> texLocList = new ArrayList<Integer>();
 	
 	// Lists storing all the properties for point lights
 	private ArrayList<Integer> pointLightColorLocList = new ArrayList<Integer>();
@@ -93,11 +103,24 @@ public class Shader {
 		normalMatrixLoc = glGetUniformLocation(shaderProgram, "normalMatrix");
 		projectionMatrixLoc = glGetUniformLocation(shaderProgram, "projectionMatrix");
 		
+		lightViewMatrixLoc = glGetUniformLocation(shaderProgram, "lightViewMatrix");
+		lightProjectionMatrixLoc = glGetUniformLocation(shaderProgram, "lightProjectionMatrix");
+		biasMatrixLoc = glGetUniformLocation(shaderProgram, "biasMatrix");
+		
 		cameraPosLoc = glGetUniformLocation(shaderProgram, "camera_Position");
 		lightPosLoc = glGetUniformLocation(shaderProgram, "light_Position");
 		
 		rgbColorLoc = glGetUniformLocation(shaderProgram, "rgbColor");
 		rgbaColorLoc = glGetUniformLocation(shaderProgram, "rgbaColor");
+		
+		// The shader supports 2 textures:
+		// - The first is the normal texture
+		// - The second is the depth texture for shadow rendering
+		textureSampleLoc = glGetUniformLocation(shaderProgram, "textureSample");
+		depthTextureSampleLoc = glGetUniformLocation(shaderProgram, "depthTextureSample");
+		
+		texLocList.add(textureSampleLoc);
+		texLocList.add(depthTextureSampleLoc);
 		
 		cutoffLoc = glGetUniformLocation(shaderProgram, "cutoff");
 		
@@ -386,6 +409,18 @@ public class Shader {
 		return normalMatrixLoc;
 	}
 	
+	public int getLightProjectionMatrixLoc() {
+		return lightProjectionMatrixLoc;
+	}
+
+	public int getLightViewMatrixLoc() {
+		return lightViewMatrixLoc;
+	}
+	
+	public int getBiasMatrixLoc() {
+		return biasMatrixLoc;
+	}
+
 	public int getCameraPocLoc() {
 		return cameraPosLoc;
 	}
@@ -418,6 +453,18 @@ public class Shader {
 		return rgbaColorLoc;
 	}
 
+	public int getTextureSampleLoc() {
+		return textureSampleLoc;
+	}
+
+	public int getDepthTextureSampleLoc() {
+		return depthTextureSampleLoc;
+	}
+
+	public ArrayList<Integer> getTextureLocList() {
+		return texLocList;
+	}
+	
 	public int getNumberOfPointLightsLoc() {
 		return pointLightsLoc;
 	}

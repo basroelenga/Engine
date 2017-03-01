@@ -56,7 +56,12 @@ public class LightManager {
 			}
 		}
 	}
-	public static void render()	{for(LightObject light : pointLightList) light.render();}
+	
+	public static void render()	{
+		
+		for(LightObject light : pointLightList) light.render();
+		for(LightObject light : directionalLightList) light.render();
+	}
 	
 	public static void addPointLight(String name, float x, float y, float z, Vector3f lightColor, boolean show)
 	{

@@ -40,7 +40,7 @@ public abstract class LightObject {
 	protected float phi;
 	
 	// Toggle shadows (default is false)
-	protected boolean renderShadows = false;
+	protected boolean renderShadows = true;
 	
 	// Shadow render distance, this is the distance that will be used as zFar.
 	protected float shadowDistance = 10f;
@@ -234,5 +234,8 @@ public abstract class LightObject {
 	}
 	public Matrix4f getProjectionLightMatrix() {
 		return projectionLightMatrix;
+	}
+	public Matrix4f getViewLightMatrix() {
+		return viewLightMatrix;
 	}
 }

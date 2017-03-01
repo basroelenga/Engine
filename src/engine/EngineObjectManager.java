@@ -51,6 +51,7 @@ public class EngineObjectManager {
 		isInit = true;
 	}
 	
+	public static void prerender() {for(EngineObjects obj : engineObjectList) obj.prerender();}
 	public static void update()	{for(EngineObjects obj : engineObjectList) obj.update();}
 	public static void render()	{for(EngineObjects obj : engineObjectList) obj.render();}
 	
@@ -119,7 +120,6 @@ public class EngineObjectManager {
 		
 		for(EngineObjects obj : engineObjectList)
 		{
-			System.out.println(obj.getName());
 			if(obj.getName().equals(id)) return obj;
 		}
 		
