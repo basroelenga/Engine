@@ -67,18 +67,15 @@ public class Sphere extends EngineObjects{
 		if(tex == null)
 		{
 			
-			DrawShapes.drawUVSphere(shader, sphere, fbo);
+			DrawShapes.drawUVSphere(shader, fbo, sphere.getVaoID(), sphere.getAmountOfTriangles());
 		}
 		else
 		{
 			
-			DrawShapes.drawUVSphere(shader, sphere, fbo, tex);
+			DrawShapes.drawUVSphere(shader, fbo, tex, sphere.getVaoID(), sphere.getAmountOfTriangles());
 		}
 	}
 
 	@Override
-	public void prerender() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void prerender() {}
 }

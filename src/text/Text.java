@@ -2,7 +2,6 @@ package text;
 
 import java.util.ArrayList;
 
-import engine.Engine;
 import math.Matrix4f;
 import matrices.MatrixObjectManager;
 import shaders.Shader;
@@ -94,7 +93,7 @@ public class Text {
 			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
 			shader.uploadMatrix4f(projMatrix, shader.getProjectionMatrixLoc());
 			
-			DrawShapes.drawQuad(shader, charList.get(i).getQuad(), TextManager.getFontTexture(), null);
+			DrawShapes.drawQuad(shader, TextManager.getFontTexture(), null, charList.get(i).getQuad().getVaoID());
 		}
 	}
 	

@@ -1,38 +1,20 @@
 package engine.objects;
 
-import java.util.ArrayList;
-
 import camera.CameraManager;
 import engine.EngineObjectManager;
 import engine.EngineObjects;
 import fbo.FrameBufferObjectManager;
 import graphics.Texture;
-import graphics.TextureManager;
 import light.LightManager;
 import light.LightObject;
-import math.Matrix4f;
-import math.Vector4f;
 import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
 import utils.DrawShapes;
 
 public class Rectangle extends EngineObjects{
 	
-	/**
-	 * This function creates a rectangle. This can be specified in both perspective and orthogonal space.
-	 * The position and scaling should be based on the projection matrix which is used.
-	 * Call update and render function of the object to get it to function.
-	 * @param x Position in x-space.
-	 * @param y Position in y-space.
-	 * @param z Position in z-space.
-	 * @param sx Scaling in x-space.
-	 * @param sy Scaling in y-space.
-	 * @param sz Scaling in z-space.
-	 * @param angleY Rotation around the y-axis.
-	 * @param projection The projection matrix to use.
-	 * @param color The color of the rectangle (RGBA).
-	 */
-	public Rectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, Matrix4f projection, Vector4f RGBAcolor)
+	// 3D space
+	public Rectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs)
 	{
 		
 		this.name = name;
@@ -45,22 +27,38 @@ public class Rectangle extends EngineObjects{
 		this.ys = ys;
 		this.zs = zs;
 		
-		this.projectionMatrix = projection;
+		this.tex = tex;
+		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("dir").getDepthTexID());
 		
-		this.RGBAcolor = RGBAcolor;
+		textureList.add(tex);
+		textureList.add(depthTex);
 		
-		// Define the shader to be used
-		shader = ShaderManager.getShader("basic");
+		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
+		vaoID = EngineObjectManager.getQuad().getVaoID();
 		
-		// If the projection matrix is the perspective matrix the view matrix should also be set.
-		if(projectionMatrix == MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix()) viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
-		else viewMatrix = new Matrix4f();
-
+		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
+		shader = ShaderManager.getShader("light");
+	}
+	
+	// GUI/debug
+	public Rectangle(String name, Texture tex, float x, float y, float xs, float ys)
+	{
+		
+		this.name = name;
+		
+		this.x = x;
+		this.y = y;
+		
+		this.xs = xs;
+		this.ys = ys;
+		
 		this.tex = tex;
 		
-		if(tex != null) shader = ShaderManager.getShader("basictex");
-		
-		quad = EngineObjectManager.getQuad();
+		projectionMatrix = MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix();
+		vaoID = EngineObjectManager.getQuad().getVaoID();
+				
+		if(tex == null)	shader = ShaderManager.getShader("basic");
+		else shader = ShaderManager.getShader("basictex");
 	}
 	
 	public void update()
@@ -73,19 +71,6 @@ public class Rectangle extends EngineObjects{
 		modelMatrix.scale(xs, ys, zs);
 	}
 	
-	public void render()
-	{
-
-		shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
-		shader.uploadMatrix4f(projectionMatrix, shader.getProjectionMatrixLoc());
-		shader.uploadMatrix4f(viewMatrix, shader.getViewMatrixLoc());
-		
-		shader.uploadVector4f(RGBAcolor, shader.getRgbaColorLoc());
-		
-		if(tex == null) DrawShapes.drawQuad(shader, quad, fbo);
-		else DrawShapes.drawQuad(shader, quad, tex, fbo);
-	}
-
 	@Override
 	public void prerender() {
 		
@@ -103,9 +88,28 @@ public class Rectangle extends EngineObjects{
 					depthShader.uploadMatrix4f(dLight.getViewLightMatrix(), depthShader.getViewMatrixLoc());
 					depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
 
-					DrawShapes.drawQuad(depthShader, quad, dLight.getDepthBuffer());
+					DrawShapes.drawQuad(depthShader, dLight.getDepthBuffer(), vaoID);
 				}
 			}
 		}
+	}
+	
+	public void render()
+	{
+
+		shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
+		shader.uploadMatrix4f(viewMatrix, shader.getViewMatrixLoc());
+		shader.uploadMatrix4f(projectionMatrix, shader.getProjectionMatrixLoc());
+		
+		// Also upload the matrices for the depth texture
+		shader.uploadMatrix4f(LightManager.getDirectionalLightList().get(0).getViewLightMatrix(), shader.getLightViewMatrixLoc());
+		shader.uploadMatrix4f(LightManager.getDirectionalLightList().get(0).getProjectionLightMatrix(), shader.getLightProjectionMatrixLoc());
+		shader.uploadMatrix4f(LightManager.getBiasMatrix(), shader.getBiasMatrixLoc());	
+		
+		shader.uploadVector4f(RGBAcolor, shader.getRgbaColorLoc());
+		
+		if(tex == null) DrawShapes.drawQuad(shader, fbo, vaoID);
+		else if(textureList.size() == 0) DrawShapes.drawQuad(shader, tex, fbo, vaoID);
+		else DrawShapes.drawQuadNormal(shader, textureList, fbo, vaoID);
 	}
 }

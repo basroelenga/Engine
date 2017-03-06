@@ -1,15 +1,13 @@
 package engine;
 
+import java.util.ArrayList;
+
 import fbo.FrameBufferObject;
 import graphics.Texture;
 import math.Matrix4f;
 import math.Vector4f;
-import models.Model;
 import shaders.Shader;
 import shaders.ShaderManager;
-import shapes.Point;
-import shapes.Quad;
-import shapes.Triangle;
 
 public abstract class EngineObjects {
 
@@ -18,9 +16,9 @@ public abstract class EngineObjects {
 	protected String name;
 	
 	// Their position
-	protected float x;
-	protected float y;
-	protected float z;
+	protected float x = 0f;
+	protected float y = 0f;
+	protected float z = 0f;
 	
 	// Their velocities
 	protected float vx;
@@ -28,9 +26,9 @@ public abstract class EngineObjects {
 	protected float vz;
 	
 	// Their scaling
-	protected float xs;
-	protected float ys;
-	protected float zs;
+	protected float xs = 0f;
+	protected float ys = 0f;
+	protected float zs = 0f;
 	
 	// Their rotation
 	protected float xa = 0f;
@@ -50,6 +48,7 @@ public abstract class EngineObjects {
 	
 	// Requirements for rendering (The objects VAO ID, FBO, shader, shader properties and matrices)
 	protected int vaoID;
+	protected int amountOfTriangles;
 	
 	// Requirements for shadow rendering
 	protected boolean renderDepthMap = false;
@@ -63,13 +62,7 @@ public abstract class EngineObjects {
 	protected Texture tex;
 	protected Texture depthTex;
 	
-	// Default primitive objects
-	protected Point point;
-	protected Triangle triangle;
-	protected Quad quad;
-	
-	// A model object
-	protected Model model;
+	protected ArrayList<Texture> textureList = new ArrayList<Texture>();
 	
 	// The default color is white
 	protected Vector4f RGBAcolor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -194,6 +187,9 @@ public abstract class EngineObjects {
 	public int getVaoID() {
 		return vaoID;
 	}
+	public int getAmountOfTriangles() {
+		return amountOfTriangles;
+	}
 	public FrameBufferObject getFbo() {
 		return fbo;
 	}
@@ -216,11 +212,11 @@ public abstract class EngineObjects {
 	public Texture getTex() {
 		return tex;
 	}
-	public Model getModel() {
-		return model;
-	}
 	public Vector4f getRGBAcolor() {
 		return RGBAcolor;
+	}
+	public void setRGBAcolor(Vector4f rGBAcolor) {
+		RGBAcolor = rGBAcolor;
 	}
 	public Matrix4f getModelMatrix() {
 		return modelMatrix;

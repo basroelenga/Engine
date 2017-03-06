@@ -2,14 +2,12 @@ package engine;
 
 import java.util.ArrayList;
 
-import engine.objects.TestObject;
 import engine.objects.Particle;
 import engine.objects.Rectangle;
 import engine.objects.Sphere;
+import engine.objects.TestObject;
 import graphics.Texture;
-import math.Matrix4f;
 import math.Vector3f;
-import math.Vector4f;
 import shapes.Point;
 import shapes.Quad;
 import shapes.UVSphere;
@@ -21,6 +19,7 @@ public class EngineObjectManager {
 	
 	private static Point point;
 	private static Quad quad;
+	private static Quad quadN;
 		
 	private static boolean isInit = false;
 	
@@ -47,29 +46,32 @@ public class EngineObjectManager {
 		// Create the quad which represents the rectangle as a cube/box.
 		quad = new Quad(points, true);
 		
+		// Create a quad with normals
+		ArrayList<Vector3f> nPoints = new ArrayList<Vector3f>();
+		
+		nPoints.add(new Vector3f(0, 0, 1));
+		nPoints.add(new Vector3f(0, 0, 1));
+		nPoints.add(new Vector3f(0, 0, 1));
+		nPoints.add(new Vector3f(0, 0, 1));
+		
+		quadN = new Quad(points, nPoints, true);
+		
 		// Set the init state to true
 		isInit = true;
 	}
 	
 	public static void prerender() {for(EngineObjects obj : engineObjectList) obj.prerender();}
 	public static void update()	{for(EngineObjects obj : engineObjectList) obj.update();}
-	public static void render()	{for(EngineObjects obj : engineObjectList) obj.render();}
+	public static void render()	{for(EngineObjects obj : engineObjectList) 	obj.render();}
 	
-	/**
-	 * Create a quad based rectangle, this rectangle is automatically added to the engine object update and render list.
-	 * @param x The x-position of the rectangle.
-	 * @param y The y-position of the rectangle.
-	 * @param z The z-position of the rectangle.
-	 * @param xs The x-scaling of the rectangle.
-	 * @param ys The y-scaling of the rectangle.
-	 * @param zs The z-scaling of the rectangle.
-	 * @param ya The y-rotation of the rectangle.
-	 * @param projection The projection matrix to be used, can be orthographic or perspective.
-	 * @param RGBAcolor The color of the rectangle.
-	 */
-	public static void addRectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs, Matrix4f projection, Vector4f RGBAcolor)
+	public static void addRectangle(String name, Texture tex, float x, float y, float z, float xs, float ys, float zs)
 	{
-		engineObjectList.add(new Rectangle(name, tex, x, y, z, xs, ys, zs, projection, RGBAcolor));
+		engineObjectList.add(new Rectangle(name, tex, x, y, z, xs, ys, zs));
+	}
+	
+	public static void addRectangle(String name, Texture tex, float x, float y, float xs, float ys)
+	{
+		engineObjectList.add(new Rectangle(name, tex, x, y, xs, ys));
 	}
 	
 	/**
@@ -145,6 +147,13 @@ public class EngineObjectManager {
 	{
 		
 		if(isInit) return quad;
+		throw new RuntimeException("Primitives have not yet been created");
+	}
+	
+	public static Quad getNormalQuad()
+	{
+		
+		if(isInit) return quadN;
 		throw new RuntimeException("Primitives have not yet been created");
 	}
 	

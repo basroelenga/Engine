@@ -219,7 +219,7 @@ public class FrameBufferObject {
 			
 			//System.out.println(tex.getTexID());
 			
-			DrawShapes.drawQuad(shader, EngineObjectManager.getQuad(), tex, null);
+			DrawShapes.drawQuad(shader, tex, null, EngineObjectManager.getQuad().getVaoID());
 		}
 	}
 	

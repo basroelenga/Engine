@@ -255,12 +255,12 @@ public class ParticleSystem extends EngineSystem{
 		
 		case "point":
 
-			DrawShapes.drawPointInstanced(shader, point, pList.size(), fbo);
+			DrawShapes.drawPointInstanced(shader, fbo, point.getVaoID(), pList.size());
 			break;
 			
 		case "quad":
 			
-			DrawShapes.drawQuadInstanced(shader, quad, pList.size(), fbo);
+			DrawShapes.drawQuadInstanced(shader, fbo, quad.getVaoID(),pList.size());
 			break;
 			
 		case "sphere":

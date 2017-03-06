@@ -7,12 +7,14 @@ import graphics.Texture;
 import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
 import shapes.Point;
+import shapes.Quad;
 import shapes.UVSphere;
 import utils.DrawShapes;
 
 public class Particle extends EngineObjects{
 
 	private UVSphere uvSphere;
+	private Quad quad;
 	private Point point;
 	
 	public Particle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, Texture tex, String type)
@@ -111,19 +113,19 @@ public class Particle extends EngineObjects{
 		
 		case "sphere":
 			
-			if(tex != null)	DrawShapes.drawUVSphere(shader, uvSphere, fbo, tex);
-			else DrawShapes.drawUVSphere(shader, uvSphere, fbo);
+			if(tex != null)	DrawShapes.drawUVSphere(shader, fbo, tex, uvSphere.getVaoID(), uvSphere.getAmountOfTriangles());
+			else DrawShapes.drawUVSphere(shader, fbo, uvSphere.getVaoID(), uvSphere.getAmountOfTriangles());
 			
 			break;
 			
 		case "quad":
 			
-			DrawShapes.drawQuad(shader, quad, fbo);
+			DrawShapes.drawQuad(shader, fbo, quad.getVaoID());
 			break;
 			
 		case "point":
 			
-			DrawShapes.drawPoint(shader, point, fbo);
+			DrawShapes.drawPoint(shader, fbo, point.getVaoID());
 			break;
 		}
 	}

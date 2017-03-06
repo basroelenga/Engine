@@ -24,7 +24,9 @@ public class TestObject extends EngineObjects{
 		name = "bunny";
 		
 		shader = ShaderManager.getShader("light");
-		model = ModelManager.getModel("monkey");
+		
+		vaoID = ModelManager.getModel("monkey").getVaoID();
+		amountOfTriangles = ModelManager.getModel("monkey").getVertices();
 		
 		tex = TextureManager.getTexture("testtex");
 		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("dir").getDepthTexID());
@@ -41,6 +43,7 @@ public class TestObject extends EngineObjects{
 		
 		modelMatrix.translate(x, y, z);
 		modelMatrix.scale(0.5f, 0.5f, 0.5f);
+		modelMatrix.rotateEulerY(ya);
 	}
 	
 	@Override
@@ -50,16 +53,10 @@ public class TestObject extends EngineObjects{
 		shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
 		shader.uploadMatrix4f(projectionMatrix, shader.getProjectionMatrixLoc());
 		
-		Matrix4f biasMatrix = new Matrix4f();
-		biasMatrix.translate(0.5f, 0.5f, 0.5f);
-		biasMatrix.scale(0.5f, 0.5f, 0.5f);
-		
-		biasMatrix.print();
-		
 		// Also upload the matrices for the depth texture
 		shader.uploadMatrix4f(LightManager.getDirectionalLightList().get(0).getViewLightMatrix(), shader.getLightViewMatrixLoc());
 		shader.uploadMatrix4f(LightManager.getDirectionalLightList().get(0).getProjectionLightMatrix(), shader.getLightProjectionMatrixLoc());
-		shader.uploadMatrix4f(biasMatrix, shader.getBiasMatrixLoc());		
+		shader.uploadMatrix4f(LightManager.getBiasMatrix(), shader.getBiasMatrixLoc());		
 		
 		shader.uploadVector4f(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f), shader.getRgbaColorLoc());
 		
@@ -69,7 +66,7 @@ public class TestObject extends EngineObjects{
 		texList.add(tex);
 		texList.add(depthTex);
 				
-		DrawShapes.drawModel(shader, model, fbo, texList);
+		DrawShapes.drawModel(shader, fbo, texList, vaoID, amountOfTriangles);
 	}
 	
 	@Override
@@ -85,12 +82,12 @@ public class TestObject extends EngineObjects{
 				
 				if(dLight.isRenderShadows())
 				{
-				
+					
 					depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
 					depthShader.uploadMatrix4f(dLight.getViewLightMatrix(), depthShader.getViewMatrixLoc());
 					depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
 					
-					DrawShapes.drawModel(depthShader, model, dLight.getDepthBuffer());
+					DrawShapes.drawModel(depthShader, dLight.getDepthBuffer(), vaoID, amountOfTriangles);
 				}
 			}
 		}

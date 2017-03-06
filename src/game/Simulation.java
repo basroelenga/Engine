@@ -2,12 +2,8 @@ package game;
 
 import camera.CameraManager;
 import engine.EngineObjectManager;
-import fbo.FrameBufferObjectManager;
 import light.LightManager;
 import math.Vector3f;
-import math.Vector4f;
-import matrices.MatrixObjectManager;
-import postprocessing.ShadowManager;
 
 public class Simulation {
 		
@@ -20,18 +16,17 @@ public class Simulation {
 		// =========================
 		
 		LightManager.addDirectionalLight("dir", CameraManager.getCamera("cam"), 0, 1, -1, new Vector3f(1.0f, 0.0f, 0.0f));
+		LightManager.setBiasMatrix();
 		
 		// Add a model
 		EngineObjectManager.addBunny();
 		EngineObjectManager.getEngineObject("bunny").setRenderDepthMap(true);
 		
 		// Add a surface
-		EngineObjectManager.addRectangle("surface", null, -5f, -1f, 5f, 10f, 10f, 0f, MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix(), new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+		EngineObjectManager.addRectangle("surface", null, -5f, -1f, 5f, 10f, 10f, 0f);
 		EngineObjectManager.getEngineObject("surface").setRenderDepthMap(true);
 		
 		EngineObjectManager.getEngineObject("surface").setXa(90f);
-		
-		ShadowManager.setDepthFBO(FrameBufferObjectManager.getFrameBuffer("shadow"));
 	}
 	
 	/**
@@ -40,7 +35,7 @@ public class Simulation {
 	public void update()
 	{
 		
-		angle += 0.0025f;
-		EngineObjectManager.getEngineObject("bunny").setZ(angle);
+		angle += 0.25f;
+		EngineObjectManager.getEngineObject("bunny").setYa(angle);
 	}
 }

@@ -442,7 +442,7 @@ public class TerrainGenerator {
 				pointsN.add(normalList.get((i) * width + (j + 1)));
 				pointsN.add(normalList.get((i) * width + j));
 				
-				quadList.add(new Quad(pointsV, pointsN));
+				quadList.add(new Quad(pointsV, pointsN, false));
 			}
 		}
 		

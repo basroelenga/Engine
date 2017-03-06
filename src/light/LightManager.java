@@ -3,12 +3,15 @@ package light;
 import java.util.ArrayList;
 
 import camera.Camera;
+import math.Matrix4f;
 import math.Vector3f;
 import shaders.Shader;
 import shaders.ShaderManager;
 
 public class LightManager {
 
+	private static Matrix4f biasMatrix;
+	
 	private static ArrayList<LightObject> pointLightList = new ArrayList<LightObject>();
 	private static ArrayList<LightObject> directionalLightList = new ArrayList<LightObject>();
 	private static ArrayList<LightObject> spotLightList = new ArrayList<LightObject>();
@@ -187,5 +190,18 @@ public class LightManager {
 	public static int getNumberOfLights()
 	{
 		return pointLightList.size() + directionalLightList.size() + spotLightList.size();
+	}
+	
+	public static void setBiasMatrix()
+	{
+		biasMatrix = new Matrix4f();
+		
+		biasMatrix.translate(0.5f, 0.5f, 0.5f);
+		biasMatrix.scale(0.5f, 0.5f, 0.5f);
+	}
+	
+	public static Matrix4f getBiasMatrix()
+	{
+		return biasMatrix;
 	}
 }

@@ -49,7 +49,6 @@ import graphics.TextureManager;
 import light.LightManager;
 import matrices.MatrixObjectManager;
 import models.ModelManager;
-import postprocessing.ShadowManager;
 import shaders.ShaderManager;
 import text.Text;
 import text.TextManager;
@@ -292,9 +291,6 @@ public class Engine {
 		{
 			fbo.render();
 		}
-		
-		// Render depth texture
-		ShadowManager.render();
 	}
 
 	private void setFPS()

@@ -288,7 +288,7 @@ public class UVSphere {
 				quadNPointList.add(tnPoint);
 				quadNPointList.add(ffnPoint);
 
-				Quad middleQuad = new Quad(quadVPointList, quadNPointList);
+				Quad middleQuad = new Quad(quadVPointList, quadNPointList, false);
 				quadMiddleList.add(middleQuad);
 			}
 		}

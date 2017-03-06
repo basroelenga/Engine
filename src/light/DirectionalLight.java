@@ -30,11 +30,11 @@ public class DirectionalLight extends LightObject{
 		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
 		
 		// Create the depth buffer for the light
-		FrameBufferObjectManager.addShadowFrameBufferObject(name, 1024, 1024);
+		FrameBufferObjectManager.addShadowFrameBufferObject(name, 2048, 2048);
 		depthBuffer = FrameBufferObjectManager.getFrameBuffer(name);
 		
 		// Rendering the depth map
-		rect = new Rectangle("depth", new Texture("depth", depthBuffer.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, 0, Engine.getWidth() / 4, Engine.getHeight() / 4, 0, MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), new Vector4f(1, 1, 1, 1));
+		rect = new Rectangle("depth", new Texture("depth", depthBuffer.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, Engine.getWidth() / 4, Engine.getHeight() / 4);
 		
 		// Calculate the initial direction of the light in polar coordinates
 		getPolarDirection();
@@ -77,7 +77,7 @@ public class DirectionalLight extends LightObject{
 		viewLightMatrix = result.toMatrix4f();
 		
 		// This means that the projection matrix is also constant
-		MatrixObjectManager.generateOrthographicMatrix("lightdirmatrix", -5, 10, -5, 5, -5, 5);
+		MatrixObjectManager.generateOrthographicMatrix("lightdirmatrix", -2, 5, -2, 2, -2, 2);
 		projectionLightMatrix = MatrixObjectManager.getMatrixObject("lightdirmatrix").getMatrix();
 		
 		/**

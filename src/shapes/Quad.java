@@ -162,7 +162,7 @@ public class Quad {
 	 * @param vPoints Vertices.
 	 * @param nPoints Normals.
 	 */
-	public Quad(ArrayList<Vector3f> vPoints, ArrayList<Vector3f> nPoints)
+	public Quad(ArrayList<Vector3f> vPoints, ArrayList<Vector3f> nPoints, boolean store)
 	{
 		
 		if(vPoints.size() == 4 && nPoints.size() == 4)
@@ -178,6 +178,56 @@ public class Quad {
 		{
 			
 			System.err.println("Cannot construct a quad with more or less than four points");
+		}
+		
+		if(store)
+		{
+			
+			FloatBuffer vertexData = BufferUtils.createFloatBuffer(this.getVertexData().length);
+			vertexData.put(this.getVertexData());
+			vertexData.flip();
+
+			float[] texCoords = {
+					
+					0f, 1f,
+					1f, 1f,
+					1f, 0f,
+					
+					0f, 1f,
+					0f, 0f,
+					1f, 0f
+			};
+			
+			FloatBuffer textureData = BufferUtils.createFloatBuffer(texCoords.length);
+			textureData.put(texCoords);
+			textureData.flip();
+			
+			FloatBuffer normalData = BufferUtils.createFloatBuffer(this.getNormalData().length);
+			normalData.put(this.getNormalData());
+			normalData.flip();
+			
+			vaoID = glGenVertexArrays();
+			glBindVertexArray(vaoID);
+			
+			int vboVID = glGenBuffers();
+			glBindBuffer(GL_ARRAY_BUFFER, vboVID);
+			glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
+			glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			
+			int vboTID = glGenBuffers();
+			glBindBuffer(GL_ARRAY_BUFFER, vboTID);
+			glBufferData(GL_ARRAY_BUFFER, textureData, GL_STATIC_DRAW);
+			glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			
+			int vboNID = glGenBuffers();
+			glBindBuffer(GL_ARRAY_BUFFER, vboNID);
+			glBufferData(GL_ARRAY_BUFFER, normalData, GL_STATIC_DRAW);
+			glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			
+			glBindVertexArray(0);
 		}
 	}
 	
