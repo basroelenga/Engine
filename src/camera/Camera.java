@@ -33,6 +33,9 @@ public class Camera {
 	private Quaternion rotateTheta;
 	private Quaternion rotatePhi;
 	
+	private Matrix4f viewRotationMatrix;
+	private Matrix4f viewPositionMatrix;
+	
 	private Matrix4f viewMatrix;
 
 	/**
@@ -179,10 +182,10 @@ public class Camera {
 	private void updatePosition()
 	{
 	
-		Matrix4f posMatrix = new Matrix4f();
-		posMatrix.translate(position);
+		viewPositionMatrix = new Matrix4f();
+		viewPositionMatrix.translate(position);
 
-		viewMatrix.multiply(posMatrix);
+		viewMatrix.multiply(viewPositionMatrix);
 		
 		// Upload the view matrix and the position of the camera to all shaders
 		for(Shader shader : ShaderManager.getShaderList())
@@ -207,8 +210,8 @@ public class Camera {
 		result.normalize();
 		
 		// Obtain the rotation matrix from the final quaternion
-		Matrix4f rotationMatrix = result.toMatrix4f();
-		viewMatrix.multiply(rotationMatrix);
+		viewRotationMatrix = result.toMatrix4f();
+		viewMatrix.multiply(viewRotationMatrix);
 	}
 	
 	/**
@@ -261,5 +264,23 @@ public class Camera {
 	public Vector3f getOrientation()
 	{
 		return angles;
+	}
+	
+	/**
+	 * Get the rotation matrix of the camera.
+	 * @return The view rotation matrix.
+	 */
+	public Matrix4f getRotationMatrix()
+	{
+		return viewRotationMatrix;
+	}
+	
+	/**
+	 * Get the position matrix of the camera.
+	 * @return the view position matrix.
+	 */
+	public Matrix4f getPositionMatrix()
+	{
+		return viewPositionMatrix;
 	}
 }

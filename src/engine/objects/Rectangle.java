@@ -30,8 +30,8 @@ public class Rectangle extends EngineObjects{
 		this.tex = tex;
 		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("dir").getDepthTexID());
 		
-		textureList.add(tex);
-		textureList.add(depthTex);
+		textureMap.put("mTexture", tex);
+		textureMap.put("dTexture", depthTex);
 		
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 		vaoID = EngineObjectManager.getQuad().getVaoID();
@@ -109,7 +109,7 @@ public class Rectangle extends EngineObjects{
 		shader.uploadVector4f(RGBAcolor, shader.getRgbaColorLoc());
 		
 		if(tex == null) DrawShapes.drawQuad(shader, fbo, vaoID);
-		else if(textureList.size() == 0) DrawShapes.drawQuad(shader, tex, fbo, vaoID);
-		else DrawShapes.drawQuadNormal(shader, textureList, fbo, vaoID);
+		else if(textureMap.size() == 0) DrawShapes.drawQuad(shader, tex, fbo, vaoID);
+		//else DrawShapes.drawQuadNormal(shader, textureMap, fbo, vaoID);
 	}
 }

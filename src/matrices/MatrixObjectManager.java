@@ -10,12 +10,17 @@ public class MatrixObjectManager {
 	
 	public static void generateProjectionMatrix(String name, float fov, float zNear, float zFar, float width, float height)
 	{
-		matrixList.add(new ProjectionMatrix(name, fov, zNear, zFar, width, height));
+		matrixList.add(new PerspectiveMatrix(name, fov, zNear, zFar, width, height));
 	}
 	
 	public static void generateOrthographicMatrix(String name, float zNear, float zFar, float left, float right, float top, float bottom)
 	{
 		matrixList.add(new OrthographicMatrix(name, zNear, zFar, left, right, top, bottom));
+	}
+	
+	public static void generateOrthographicMatrix(String name, float lr, float tb, float nf)
+	{
+		matrixList.add(new OrthographicMatrix(name, lr, tb, nf));
 	}
 	
 	/**

@@ -13,12 +13,17 @@ import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glUniform1i;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import engine.EngineObjects;
 import fbo.FrameBufferObject;
 import graphics.Texture;
 import shaders.Shader;
@@ -423,7 +428,7 @@ public class DrawShapes {
 		glDisable(GL_BLEND);
 	}
 	
-	public static void drawModel(Shader shader, FrameBufferObject fbo, ArrayList<Texture> texList, int vaoID, int amountOfTriangles)
+	public static void drawModel(EngineObjects obj, Shader shader, FrameBufferObject fbo, LinkedHashMap<String, Texture> textureMap, int vaoID, int amountOfTriangles)
 	{
 		
 		glEnable(GL_BLEND);
@@ -432,32 +437,39 @@ public class DrawShapes {
 		if(fbo != null) fbo.bind();
 		shader.bind();
 		
-		for(int i = 0; i < texList.size(); i++)
+		int j = 0;
+		
+		for(Map.Entry<String, Texture> entry : textureMap.entrySet())
 		{
 			
-			// This indicates which texture to use
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, texList.get(i).getTexID());
+			if(entry.getValue() == null) {j+= 1; continue;}
 			
-			glUniform1i(shader.getTextureLocList().get(i), i);
+			// This indicates which texture to use
+			glActiveTexture(GL_TEXTURE0 + j);
+			glBindTexture(GL_TEXTURE_2D, entry.getValue().getTexID());
+			
+			shader.setLocation(entry.getKey(), j);
+			j += 1;
 		}
 		
 		glBindVertexArray(vaoID);
 		
 		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
+		if(textureMap.get("mTexture") != null && obj.getModel().hasTextureCoordinates()) glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
 		
 		glDrawArrays(GL_TRIANGLES, 0, amountOfTriangles);
 		
 		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
+		if(textureMap.get("mTexture") != null && obj.getModel().hasTextureCoordinates()) glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 		
 		glBindVertexArray(0);
 		
-		for(int i = 0; i <texList.size(); i++)
+		for(Map.Entry<String, Texture> entry : textureMap.entrySet())
 		{
+			
+			if(entry.getValue() == null) continue;
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		

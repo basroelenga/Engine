@@ -151,7 +151,7 @@ public class Engine {
 		// Set up the projection matrices (these are configured at the width and height of the OpenGL window)
 		// These are the default projection matrices and used for camera and GUI rendering
 		MatrixObjectManager.generateProjectionMatrix("projectionMatrixDefault", 70, 0.1f, 1000f, Engine.getWidth(), Engine.getHeight());
-		MatrixObjectManager.generateOrthographicMatrix("orthographicMatrixDefault", -1f, 1f, 0f, Engine.getWidth(), Engine.getHeight(), 0f);
+		MatrixObjectManager.generateOrthographicMatrix("orthographicMatrixDefault", -0.1f, 0.1f, 0f, Engine.getWidth(), Engine.getHeight(), 0f);
 	}
 	
 	private void engineResourceLoader()

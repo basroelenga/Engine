@@ -16,6 +16,13 @@ in vec3 pass_Vertices;
 
 in vec4 depth_Coords;
 
+vec2 poissonDisk[4] = vec2[](
+  vec2( -0.94201624, -0.39906216 ),
+  vec2( 0.94558609, -0.76890725 ),
+  vec2( -0.094184101, -0.92938870 ),
+  vec2( 0.34495938, 0.29387760 )
+);
+
 uniform struct PointLight {
 	vec3 lightPos;
 	vec3 lightColor;
@@ -107,7 +114,7 @@ vec3 calcDirLight(DirectionalLight light, vec4 textureColor, vec3 calcNorm, vec3
 	
 	vec3 specular = specularC * light.lightColor;
 
-	return ambient + visibility * (diffuse + specular);
+	return ambient + visibility * (diffuse);
 }
 
 vec3 calcSpotLight(SpotLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_Vertices, vec3 surfaceC)
@@ -161,11 +168,14 @@ void main()
 
 	vec4 depthTexture = texture(depthTextureSample, depth_Coords.xy);
 	float visibility = 1.0;
-	float bias = 0.005;
+	float bias = 0.008;
 
-	if(depthTexture.z < depth_Coords.z-bias)
-	{
-		visibility = 0.5;
+
+
+	for (int i=0;i<4;i++){
+	  if (texture(depthTextureSample, depth_Coords.xy + poissonDisk[i]/1000.0 ).z  <  depth_Coords.z-bias ){
+	    visibility-=0.2;
+	  }
 	}
 
 	// Normalized distance between camera and vertex

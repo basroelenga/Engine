@@ -1,13 +1,18 @@
 package light;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import camera.Camera;
 import engine.Engine;
 import engine.objects.Rectangle;
 import fbo.FrameBufferObjectManager;
 import graphics.Texture;
+import math.Matrix4f;
 import math.Quaternion;
 import math.Vector3f;
 import math.Vector4f;
+import matrices.MatrixObject;
 import matrices.MatrixObjectManager;
 import shaders.Shader;
 
@@ -67,6 +72,59 @@ public class DirectionalLight extends LightObject{
 		lightDir = new Vector3f(xDir, yDir, zDir);
 		getPolarDirection();
 				
+		// Where are the 8 lightcorners of the perspective matrix in space
+		// First the near points, these points are in a plane z-near distance from the position of the camera
+		
+		// Get the matrix object that needs to be used
+		MatrixObject mObj = MatrixObjectManager.getMatrixObject("projectionMatrixDefault");
+		
+		HashMap<String, Vector3f> nearPoints = getCornerPoints("near", mObj, mObj.getzNear());
+		HashMap<String, Vector3f> farPoints = getCornerPoints("far", mObj, shadowDistance);
+
+		// Put all the points in the same map
+		HashMap<String, Vector3f> cornerPoints = new HashMap<String, Vector3f>();
+		cornerPoints.putAll(nearPoints);
+		cornerPoints.putAll(farPoints);
+		
+		// Now a 3D box needs to be constructed around these points
+		// First calculate the values for the orthographic projection matrix, this is done by getting the maximum and minimum values for x, y and z.
+		float maxX = cornerPoints.entrySet().iterator().next().getValue().getX();
+		float minX = cornerPoints.entrySet().iterator().next().getValue().getX();
+		
+		float maxY = cornerPoints.entrySet().iterator().next().getValue().getY();
+		float minY = cornerPoints.entrySet().iterator().next().getValue().getY();
+		
+		float maxZ = cornerPoints.entrySet().iterator().next().getValue().getZ();
+		float minZ = cornerPoints.entrySet().iterator().next().getValue().getZ();
+		
+		System.out.println("=======================");
+		
+		for(Map.Entry<String, Vector3f> entry : cornerPoints.entrySet())
+		{
+			
+			System.out.println(entry.getValue().getZ());
+			
+			if(entry.getValue().getX() > maxX) maxX = entry.getValue().getX();
+			if(entry.getValue().getX() < minX) minX = entry.getValue().getX();
+			
+			if(entry.getValue().getY() > maxY) maxY = entry.getValue().getY();
+			if(entry.getValue().getY() < minY) minY = entry.getValue().getY();
+			
+			if(entry.getValue().getZ() > maxZ) maxZ = entry.getValue().getZ();
+			if(entry.getValue().getZ() < minZ) minZ = entry.getValue().getZ();
+		}
+		
+		float lr = maxX - minX;
+		float tb = maxY - minY;
+		float nf = maxZ - minZ;
+		
+		System.out.println(maxZ + " , " + minZ);
+		System.out.println(lr + " , " + tb + " , " + nf);
+		
+		// The orthographic projection matrix around the perspective matrix then is
+		MatrixObjectManager.generateOrthographicMatrix("lightdirmatrix", lr, tb, nf);
+		projectionLightMatrix = MatrixObjectManager.getMatrixObject("lightdirmatrix").getMatrix();
+		
 		// First calculate the rotation of the camera from the lights point of view
 		Quaternion firstRotation = new Quaternion(getPhi(), new Vector3f(0, 1, 0));
 		Quaternion secondRotation = new Quaternion(getTheta(), new Vector3f(1, 0, 0));
@@ -74,11 +132,18 @@ public class DirectionalLight extends LightObject{
 		// Assume that only the orientation of the light is important
 		// This means that shadows will only be casted around the zero point and will not be dynamic
 		Quaternion result = Quaternion.multiply(firstRotation, secondRotation);
-		viewLightMatrix = result.toMatrix4f();
+		Matrix4f lightRotationMatrix = result.toMatrix4f();
 		
-		// This means that the projection matrix is also constant
-		MatrixObjectManager.generateOrthographicMatrix("lightdirmatrix", -2, 5, -2, 2, -2, 2);
-		projectionLightMatrix = MatrixObjectManager.getMatrixObject("lightdirmatrix").getMatrix();
+		// Use the position of the camera to place the view matrix in the right place
+		Matrix4f lightPositionMatrix = cam.getPositionMatrix();
+
+		// Calculate the light view matrix
+		viewLightMatrix.setIdentity();
+		
+		viewLightMatrix.multiply(lightRotationMatrix);
+		viewLightMatrix.multiply(lightPositionMatrix);
+		
+		
 		
 		/**
 		// Calculate the forward vector
@@ -118,14 +183,38 @@ public class DirectionalLight extends LightObject{
 		*/
 	}
 	
-	private Vector4f calculateLightCorner(Vector3f startPoint, Vector3f direction, float width)
+	/**
+	 * Calculate the corner points at a certain z distance of a matrix object (perspective matrix object).
+	 * @param mObj The matrix object.
+	 * @param zDistance The z distance.
+	 * @return A hashmap containing the corner points.
+	 */
+	private HashMap<String, Vector3f> getCornerPoints(String key, MatrixObject mObj, float zDistance)
 	{
 		
-		Vector3f point3f = Vector3f.add(startPoint, new Vector3f(direction.getX() * width, direction.getY() * width, direction.getZ() * width));
-		Vector4f point4f = new Vector4f(point3f.getX(), point3f.getY(), point3f.getZ(), 1f);
+		HashMap<String, Vector3f> cornerMap = new HashMap<String, Vector3f>();
 		
-		return new Vector4f();
+		// The distance from the near center to the actual points are
+		float fov = mObj.getFov();
+		float aspect = mObj.getAspect();
+
+		float zNearWidth = zDistance * (float) Math.tan(Math.toRadians(fov / 2f));
+		float zNearHeight = zNearWidth / aspect;
 		
+		// The first four point in the z-near plane then are (if there is no camera rotation)
+		Vector3f nearLT = new Vector3f(-zNearWidth, zNearHeight, zDistance);
+		Vector3f nearRT = new Vector3f(zNearWidth, zNearHeight, zDistance);
+		
+		Vector3f nearLB = new Vector3f(-zNearWidth, -zNearHeight, zDistance);
+		Vector3f nearRB = new Vector3f(zNearWidth, -zNearHeight, zDistance);
+		
+		// Rotate each of the points by using the camera rotation matrix
+		cornerMap.put(key + "LT", cam.getRotationMatrix().multiply(new Vector4f(nearLT, 0f)).toVector3f());
+		cornerMap.put(key + "RT", cam.getRotationMatrix().multiply(new Vector4f(nearRT, 0f)).toVector3f());
+		cornerMap.put(key + "LB", cam.getRotationMatrix().multiply(new Vector4f(nearLB, 0f)).toVector3f());
+		cornerMap.put(key + "RB", cam.getRotationMatrix().multiply(new Vector4f(nearRB, 0f)).toVector3f());
+		
+		return cornerMap;
 	}
 	
 	@Override

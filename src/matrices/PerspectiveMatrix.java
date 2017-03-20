@@ -2,7 +2,7 @@ package matrices;
 
 import math.Matrix4f;
 
-public class ProjectionMatrix extends MatrixObject{
+public class PerspectiveMatrix extends MatrixObject{
 	
 	/**
 	 * Create a projection matrix object, this object contains the various properties of the projection matrix
@@ -14,7 +14,7 @@ public class ProjectionMatrix extends MatrixObject{
 	 * @param width Width of the window.
 	 * @param height Height of the window.
 	 */
-	public ProjectionMatrix(String name, float fov, float zNear, float zFar, float width, float height)
+	public PerspectiveMatrix(String name, float fov, float zNear, float zFar, float width, float height)
 	{
 				
 		this.name = name;
@@ -31,13 +31,13 @@ public class ProjectionMatrix extends MatrixObject{
 		matrix = new Matrix4f();
 		
 		generateHashMap();
-		calculateProjectionMatrix();
+		calculatePerspectiveMatrix();
 	}
 	
 	/**
 	 * Calculate the projection matrix.
 	 */
-	private void calculateProjectionMatrix()
+	private void calculatePerspectiveMatrix()
 	{
 	
 		float f = 1.0f / (float) Math.tan(Math.toRadians(matrixMap.get("FOV") / 2));
@@ -55,6 +55,6 @@ public class ProjectionMatrix extends MatrixObject{
 	@Override
 	public void update() {
 		
-		calculateProjectionMatrix();
+		calculatePerspectiveMatrix();
 	}
 }

@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import engine.Engine;
 import engine.EngineObjectManager;
@@ -20,6 +21,8 @@ public class FrameBufferObject {
 
 	private int WIDTH;
 	private int HEIGHT;
+	
+	private ArrayList<Integer> texIDList = new ArrayList<Integer>();
 	
 	private String bufferName;
 	

@@ -1,7 +1,5 @@
 package matrices;
 
-import math.Matrix4f;
-
 public class OrthographicMatrix extends MatrixObject{
 	
 	public OrthographicMatrix(String name, float zNear, float zFar, float left, float right, float top, float bottom)
@@ -17,8 +15,24 @@ public class OrthographicMatrix extends MatrixObject{
 		
 		this.top = top;
 		this.bottom = bottom;
+				
+		generateHashMap();
+		calculateOrthographicMatrix();
+	}
+	
+	public OrthographicMatrix(String name, float lr, float tb, float fn)
+	{
 		
-		matrix = new Matrix4f();
+		this.name = name;
+		
+		this.zNear = 0;
+		this.zFar = fn;
+		
+		this.left = 0f;
+		this.right = lr;
+		
+		this.top = 0f;
+		this.bottom = tb;
 		
 		generateHashMap();
 		calculateOrthographicMatrix();

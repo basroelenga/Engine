@@ -194,6 +194,7 @@ public class LightManager {
 	
 	public static void setBiasMatrix()
 	{
+		
 		biasMatrix = new Matrix4f();
 		
 		biasMatrix.translate(0.5f, 0.5f, 0.5f);

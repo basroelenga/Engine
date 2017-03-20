@@ -19,7 +19,9 @@ public class Model {
 	private int vaoID;
 	
 	private int vertices;
+	private int normals;
 	
+	private boolean hasVertices = false;
 	private boolean hasTexture = false;
 	private boolean hasNormals = false;
 	
@@ -65,6 +67,8 @@ public class Model {
 				vertexList.add(Float.parseFloat(splitLineData[2]));
 				vertexList.add(Float.parseFloat(splitLineData[3]));
 				
+				hasVertices = true;
+				
 				break;
 				
 			// Add the texture data.
@@ -91,30 +95,25 @@ public class Model {
 			// The last case, the faces, will order all the data from the lists in the correct order. 
 			case "f":
 				
+				// Put all the components in the right order.
 				for(int j = 1; j < splitLineData.length; j++)
 				{
-					
-					String[] lineSplitFaceData = splitLineData[j].split("//");
-					StringBuilder builder = new StringBuilder();
-					
-					for(int k = 0; k < lineSplitFaceData.length; k++)
+				
+					// This is the case for only vertices
+					if(hasVertices && !hasTexture && !hasNormals)
 					{
-						
-					}
 					
-					
-					// Should handle all kind of types of data.
-					if(lineSplitFaceData.length == 1)
-					{
-						
-						int v = Integer.parseInt(lineSplitFaceData[0]);
+						int v = Integer.parseInt(splitLineData[j]);
 						
 						vertexOrderList.add(vertexList.get(3 * v + 0 - 3));
 						vertexOrderList.add(vertexList.get(3 * v + 1 - 3));
 						vertexOrderList.add(vertexList.get(3 * v + 2 - 3));
 					}
-					else if(lineSplitFaceData.length == 2 & normalList.size() == 0)
+					// The case if there are vertices and texture coordinates but no normals.
+					else if(hasVertices && hasTexture && !hasNormals)
 					{
+						
+						String[] lineSplitFaceData = splitLineData[j].split("/");
 						
 						int v = Integer.parseInt(lineSplitFaceData[0]);
 						int vt = Integer.parseInt(lineSplitFaceData[1]);
@@ -126,8 +125,11 @@ public class Model {
 						textureOrderList.add(textureList.get(2 * vt + 0 - 2));
 						textureOrderList.add(textureList.get(2 * vt + 1 - 2));
 					}
-					else if(lineSplitFaceData.length == 2 & textureList.size() == 0)
+					// The case if there are vertices and normals but no texture coordinates.
+					else if(hasVertices && !hasTexture && hasNormals)
 					{
+						
+						String[] lineSplitFaceData = splitLineData[j].split("//");
 						
 						int v = Integer.parseInt(lineSplitFaceData[0]);
 						int vn = Integer.parseInt(lineSplitFaceData[1]);
@@ -140,8 +142,10 @@ public class Model {
 						normalOrderList.add(normalList.get(3 * vn + 1 - 3));
 						normalOrderList.add(normalList.get(3 * vn + 2 - 3));
 					}
-					else
+					else if(hasVertices && hasTexture && hasNormals)
 					{
+					
+						String[] lineSplitFaceData = splitLineData[j].split("/");
 						
 						int v = Integer.parseInt(lineSplitFaceData[0]);
 						int vt = Integer.parseInt(lineSplitFaceData[1]);
@@ -156,7 +160,7 @@ public class Model {
 						
 						normalOrderList.add(normalList.get(3 * vn + 0 - 3));
 						normalOrderList.add(normalList.get(3 * vn + 1 - 3));
-						normalOrderList.add(normalList.get(3 * vn + 2 - 3));
+						normalOrderList.add(normalList.get(3 * vn + 2 - 3));			
 					}
 				}
 				
@@ -227,6 +231,7 @@ public class Model {
 		{
 			
 			float[] normalData = new float[normalOrderList.size()];
+			normals = normalOrderList.size();
 			
 			for(int i = 0; i < normalOrderList.size(); i++)
 			{
@@ -254,12 +259,32 @@ public class Model {
 		glBindVertexArray(0);
 	}
 
+	public void printInfo()
+	{
+		
+		System.out.println("The model " + getModelName() + " has:");
+		System.out.println("Vertices: " + getVertices());
+		System.out.println("Normals: " + getNormals());
+	}
+	
+	public boolean hasTextureCoordinates() {
+		return hasTexture;
+	}
+	
+	public boolean hasNormals() {
+		return hasNormals;
+	}
+	
 	public int getVaoID() {
 		return vaoID;
 	}
 	
 	public int getVertices() {
 		return vertices;
+	}
+	
+	public int getNormals() {
+		return normals;
 	}
 	
 	public String getModelName() {

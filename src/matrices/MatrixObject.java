@@ -6,7 +6,7 @@ import math.Matrix4f;
 
 public abstract class MatrixObject {
 
-	protected Matrix4f matrix;
+	protected Matrix4f matrix = new Matrix4f();;
 	
 	protected String name;
 	
@@ -35,7 +35,7 @@ public abstract class MatrixObject {
 	
 	protected float nearHeight;
 	protected float nearWidth;
-	
+		
 	protected void generateHashMap()
 	{
 		
@@ -55,6 +55,10 @@ public abstract class MatrixObject {
 		
 		matrixMap.put("top", top);
 		matrixMap.put("bottom", bottom);
+		
+		matrixMap.put("lr", Math.abs(left - right));
+		matrixMap.put("tb", Math.abs(top - bottom));
+		matrixMap.put("fn", Math.abs(zFar - zNear));
 	}
 
 	public void updateHashMap(String key, float value)

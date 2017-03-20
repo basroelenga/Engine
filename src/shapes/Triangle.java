@@ -35,6 +35,8 @@ public class Triangle {
 	private Vector3f secondN;
 	private Vector3f thirdN;
 	
+	private Vector3f normal;
+	
 	private float[] triangleData;
 	private float[] normalData;
 	
@@ -52,6 +54,19 @@ public class Triangle {
 		this.third = third;
 		
 		setDataV();
+	}
+	
+	public Triangle(Vector3f first, Vector3f second, Vector3f third, Vector3f normal)
+	{
+		
+		this.first = first;
+		this.second = second;
+		this.third = third;
+		
+		this.normal = normal;
+		
+		setDataV();
+		setDataNV();
 	}
 	
 	/**
@@ -177,6 +192,16 @@ public class Triangle {
 		normalData[6] = thirdN.getX();
 		normalData[7] = thirdN.getY();
 		normalData[8] = thirdN.getZ();
+	}
+	
+	private void setDataNV()
+	{
+		
+		normalData = new float[3];
+		
+		normalData[0] = normal.getX();
+		normalData[1] = normal.getY();
+		normalData[2] = normal.getZ();
 	}
 	
 	public void print()

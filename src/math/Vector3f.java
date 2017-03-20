@@ -113,6 +113,15 @@ public class Vector3f {
 		return vect1;
 	}
 	
+	public static Vector3f scale(Vector3f vec1, float scale)
+	{
+		
+		Vector3f vec = new Vector3f(vec1);
+		vec.scale(scale);
+		
+		return vec;
+	}
+	
 	public static Vector3f multiply(Vector3f vec, float f)
 	{
 		

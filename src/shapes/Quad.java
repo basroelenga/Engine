@@ -31,6 +31,8 @@ public class Quad {
 	private Triangle triangle1;
 	private Triangle triangle2;
 	
+	private Vector3f normal;
+	
 	private ArrayList<Vector3f> vPoints;
 	private ArrayList<Vector3f> nPoints;
 	
@@ -157,6 +159,70 @@ public class Quad {
 		glBindVertexArray(0);
 	}
 	
+	public Quad(ArrayList<Vector3f> vPoints, Vector3f normal)
+	{
+		
+		if(vPoints.size() == 4)
+		{
+			
+			this.vPoints = vPoints;
+			this.normal = normal;
+			
+			triangle1 = new Triangle(vPoints.get(0), vPoints.get(1), vPoints.get(2), normal);
+			triangle2 = new Triangle(vPoints.get(0), vPoints.get(3), vPoints.get(2), normal);
+		}
+		else
+		{
+			throw new RuntimeException("Cannot construct a quad with more or less than four points");
+		}
+		
+		FloatBuffer vertexData = BufferUtils.createFloatBuffer(getVertexData().length);
+		vertexData.put(this.getVertexData());
+		vertexData.flip();
+
+		float[] texCoords = {
+				
+				0f, 1f,
+				1f, 1f,
+				1f, 0f,
+				
+				0f, 1f,
+				0f, 0f,
+				1f, 0f
+		};
+		
+		FloatBuffer textureData = BufferUtils.createFloatBuffer(texCoords.length);
+		textureData.put(texCoords);
+		textureData.flip();
+		
+		FloatBuffer normalData = BufferUtils.createFloatBuffer(this.getNormalData().length);
+		normalData.put(this.getNormalData());
+		normalData.flip();
+		
+		vaoID = glGenVertexArrays();
+		glBindVertexArray(vaoID);
+		
+		int vboVID = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboVID);
+		glBufferData(GL_ARRAY_BUFFER, vertexData, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		int vboTID = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboTID);
+		glBufferData(GL_ARRAY_BUFFER, textureData, GL_STATIC_DRAW);
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		int vboNID = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vboNID);
+		glBufferData(GL_ARRAY_BUFFER, normalData, GL_STATIC_DRAW);
+		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindVertexArray(0);
+	}
+	
 	/**
 	 * Create a quad which consists out of 2 triangles (contains vertices and normals).
 	 * @param vPoints Vertices.
@@ -183,7 +249,7 @@ public class Quad {
 		if(store)
 		{
 			
-			FloatBuffer vertexData = BufferUtils.createFloatBuffer(this.getVertexData().length);
+			FloatBuffer vertexData = BufferUtils.createFloatBuffer(getVertexData().length);
 			vertexData.put(this.getVertexData());
 			vertexData.flip();
 
@@ -334,18 +400,19 @@ public class Quad {
 	public float[] getNormalData()
 	{
 		
-		float[] nData = new float[9 * 2];
+		int length = 2 * triangle1.getNormalData().length;
+		float[] nData = new float[length];
 		
-		for(int i = 0; i < 9; i++)
+		for(int i = 0; i < length / 2; i++)
 		{
 			
 			nData[i] = triangle1.getNormalData()[i];
-			nData[i + 9] = triangle2.getNormalData()[i];
+			nData[i + length / 2] = triangle2.getNormalData()[i];
 		}
 		
 		return nData;
 	}
-
+	
 	public void print()
 	{
 		

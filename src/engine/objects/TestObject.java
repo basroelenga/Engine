@@ -1,6 +1,6 @@
 package engine.objects;
 
-import java.util.ArrayList;
+import static org.lwjgl.opengl.GL11.*;
 
 import camera.CameraManager;
 import engine.EngineObjects;
@@ -9,27 +9,30 @@ import graphics.Texture;
 import graphics.TextureManager;
 import light.LightManager;
 import light.LightObject;
-import math.Matrix4f;
 import math.Vector4f;
 import matrices.MatrixObjectManager;
-import models.ModelManager;
+import models.Model;
 import shaders.ShaderManager;
 import utils.DrawShapes;
 
 public class TestObject extends EngineObjects{
-		
-	public TestObject()
+	
+	public TestObject(String name, Model model)
 	{
 		
-		name = "bunny";
+		this.name = name;
+		this.model = model;
 		
 		shader = ShaderManager.getShader("light");
 		
-		vaoID = ModelManager.getModel("monkey").getVaoID();
-		amountOfTriangles = ModelManager.getModel("monkey").getVertices();
+		vaoID = model.getVaoID();
+		amountOfTriangles = model.getVertices();
 		
 		tex = TextureManager.getTexture("testtex");
 		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("dir").getDepthTexID());
+		
+		textureMap.put("mTexture", null);
+		textureMap.put("dTexture", depthTex);
 		
 		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
@@ -42,8 +45,10 @@ public class TestObject extends EngineObjects{
 		modelMatrix.setIdentity();
 		
 		modelMatrix.translate(x, y, z);
-		modelMatrix.scale(0.5f, 0.5f, 0.5f);
+		modelMatrix.scale(xs, ys, zs);
 		modelMatrix.rotateEulerY(ya);
+		modelMatrix.rotateEulerZ(za);
+		modelMatrix.rotateEulerX(xa);
 	}
 	
 	@Override
@@ -59,14 +64,8 @@ public class TestObject extends EngineObjects{
 		shader.uploadMatrix4f(LightManager.getBiasMatrix(), shader.getBiasMatrixLoc());		
 		
 		shader.uploadVector4f(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f), shader.getRgbaColorLoc());
-		
-		// Both textures need to be uploaded
-		ArrayList<Texture> texList = new ArrayList<Texture>();
-		
-		texList.add(tex);
-		texList.add(depthTex);
 				
-		DrawShapes.drawModel(shader, fbo, texList, vaoID, amountOfTriangles);
+		DrawShapes.drawModel(this, shader, fbo, textureMap, vaoID, amountOfTriangles);
 	}
 	
 	@Override
@@ -75,7 +74,7 @@ public class TestObject extends EngineObjects{
 		
 		if(renderDepthMap)
 		{
-			
+						
 			// Update the FBO of every directional light
 			for(LightObject dLight : LightManager.getDirectionalLightList())
 			{

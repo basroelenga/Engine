@@ -1,11 +1,12 @@
 package engine;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import fbo.FrameBufferObject;
 import graphics.Texture;
 import math.Matrix4f;
 import math.Vector4f;
+import models.Model;
 import shaders.Shader;
 import shaders.ShaderManager;
 
@@ -26,9 +27,9 @@ public abstract class EngineObjects {
 	protected float vz;
 	
 	// Their scaling
-	protected float xs = 0f;
-	protected float ys = 0f;
-	protected float zs = 0f;
+	protected float xs = 1f;
+	protected float ys = 1f;
+	protected float zs = 1f;
 	
 	// Their rotation
 	protected float xa = 0f;
@@ -37,6 +38,9 @@ public abstract class EngineObjects {
 	
 	// Mass or weight of an object
 	protected float mass;
+	
+	// Object can contain a model
+	protected Model model;
 	
 	// Particle specific parameters
 	// Particle type
@@ -58,11 +62,13 @@ public abstract class EngineObjects {
 	protected FrameBufferObject fbo;
 	protected Shader shader;
 	
-	// Texture to be used
+	// Textures to be used
+	// 1: The model texture
+	// 2: The depth texture used for shadow rendering
+	protected LinkedHashMap<String, Texture> textureMap = new LinkedHashMap<String, Texture>();
+	
 	protected Texture tex;
 	protected Texture depthTex;
-	
-	protected ArrayList<Texture> textureList = new ArrayList<Texture>();
 	
 	// The default color is white
 	protected Vector4f RGBAcolor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -171,6 +177,9 @@ public abstract class EngineObjects {
 	}
 	public float getMass() {
 		return mass;
+	}
+	public Model getModel() {
+		return model;
 	}
 	public String getParticleType()	{
 		return pType;

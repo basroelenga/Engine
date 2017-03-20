@@ -8,6 +8,7 @@ import engine.objects.Sphere;
 import engine.objects.TestObject;
 import graphics.Texture;
 import math.Vector3f;
+import models.Model;
 import shapes.Point;
 import shapes.Quad;
 import shapes.UVSphere;
@@ -49,12 +50,12 @@ public class EngineObjectManager {
 		// Create a quad with normals
 		ArrayList<Vector3f> nPoints = new ArrayList<Vector3f>();
 		
-		nPoints.add(new Vector3f(0, 0, 1));
-		nPoints.add(new Vector3f(0, 0, 1));
-		nPoints.add(new Vector3f(0, 0, 1));
-		nPoints.add(new Vector3f(0, 0, 1));
+		nPoints.add(new Vector3f(0, 0, -1f));
+		nPoints.add(new Vector3f(0, 0, -1f));
+		nPoints.add(new Vector3f(0, 0, -1f));
+		nPoints.add(new Vector3f(0, 0, -1f));
 		
-		quadN = new Quad(points, nPoints, true);
+		quadN = new Quad(points, new Vector3f(0, 0, -1f));
 		
 		// Set the init state to true
 		isInit = true;
@@ -107,9 +108,9 @@ public class EngineObjectManager {
 		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, scaling, mass, tex, type));
 	}
 	
-	public static void addBunny()
+	public static void addTO(String name, Model model)
 	{
-		engineObjectList.add(new TestObject());
+		engineObjectList.add(new TestObject(name, model));
 	}
 	
 	/**

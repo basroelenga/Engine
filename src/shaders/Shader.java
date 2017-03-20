@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import light.LightManager;
 import math.Matrix4f;
@@ -39,6 +40,7 @@ public class Shader {
 	
 	// List storing all the texture locations
 	private ArrayList<Integer> texLocList = new ArrayList<Integer>();
+	private HashMap<String, Integer> textureLocationList = new HashMap<String, Integer>();
 	
 	// Lists storing all the properties for point lights
 	private ArrayList<Integer> pointLightColorLocList = new ArrayList<Integer>();
@@ -119,8 +121,8 @@ public class Shader {
 		textureSampleLoc = glGetUniformLocation(shaderProgram, "textureSample");
 		depthTextureSampleLoc = glGetUniformLocation(shaderProgram, "depthTextureSample");
 		
-		texLocList.add(textureSampleLoc);
-		texLocList.add(depthTextureSampleLoc);
+		textureLocationList.put("mTexture", textureSampleLoc);
+		textureLocationList.put("dTexture", depthTextureSampleLoc);
 		
 		cutoffLoc = glGetUniformLocation(shaderProgram, "cutoff");
 		
@@ -363,6 +365,13 @@ public class Shader {
 		glUniformMatrix4fv(loc, true, matrix.toFloatBuffer());
 		
 		unbind();
+	}
+	
+	// Function should only be used in draw shapes module,
+	// otherwise bind function need to be added
+	public void setLocation(String texture, int loc)
+	{
+		glUniform1i(textureLocationList.get(texture), loc);
 	}
 	
 	public void bind()
