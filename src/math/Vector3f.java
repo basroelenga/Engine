@@ -54,6 +54,14 @@ public class Vector3f {
 		z *= s;
 	}
 	
+	public void negate()
+	{
+		
+		x = -x;
+		y = -y;
+		z = -z;
+	}
+	
 	public void dotProduct(Vector3f v)
 	{
 		

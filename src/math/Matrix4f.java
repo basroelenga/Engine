@@ -338,6 +338,25 @@ public class Matrix4f {
 		this.multiply(transMatrix);
 	}
 	
+	public Vector4f transform(Vector4f right)
+	{
+		
+		Vector4f vec2 = new Vector4f();
+		Matrix4f left = this;
+		
+		float x = left.m00 * right.getX() + left.m10 * right.getY() + left.m20 * right.getZ() + left.m30 * right.getW();
+		float y = left.m01 * right.getX() + left.m11 * right.getY() + left.m21 * right.getZ() + left.m31 * right.getW();
+		float z = left.m02 * right.getX() + left.m12 * right.getY() + left.m22 * right.getZ() + left.m32 * right.getW();
+		float w = left.m03 * right.getX() + left.m13 * right.getY() + left.m23 * right.getZ() + left.m33 * right.getW();
+		
+		vec2.setX(x);
+		vec2.setY(y);
+		vec2.setZ(z);
+		vec2.setW(w);
+		
+		return vec2;
+	}
+	
 	/**
 	 * Scale the current matrix.
 	 * @param x Scaling in x-direction.

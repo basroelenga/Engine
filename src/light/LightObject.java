@@ -41,6 +41,7 @@ public abstract class LightObject {
 	
 	// Toggle shadows (default is false)
 	protected boolean renderShadows = true;
+	protected boolean renderShadowMap = true;
 	
 	// Shadow render distance, this is the distance that will be used as zFar.
 	protected float shadowDistance = 10f;
@@ -201,6 +202,12 @@ public abstract class LightObject {
 	}
 	public void setRenderShadows(boolean renderShadows) {
 		this.renderShadows = renderShadows;
+	}
+	public boolean isRenderShadowMap() {
+		return renderShadowMap;
+	}
+	public void setRenderShadowMap(boolean renderShadowMap) {
+		this.renderShadowMap = renderShadowMap;
 	}
 	public boolean isShow() {
 		return show;

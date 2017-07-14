@@ -18,6 +18,14 @@ public class LightManager {
 	
 	private LightManager(){}
 	
+	/**
+	 * Initialize the light manager, this includes creating the bias matrix for shadow rendering
+	 */
+	public static void initialize()
+	{
+		setBiasMatrix();
+	}
+	
 	public static void update()	
 	{
 		

@@ -369,10 +369,9 @@ public class Debugger {
 			
 			startText.updateAndRender();
 			text.updateAndRender();
-			
+						
 			if(showReply)
 			{
-				
 				command.updateAndRender();
 				reply.updateAndRender();
 			}

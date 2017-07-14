@@ -2,6 +2,8 @@ package matrices;
 
 public class OrthographicMatrix extends MatrixObject{
 	
+	private boolean scale = false;
+	
 	public OrthographicMatrix(String name, float zNear, float zFar, float left, float right, float top, float bottom)
 	{
 		
@@ -25,21 +27,25 @@ public class OrthographicMatrix extends MatrixObject{
 		
 		this.name = name;
 		
-		this.zNear = 0;
-		this.zFar = fn;
+		this.zNear = - fn / 2;
+		this.zFar = fn / 2;
 		
-		this.left = 0f;
-		this.right = lr;
+		this.left = - lr / 2;
+		this.right = lr / 2;
 		
-		this.top = 0f;
-		this.bottom = tb;
+		this.top = tb / 2;
+		this.bottom = -tb / 2;
+		
+		scale = true;
 		
 		generateHashMap();
-		calculateOrthographicMatrix();
+		calculateScaleOrthographicMatrix();
 	}
 	
 	private void calculateOrthographicMatrix()
 	{
+		
+		matrix.setIdentity();
 		
 		matrix.getElements()[0] = 2 / (matrixMap.get("right") - matrixMap.get("left"));
 		matrix.getElements()[5] = 2 / (matrixMap.get("top") - matrixMap.get("bottom"));
@@ -50,10 +56,22 @@ public class OrthographicMatrix extends MatrixObject{
 		matrix.getElements()[7] = -((matrixMap.get("top") + matrixMap.get("bottom")) / (matrixMap.get("top") - matrixMap.get("bottom")));
 		matrix.getElements()[11] = (matrixMap.get("zFar") + matrixMap.get("zNear")) / (matrixMap.get("zFar") - matrixMap.get("zNear"));
 	}
+	
+	private void calculateScaleOrthographicMatrix()
+	{
+		
+		matrix.setIdentity();
+		
+		matrix.getElements()[0] = 2 / matrixMap.get("rl");
+		matrix.getElements()[5] = 2 / matrixMap.get("tb");
+		matrix.getElements()[10] = -2 / matrixMap.get("fn");
+		matrix.getElements()[15]= 1;
+	}
 
 	@Override
 	public void update() {
 		
-		calculateOrthographicMatrix();
+		if(scale) calculateScaleOrthographicMatrix();
+		else calculateOrthographicMatrix();
 	}
 }

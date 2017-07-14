@@ -56,7 +56,7 @@ public abstract class MatrixObject {
 		matrixMap.put("top", top);
 		matrixMap.put("bottom", bottom);
 		
-		matrixMap.put("lr", Math.abs(left - right));
+		matrixMap.put("rl", Math.abs(right - left));
 		matrixMap.put("tb", Math.abs(top - bottom));
 		matrixMap.put("fn", Math.abs(zFar - zNear));
 	}

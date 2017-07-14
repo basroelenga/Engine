@@ -13,6 +13,10 @@ public class TextManager {
 	private static Texture fontTex;
 	private static ArrayList<ECharacter> charList = new ArrayList<ECharacter>();
 	
+	/**
+	 * Construct the text manager, this class manages text displayed on the screen
+	 * @param useConf Type of text to use (Should be configuration file only in the future)
+	 */
 	public TextManager(boolean useConf)
 	{
 		
@@ -28,7 +32,7 @@ public class TextManager {
 		if(useConf) 
 		{
 			
-			fontTex = new Texture("fontangel");
+			fontTex = new Texture("fontHD");
 			constructCharListConfig();
 		}
 	}
@@ -53,7 +57,7 @@ public class TextManager {
 	{
 		
 		// Load the configuration file in a ArrayObject
-		ArrayObject conf = FileIO.loadtxt("textures/texdata/font.dat", null, true, null);
+		ArrayObject conf = FileIO.loadtxt("textures/texdata/fontHD_converted.dat", ",", true, null);
 		
 		// Need to find the maximum x width
 		xMax = 0f;
@@ -69,13 +73,15 @@ public class TextManager {
 		for(int i = 0; i < conf.getDataArray()[0].length; i++)
 		{
 
-			int id = Integer.parseInt(conf.get(1, i).split("=")[1]);
+			int id = Integer.parseInt(conf.get(0, i).split("=")[1]);
 
-			int posX = Integer.parseInt(conf.get(2, i).split("=")[1]);
-			int posY = Integer.parseInt(conf.get(3, i).split("=")[1]);
+			System.out.println(id);
 			
-			int offX = Integer.parseInt(conf.get(4, i).split("=")[1]);
-			int offY = Integer.parseInt(conf.get(5, i).split("=")[1]);
+			int posX = Integer.parseInt(conf.get(1, i).split("=")[1]);
+			int posY = Integer.parseInt(conf.get(2, i).split("=")[1]);
+			
+			int offX = Integer.parseInt(conf.get(3, i).split("=")[1]);
+			int offY = Integer.parseInt(conf.get(4, i).split("=")[1]);
 			
 			charList.add(new ECharacter(id, posX, posY, offX, offY));
 		}

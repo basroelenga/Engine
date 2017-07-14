@@ -13,6 +13,7 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
@@ -37,6 +38,7 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
@@ -45,6 +47,7 @@ import debug.Debugger;
 import fbo.FrameBufferObject;
 import fbo.FrameBufferObjectManager;
 import game.Simulation;
+import graphics.Texture;
 import graphics.TextureManager;
 import light.LightManager;
 import matrices.MatrixObjectManager;
@@ -129,6 +132,8 @@ public class Engine {
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(window, (vidmode.width() - width) / 2,	(vidmode.height() - height) / 2);
 		
+		//glfwSetWindowIcon(window, NULL);
+		
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
 		
@@ -137,6 +142,10 @@ public class Engine {
 		// Set up OpenGL
 		GL.createCapabilities();
 
+		// Set the icon
+		setIcon();
+		
+		// Construct the clear color
 		float red = (1 / 255f) * 135;
 		float green = (1 / 255f) * 206;
 		float blue = (1 / 255f) * 250;
@@ -149,9 +158,25 @@ public class Engine {
 		glEnable(GL_TEXTURE_2D);
 		
 		// Set up the projection matrices (these are configured at the width and height of the OpenGL window)
-		// These are the default projection matrices and used for camera and GUI rendering
-		MatrixObjectManager.generateProjectionMatrix("projectionMatrixDefault", 70, 0.1f, 1000f, Engine.getWidth(), Engine.getHeight());
-		MatrixObjectManager.generateOrthographicMatrix("orthographicMatrixDefault", -0.1f, 0.1f, 0f, Engine.getWidth(), Engine.getHeight(), 0f);
+		// These are the default projection matrices and used for camera and GUI rendering and can be changed
+		MatrixObjectManager.generateProjectionMatrix("projectionMatrixDefault", 70, 0.1f, 10f, Engine.getWidth(), Engine.getHeight());
+		MatrixObjectManager.generateOrthographicMatrix("orthographicMatrixDefault", -0.2f, 0.2f, 0f, Engine.getWidth(), Engine.getHeight(), 0f);
+	}
+	
+	private void setIcon()
+	{
+		
+		// Load the icon
+		Texture tex = new Texture("icon");
+		
+		// Create the image
+		GLFWImage icon = GLFWImage.malloc();
+		GLFWImage.Buffer iconBuffer = GLFWImage.malloc(1);
+		
+		icon.set(tex.getWidth(), tex.getHeight(), tex.getImage());
+		iconBuffer.put(0, icon);
+		
+		glfwSetWindowIcon(window, iconBuffer);
 	}
 	
 	private void engineResourceLoader()
@@ -163,11 +188,9 @@ public class Engine {
 		new ShaderManager();
 		new ModelManager();
 		
-		// Create primitives
+		// Create primitives, these shapes can be used for anything
 		EngineObjectManager.createPrimitives();
-		
-		// Add a depth buffer, this is necessary for the debugger rectangle, should find better solution.
-		FrameBufferObjectManager.addShadowFrameBufferObject("shadow", 1024, 1024);
+		LightManager.initialize();
 		
 		// Create the debugger
 		debugger = new Debugger();

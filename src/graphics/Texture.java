@@ -20,6 +20,8 @@ public class Texture {
 	private int height;
 	private int width;
 	
+	private ByteBuffer buffer;
+	
 	/**
 	 * Constructs an OpenGL texture from a PNG file.
 	 * @param path Texture to be loaded.
@@ -36,7 +38,7 @@ public class Texture {
 			height = decoder.getHeight();
 			width = decoder.getWidth();
 			
-			ByteBuffer buffer = ByteBuffer.allocateDirect(4 * decoder.getHeight() * decoder.getWidth());
+			buffer = ByteBuffer.allocateDirect(4 * decoder.getHeight() * decoder.getWidth());
 			
 			decoder.decode(buffer, 4 * decoder.getWidth(), Format.RGBA);
 			buffer.flip();
@@ -120,5 +122,14 @@ public class Texture {
 	public int getHeight()
 	{
 		return height;
+	}
+	
+	/**
+	 * Returns the image as a buffer
+	 * @return Image bytebuffer
+	 */
+	public ByteBuffer getImage()
+	{
+		return buffer;
 	}
 }

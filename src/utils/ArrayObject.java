@@ -26,6 +26,8 @@ public class ArrayObject {
 		// Split all the rows from each other
 		String[] rows = data.split("\n");
 		
+		System.out.println(rows[0]);
+		
 		// Check if there is a delimiter, otherwise use default
 		if (delimiter == null) delimiter = " ";
 		

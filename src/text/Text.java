@@ -52,7 +52,7 @@ public class Text {
 			projMatrix = MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix();
 			shader = ShaderManager.getShader("ui");
 			
-			scaling = 32f;
+			scaling = 16f;
 			
 			break;
 		}
@@ -82,7 +82,7 @@ public class Text {
 
 			modelMatrix.setIdentity();
 			
-			modelMatrix.translate(x + xTrans, y, z + (i * 0.01f));
+			modelMatrix.translate(x + xTrans, y, z + (i * 0.001f));
 			xTrans += charList.get(i).getXScaleCorrection() * scaling;
 			
 			modelMatrix.rotateQ(0f, 0f, 180f, false);
@@ -106,6 +106,11 @@ public class Text {
 	
 	public float getScaling()
 	{
-		return this.scaling;
+		return scaling;
+	}
+	
+	public String getText()
+	{
+		return text;
 	}
 }
