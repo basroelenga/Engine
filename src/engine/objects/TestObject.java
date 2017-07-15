@@ -29,7 +29,7 @@ public class TestObject extends EngineObjects{
 		amountOfTriangles = model.getVertices();
 		
 		tex = TextureManager.getTexture("testtex");
-		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("dir").getDepthTexID());
+		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("directional_shadow").getDepthTexID());
 		
 		textureMap.put("mTexture", null);
 		textureMap.put("dTexture", depthTex);

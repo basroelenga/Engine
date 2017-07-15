@@ -36,6 +36,6 @@ public class TextureManager {
 			if(tex.getTexName().equals(name)) return tex;
 		}
 		
-		throw new RuntimeException("Texture not found in list " + name);
+		return null;
 	}
 }

@@ -7,14 +7,13 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-
 import engine.Engine;
 import engine.EngineObjectManager;
 import graphics.Texture;
 import math.Matrix4f;
 import matrices.MatrixObjectManager;
 import shaders.Shader;
+import shaders.ShaderManager;
 import utils.DrawShapes;
 
 public class FrameBufferObject {
@@ -22,7 +21,7 @@ public class FrameBufferObject {
 	private int WIDTH;
 	private int HEIGHT;
 	
-	private ArrayList<Integer> texIDList = new ArrayList<Integer>();
+	//private ArrayList<Integer> texIDList = new ArrayList<Integer>();
 	
 	private String bufferName;
 	
@@ -48,16 +47,16 @@ public class FrameBufferObject {
 	 * @param WIDTH Width of the frame buffer.
 	 * @param HEIGHT Height of the frame buffer.
 	 */
-	public FrameBufferObject(String name, Shader shader, int WIDTH, int HEIGHT)
+	public FrameBufferObject(String name, String type, int WIDTH, int HEIGHT)
 	{
 		
 		this.bufferName = name;
 		
-		this.shader = shader;
-		
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
 
+		shader = ShaderManager.getShader("basictex");
+		
 		modelMatrix = new Matrix4f();
 		
 		modelMatrix.translate(0, Engine.getHeight(), 0);
@@ -219,8 +218,6 @@ public class FrameBufferObject {
 			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
 			shader.uploadMatrix4f(new Matrix4f(), shader.getViewMatrixLoc());
 			shader.uploadMatrix4f(MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), shader.getProjectionMatrixLoc());
-			
-			//System.out.println(tex.getTexID());
 			
 			DrawShapes.drawQuad(shader, tex, null, EngineObjectManager.getQuad().getVaoID());
 		}

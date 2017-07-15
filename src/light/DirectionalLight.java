@@ -8,6 +8,7 @@ import graphics.Texture;
 import math.Matrix4f;
 import math.Quaternion;
 import math.Vector3f;
+import math.Vector4f;
 import matrices.MatrixObjectManager;
 import shaders.Shader;
 
@@ -34,7 +35,7 @@ public class DirectionalLight extends LightObject{
 		depthBuffer = FrameBufferObjectManager.getFrameBuffer(name);
 		
 		// Rendering the depth map
-		rect = new Rectangle("depth", new Texture("depth", depthBuffer.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, Engine.getWidth() / 4, Engine.getHeight() / 4);
+		rect = new Rectangle("depth", new Texture("depth", depthBuffer.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, Engine.getWidth() / 4, Engine.getHeight() / 4, new Vector4f());
 
 		// Calculate the initial direction of the light in polar coordinates
 		getPolarDirection();

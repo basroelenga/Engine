@@ -7,6 +7,7 @@ import fbo.FrameBufferObjectManager;
 import graphics.Texture;
 import light.LightManager;
 import light.LightObject;
+import math.Vector4f;
 import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
 import utils.DrawShapes;
@@ -68,7 +69,7 @@ public class Rectangle extends EngineObjects{
 	 * @param xs scaling in x direction
 	 * @param ys scaling in y direction
 	 */
-	public Rectangle(String name, Texture tex, float x, float y, float xs, float ys)
+	public Rectangle(String name, Texture tex, float x, float y, float xs, float ys, Vector4f color)
 	{
 		
 		this.name = name;
@@ -80,6 +81,7 @@ public class Rectangle extends EngineObjects{
 		this.ys = ys;
 		
 		this.tex = tex;
+		this.RGBAcolor = color;
 		
 		// No pre-render phase
 		renderDepthMap = false;

@@ -10,6 +10,8 @@ import utils.DrawShapes;
 
 public class Text {
 	
+	public static int TEXTSIZE = 32;
+	
 	private float x;
 	private float y;
 	private float z;
@@ -25,7 +27,7 @@ public class Text {
 	
 	private ArrayList<ECharacter> charList = new ArrayList<ECharacter>();
 	
-	public Text(String text, String type, float x, float y, float z)
+	public Text(String text, String type, float x, float y, float z, int size)
 	{
 		
 		this.x = x;
@@ -52,7 +54,7 @@ public class Text {
 			projMatrix = MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix();
 			shader = ShaderManager.getShader("ui");
 			
-			scaling = 16f;
+			scaling = size;
 			
 			break;
 		}
@@ -109,6 +111,30 @@ public class Text {
 		return scaling;
 	}
 	
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public float getZ() {
+		return z;
+	}
+
+	public void setZ(float z) {
+		this.z = z;
+	}
+
 	public String getText()
 	{
 		return text;

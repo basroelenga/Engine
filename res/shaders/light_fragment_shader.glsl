@@ -160,23 +160,41 @@ vec3 calcSpotLight(SpotLight light, vec4 textureColor, vec3 calcNorm, vec3 pass_
 	return ambient + attenuation * (diffuse + specular);
 }
 
+const int pcfCount = 2;
+const float totalT = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
+
 void main() 
 {
 
 	// Texture light
 	vec4 textureColor = vec4(1.0, 1.0, 1.0, 1.0);
-
 	vec4 depthTexture = texture(depthTextureSample, depth_Coords.xy);
+
+	// Initial values for the shadows
 	float visibility = 1.0;
 	float bias = 0.008;
 
+	float mapSize = 4096.0;
+	float Tsize = 1.0 / mapSize;
+	float total = 0.0;
 
+	// Use PCF the obtain better shadows
+	for(int x = -pcfCount; x <= pcfCount; x++)
+	{
+		for(int y = -pcfCount; y <= pcfCount; y++)
+		{
 
-	for (int i=0;i<4;i++){
-	  if (texture(depthTextureSample, depth_Coords.xy + poissonDisk[i]/1000.0 ).z  <  depth_Coords.z-bias ){
-	    visibility-=0.2;
-	  }
+			float objNL = texture(depthTextureSample, depth_Coords.xy + vec2(x, y) * Tsize).z;
+			if(depth_Coords.z-bias > objNL)
+			{
+				total += 1.0;
+			}
+		}
 	}
+
+	// Change the visibility
+	total /= totalT;
+	visibility = 1.0 - (total * depth_Coords.w);
 
 	// Normalized distance between camera and vertex
 	vec3 surfaceC = normalize(cameraPos - pass_Vertices);

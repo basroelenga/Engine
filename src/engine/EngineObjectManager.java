@@ -8,6 +8,7 @@ import engine.objects.Sphere;
 import engine.objects.TestObject;
 import graphics.Texture;
 import math.Vector3f;
+import math.Vector4f;
 import models.Model;
 import shapes.Point;
 import shapes.Quad;
@@ -70,9 +71,9 @@ public class EngineObjectManager {
 		engineObjectList.add(new Rectangle(name, tex, x, y, z, xs, ys, zs));
 	}
 	
-	public static void addRectangle(String name, Texture tex, float x, float y, float xs, float ys)
+	public static void addRectangle(String name, Texture tex, float x, float y, float xs, float ys, Vector4f color)
 	{
-		engineObjectList.add(new Rectangle(name, tex, x, y, xs, ys));
+		engineObjectList.add(new Rectangle(name, tex, x, y, xs, ys, color));
 	}
 	
 	/**

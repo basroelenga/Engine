@@ -2,17 +2,15 @@ package fbo;
 
 import java.util.ArrayList;
 
-import shaders.Shader;
-
 public class FrameBufferObjectManager {
 
 	private static ArrayList<FrameBufferObject> frameBufferList = new ArrayList<FrameBufferObject>();
 	
 	private FrameBufferObjectManager() {}
 	
-	public static void addDefaultFrameBufferObject(String name, Shader shader, int WIDTH, int HEIGHT)
+	public static void addDefaultFrameBufferObject(String name, String type, int WIDTH, int HEIGHT)
 	{
-		frameBufferList.add(new FrameBufferObject(name, shader, WIDTH, HEIGHT));
+		frameBufferList.add(new FrameBufferObject(name, type, WIDTH, HEIGHT));
 	}
 	
 	public static void addShadowFrameBufferObject(String name, int WIDTH, int HEIGHT)

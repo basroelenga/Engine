@@ -16,11 +16,11 @@ public class Simulation {
 		CameraManager.addCamera("cam", new Vector3f(0, 0, -2), new Vector3f(0, 0, 0));
 		// =========================
 		
-		LightManager.addDirectionalLight("dir", CameraManager.getCamera("cam"), 0, 1, 0, new Vector3f(1.0f, 0.0f, 0.0f));
+		LightManager.addDirectionalLight("directional_shadow", CameraManager.getCamera("cam"), 0, 1, 0, new Vector3f(1.0f, 0.0f, 0.0f));
 		
 		addScene();
 
-		LightManager.getLight("dir").setRenderShadowMap(false);
+		LightManager.getLight("directional_shadow").setRenderShadowMap(false);
 	}
 	
 	private void addScene()

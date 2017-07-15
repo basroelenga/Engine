@@ -10,6 +10,8 @@ import shaders.ShaderManager;
 
 public class LightManager {
 
+	private static boolean shadows = true;
+	
 	private static Matrix4f biasMatrix;
 	
 	private static ArrayList<LightObject> pointLightList = new ArrayList<LightObject>();
@@ -72,6 +74,20 @@ public class LightManager {
 		
 		for(LightObject light : pointLightList) light.render();
 		for(LightObject light : directionalLightList) light.render();
+	}
+	
+	public static void toggleShadow(boolean toggle)
+	{
+		
+		for(LightObject obj : getLightList())
+		{
+			
+			if(toggle) obj.renderShadows = true;
+			else obj.renderShadows = false;
+		}
+		
+		if(toggle) shadows = true;
+		else shadows = false;
 	}
 	
 	public static void addPointLight(String name, float x, float y, float z, Vector3f lightColor, boolean show)
@@ -212,5 +228,10 @@ public class LightManager {
 	public static Matrix4f getBiasMatrix()
 	{
 		return biasMatrix;
+	}
+	
+	public static boolean getRenderShadows()
+	{
+		return shadows;
 	}
 }

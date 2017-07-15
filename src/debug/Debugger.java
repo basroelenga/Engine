@@ -1,18 +1,28 @@
 package debug;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
-import input.KeyboardInput;
-import math.Vector4f;
 
 import java.util.ArrayList;
 
+import engine.Engine;
+import engine.EngineObjectManager;
+import engine.objects.Rectangle;
+import fbo.FrameBufferObject;
+import fbo.FrameBufferObjectManager;
+import graphics.Texture;
+import graphics.TextureManager;
+import input.KeyboardInput;
+import light.LightManager;
+import math.Vector4f;
 import text.Text;
 import text.TextManager;
-import engine.Engine;
-import engine.objects.Rectangle;
 
 public class Debugger {
 
+	// The debug framebuffer object
+	FrameBufferObject debugFBO;
+	
+	// States of the debug window
 	public static boolean debugState;
 	private boolean blinkShow;
 	
@@ -34,6 +44,13 @@ public class Debugger {
 	private float blinkTimeOut = 500f;
 	private long blinkTimer;
 	
+	// Number of possible out lines
+	private int outLines = 5;
+	private ArrayList<Text> outList = new ArrayList<Text>();
+	
+	// Size of debug text
+	private int DEBUGTEXTSIZE = 24;
+	
 	// Start text
 	private Text startText;
 	
@@ -41,14 +58,10 @@ public class Debugger {
 	private StringBuilder input = new StringBuilder();
 	
 	// Dynamic text object
-	private Text text;
+	private Text inputText;
 	
-	// Text command & reply
-	private Text command;
+	// Text reply
 	private Text reply;
-	
-	// Show reply
-	private boolean showReply = false;
 	
 	// List of all commands
 	private ArrayList<String> commandList = new ArrayList<String>();
@@ -61,21 +74,39 @@ public class Debugger {
 		debugState = false;
 		debugTimer = System.currentTimeMillis();
 		
-		// Set up the debug window (2 windows: input and output)
-		windowInput = new Rectangle("windowIn", null, 0f, Engine.getHeight() - 90f, Engine.getWidth(), 30f);
-		windowInput.setRGBAcolor(new Vector4f(0.0f, 0.0f, 0.0f, 0.6f));
+		// Create the debug FBO
+		FrameBufferObjectManager.addDefaultFrameBufferObject("debug", "debug", 2048, 2048);
+		debugFBO = FrameBufferObjectManager.getFrameBuffer("debug");
 		
-		windowOutput = new Rectangle("windowOut", null, 0f, Engine.getHeight() - 60f, Engine.getWidth(), 60f);
-		windowOutput.setRGBAcolor(new Vector4f(0.8f, 0.8f, 0.8f, 0.6f));
+		// Set up the debug window (2 windows: input and output)
+		// The input window:
+		float x_in = 0f;
+		float y_in = Engine.getHeight() - (outLines + 1) * DEBUGTEXTSIZE;
+		
+		float xScale_in = Engine.getWidth();
+		float yScale_in = DEBUGTEXTSIZE;
+		
+		Vector4f color_in = new Vector4f(0.0f, 0.0f, 0.0f, 0.6f);
+		windowInput = new Rectangle("windowIn", null, x_in, y_in, xScale_in, yScale_in, color_in);
+		
+		// The output window:
+		float x_out = 0f;
+		float y_out = Engine.getHeight() - outLines * DEBUGTEXTSIZE;
+		
+		float xScale_out = Engine.getWidth();
+		float yScale_out = outLines * DEBUGTEXTSIZE;
+		
+		Vector4f color_out = new Vector4f(0.8f, 0.8f, 0.8f, 0.6f);
+		windowOutput = new Rectangle("windowOut", null, x_out, y_out, xScale_out, yScale_out, color_out);
 		
 		// Blinker
-		windowBlinker = new Rectangle("blinker", null, 20, Engine.getHeight() - 90f, 5f, 30f);
+		windowBlinker = new Rectangle("blinker", null, 20, Engine.getHeight() - (outLines + 1) * DEBUGTEXTSIZE, 5f, DEBUGTEXTSIZE, new Vector4f(1f, 1f, 1f, 1f));
 		
 		blinkShow = true;
 		blinkTimer = System.currentTimeMillis();
 		
 		// Initial text
-		startText = new Text(">", "HUD", 0, Engine.getHeight() - 60f, 0f);
+		startText = new Text(">", "HUD", 0, Engine.getHeight() - outLines * DEBUGTEXTSIZE, 0f, DEBUGTEXTSIZE);
 	}
 	
 	public void update()
@@ -136,7 +167,7 @@ public class Debugger {
 					{
 						
 						// This makes the blinker move with the text
-						blinkerPosition = TextManager.getCharacter(input.charAt(input.length() - 1)).getXScaleCorrection() * text.getScaling();
+						blinkerPosition = TextManager.getCharacter(input.charAt(input.length() - 1)).getXScaleCorrection() * inputText.getScaling();
 						windowBlinker.setX(windowBlinker.getX() - blinkerPosition);
 						
 						input.deleteCharAt(input.length() - 1);
@@ -193,7 +224,7 @@ public class Debugger {
 							for(int i = 0; i < temp.length(); i++)
 							{
 								
-								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * text.getScaling();
+								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * inputText.getScaling();
 								
 							}
 							
@@ -221,7 +252,7 @@ public class Debugger {
 							for(int i = 0; i < temp.length(); i++)
 							{
 								
-								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * text.getScaling();
+								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * inputText.getScaling();
 								
 							}
 							
@@ -246,7 +277,7 @@ public class Debugger {
 							for(int i = 0; i < temp.length(); i++)
 							{
 								
-								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * text.getScaling();
+								tempBlink += TextManager.getCharacter(temp.charAt(i)).getXScaleCorrection() * inputText.getScaling();
 								
 							}
 							
@@ -265,19 +296,18 @@ public class Debugger {
 					{
 						
 						// This makes the blinker move with the text
-						blinkerPosition = TextManager.getCharacter(currentChar).getXScaleCorrection() * text.getScaling();
+						blinkerPosition = TextManager.getCharacter(currentChar).getXScaleCorrection() * inputText.getScaling();
 						windowBlinker.setX(windowBlinker.getX() + blinkerPosition);
 						
 						input.append(currentChar);
 					}
 				}
 			}
+						
+			// Text that is displayed as the input
+			inputText = new Text(input.toString(), "HUD", 20, Engine.getHeight() - outLines * DEBUGTEXTSIZE, 0.1f, DEBUGTEXTSIZE);
 			
-			//if(input.length() != 0) System.out.println(input.toString());
-			
-			//System.out.println(Engine.keyAction);
-			text = new Text(input.toString(), "HUD", 20, Engine.getHeight() - 60f, 0.1f);
-			
+			// Update the different components
 			windowBlinker.update();
 			
 			windowInput.update();
@@ -292,71 +322,226 @@ public class Debugger {
 	private void processCommand(String commandS)
 	{
 		
-		command = new Text("Command: " + commandS, "HUD", 20f, Engine.getHeight(), 0f);
 		String[] commandParts = commandS.split(" ");
 		
 		// Add the command to the list 
 		commandList.add(commandS);
 		listIndex = commandList.size();
 		
-		if(commandParts.length != 2)
-		{
-		
-			reply = new Text("Command has to few arguments", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
-			showReply = true;
-			
-			return;
-		}
-		
 		switch(commandParts[0])
 		{
 		
-		case "show-fps":
+		// Show different properties of the engine
+		case "show":
 			
-			if(commandParts[1].equals("0")) Engine.showFPS = false;
-			else if(commandParts[1].equals("1")) Engine.showFPS = true;
-			else
+			// Check if there are enough parameters
+			if(commandParts.length == 1)
 			{
-			
-				reply = new Text("Not a valid command", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+				
+				reply = new Text("Following show commands available: fps, wireframe", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
 				break;
 			}
 			
-			reply = new Text("Show FPS: " + Engine.showFPS, "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			switch(commandParts[1])
+			{
+			
+			case "fps":
+				
+				if(commandParts.length == 2)
+				{
+					
+					reply = new Text("Missing command parameter (0 or 1)", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				else
+				{
+					
+					if(commandParts[2].equals("0")) Engine.showFPS = false;
+					else if(commandParts[2].equals("1")) Engine.showFPS = true;
+					else 
+					{
+						
+						reply = new Text("Not a valid command parameter", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+						break;
+					}
+					
+					reply = new Text("Show FPS: " + Engine.showFPS, "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				
+			case "wireframe":
+				
+				if(commandParts.length == 2)
+				{
+					
+					reply = new Text("Missing command parameter (0 or 1)", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				else
+				{
+					
+					if(commandParts[2].equals("0")) Engine.wireframe = false;
+					else if(commandParts[2].equals("1")) Engine.wireframe = true;
+					else
+					{
+					
+						reply = new Text("Not a valid command parameter", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+						break;
+					}
+					
+					reply = new Text("Show wireframe: " + Engine.wireframe, "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+				}
+				
+				break;
+			
+			default:
+				
+				reply = new Text("Show command not recognized, type show for more information", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+				break;
+			}
+			
 			break;
 		
-		case "show-wireframe":
+		// Spawn an object in the engine
+		case "spawn":
 			
-			if(commandParts[1].equals("0")) Engine.wireframe = false;
-			else if(commandParts[1].equals("1")) Engine.wireframe = true;
-			else
+			// Check if there are enough parameters
+			if(commandParts.length == 1)
 			{
-			
-				reply = new Text("Not a valid command", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+				
+				reply = new Text("Following spawn commands available: rectangle", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
 				break;
 			}
 			
-			reply = new Text("Show wireframe: " + Engine.wireframe, "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			switch(commandParts[1])
+			{
+			
+			case "rectangle":
+				
+				if(commandParts.length == 2)
+				{
+					
+					reply = new Text("Missing command parameter", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				else
+				{
+					
+					String name = commandParts[2];
+					Texture tex = TextureManager.getTexture(commandParts[3]);
+					
+					float x = Float.parseFloat(commandParts[4]);
+					float y = Float.parseFloat(commandParts[5]);
+					float z = Float.parseFloat(commandParts[6]);
+					
+					float xs = Float.parseFloat(commandParts[7]);
+					float ys = Float.parseFloat(commandParts[8]);
+					float zs = Float.parseFloat(commandParts[9]);
+					
+					EngineObjectManager.addRectangle(name, tex, x, y, z, xs, ys, zs);
+				}
+				
+				break;
+			}
+			
+			break;
+		
+		// Switch different effects on and off
+		case "toggle":
+			
+			// Check if there are enough parameters
+			if(commandParts.length == 1)
+			{
+				
+				reply = new Text("Following toggle commands available: shadow", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+				break;
+			}
+			
+			switch(commandParts[1])
+			{
+			
+			case "shadow":
+				
+				if(commandParts.length == 2)
+				{
+					
+					reply = new Text("Missing command parameter (0 or 1)", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				else
+				{
+					
+					if(commandParts[2].equals("0")) LightManager.toggleShadow(false);
+					else if(commandParts[2].equals("1")) LightManager.toggleShadow(true);
+					else
+					{
+					
+						reply = new Text("Not a valid command parameter", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+						break;
+					}
+					
+					reply = new Text("Toggle shadows: " + LightManager.getRenderShadows(), "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				
+			default:
+				
+				reply = new Text("Toggle command not recognized, type toggle for more information", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+				break;
+			}
+			
 			break;
 			
+		// Grab an object to move it in 3 dimensional space
+		// Select in which plane to object needs to be moved
+		case "grab":
+			
+			reply = new Text("Need to implement", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+			break;
+			
+		// Exit the engine
 		case "exit":
 			
 			Engine.isRunning = false;
 			
-			reply = new Text("Exiting", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			reply = new Text("Exiting", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
 			break;
+		
+		// Clear the terminal
+		case "clear":
 			
+			outList.clear();
+			return;
+		
+		// The default response if the command is unknown
 		default:
 				
-			reply = new Text("Command not recognized", "HUD", 20f, Engine.getHeight() - 30f, 0.1f);
+			reply = new Text("Command not recognized: " + commandS, "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
 			break;
 		}
 		
-		showReply = true;
+		addToOutQueue();
+	}
+	
+	private void addToOutQueue()
+	{
+		
+		if(outList.size() >= outLines)
+		{
+			
+			outList.remove(0);
+			outList.add(reply);
+		}
+		else
+		{
+			outList.add(reply);
+		}
 	}
 	
 	public void render()
 	{
+		// Select the debug FBO
+		debugFBO.bind();
 		
 		// Render the terminal
 		if(debugState)
@@ -368,13 +553,17 @@ public class Debugger {
 			windowOutput.render();
 			
 			startText.updateAndRender();
-			text.updateAndRender();
-						
-			if(showReply)
+			inputText.updateAndRender();
+			
+			for(int i = 0; i < outList.size(); i++)
 			{
-				command.updateAndRender();
-				reply.updateAndRender();
+				
+				outList.get(i).setY(Engine.getHeight() - i * DEBUGTEXTSIZE);
+				outList.get(i).updateAndRender();
 			}
 		}
+		
+		// Unbind the debug FBO
+		debugFBO.unbind();
 	}
 }
