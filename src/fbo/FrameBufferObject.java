@@ -8,20 +8,11 @@ import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
 import java.nio.ByteBuffer;
 import engine.Engine;
-import engine.EngineObjectManager;
-import graphics.Texture;
-import math.Matrix4f;
-import matrices.MatrixObjectManager;
-import shaders.Shader;
-import shaders.ShaderManager;
-import utils.DrawShapes;
 
 public class FrameBufferObject {
 
 	private int WIDTH;
 	private int HEIGHT;
-	
-	//private ArrayList<Integer> texIDList = new ArrayList<Integer>();
 	
 	private String bufferName;
 	
@@ -31,14 +22,6 @@ public class FrameBufferObject {
 	
 	private int depthTexID;
 	private int depthBufferID;
-	
-	private boolean shouldRender = false;
-	
-	private Shader shader;
-	
-	private Matrix4f modelMatrix;
-	
-	private Texture tex;
 	
 	/**
 	 * Initialize a default frame buffer object.
@@ -54,30 +37,26 @@ public class FrameBufferObject {
 		
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
-
-		shader = ShaderManager.getShader("basictex");
 		
-		modelMatrix = new Matrix4f();
+		switch(type)
+		{
 		
-		modelMatrix.translate(0, Engine.getHeight(), 0);
-		modelMatrix.scale(Engine.getWidth(), Engine.getHeight(), 0);
-		modelMatrix.rotateQ(180, 0, 0, false);
+		case "default":
+			
+			generateDefaultBuffer();
+			break;
+			
+		case "shadow":
+			
+			generateShadowBuffer();
+			break;
+			
+		default:
+			
+			System.err.println("Buffer type does not exist");
+			break;
+		}
 		
-		shouldRender = true;
-		
-		generateDefaultBuffer();
-		checkBuffer();
-	}
-	
-	public FrameBufferObject(String name, int WIDTH, int HEIGHT)
-	{
-		
-		this.bufferName = name;
-		
-		this.WIDTH = WIDTH;
-		this.HEIGHT = HEIGHT;
-		
-		generateShadowBuffer();
 		checkBuffer();
 	}
 	
@@ -125,8 +104,6 @@ public class FrameBufferObject {
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		
 		unbind();
-		
-		tex = new Texture(bufferName, texID);
 	}
 	
 	private void generateShadowBuffer()
@@ -206,21 +183,6 @@ public class FrameBufferObject {
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, Engine.getWidth(), Engine.getHeight());
-	}
-	
-	public void render()
-	{
-		
-		// Shadow buffers should not be rendered.
-		if(shouldRender)
-		{
-			
-			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
-			shader.uploadMatrix4f(new Matrix4f(), shader.getViewMatrixLoc());
-			shader.uploadMatrix4f(MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), shader.getProjectionMatrixLoc());
-			
-			DrawShapes.drawQuad(shader, tex, null, EngineObjectManager.getQuad().getVaoID());
-		}
 	}
 	
 	public String getName()

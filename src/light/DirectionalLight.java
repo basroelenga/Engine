@@ -31,7 +31,7 @@ public class DirectionalLight extends LightObject{
 		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
 		
 		// Create the depth buffer for the light
-		FrameBufferObjectManager.addShadowFrameBufferObject(name, 4096, 4096);
+		FrameBufferObjectManager.addFrameBufferObject(name, "shadow", 4096, 4096);
 		depthBuffer = FrameBufferObjectManager.getFrameBuffer(name);
 		
 		// Rendering the depth map

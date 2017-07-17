@@ -2,8 +2,6 @@
 
 precision mediump float;
 
-uniform float cutoff;
-
 uniform sampler2D sampler;
 
 layout(location = 0) out vec4 fragColor;

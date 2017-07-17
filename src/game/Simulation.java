@@ -2,9 +2,11 @@ package game;
 
 import camera.CameraManager;
 import engine.EngineObjectManager;
+import fbo.FrameBufferObjectManager;
 import light.LightManager;
 import math.Vector3f;
 import models.ModelManager;
+import postprocess.PostProcessEffectManager;
 
 public class Simulation {
 		
@@ -15,6 +17,9 @@ public class Simulation {
 		
 		CameraManager.addCamera("cam", new Vector3f(0, 0, -2), new Vector3f(0, 0, 0));
 		// =========================
+		
+		// Set up post process effect
+		PostProcessEffectManager.addPostProcessEffect("testeffect");
 		
 		LightManager.addDirectionalLight("directional_shadow", CameraManager.getCamera("cam"), 0, 1, 0, new Vector3f(1.0f, 0.0f, 0.0f));
 		
@@ -48,6 +53,10 @@ public class Simulation {
 		EngineObjectManager.getEngineObject("plane").setZ(-2f);
 		EngineObjectManager.getEngineObject("plane").setXs(0.2f);
 		EngineObjectManager.getEngineObject("plane").setZs(0.2f);
+		
+		EngineObjectManager.getEngineObject("bunny").setFbo(FrameBufferObjectManager.getFrameBuffer("testeffect"));
+		EngineObjectManager.getEngineObject("surface").setFbo(FrameBufferObjectManager.getFrameBuffer("testeffect"));
+		EngineObjectManager.getEngineObject("plane").setFbo(FrameBufferObjectManager.getFrameBuffer("testeffect"));
 	}
 	
 	/**

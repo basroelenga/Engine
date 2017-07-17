@@ -40,6 +40,7 @@ import graphics.TextureManager;
 import light.LightManager;
 import matrices.MatrixObjectManager;
 import models.ModelManager;
+import postprocess.PostProcessEffectManager;
 import shaders.ShaderManager;
 import text.Text;
 import text.TextManager;
@@ -176,12 +177,16 @@ public class Engine {
 		new ShaderManager();
 		new ModelManager();
 		
+		PostProcessEffectManager.loadPostProcessShaders();
+		
 		// Create primitives, these shapes can be used for anything
 		EngineObjectManager.createPrimitives();
-		LightManager.initialize();
 		
 		// Create the debugger
 		debugger = new Debugger();
+		
+		// Intialize the light manager
+		LightManager.initialize();
 		
 		// Create the engine FPS timer
 		engineFPS = new Text("FPS", "HUD", Engine.getWidth() - 105f, Engine.getHeight() - 7f, 0.1f, 32);
@@ -298,10 +303,8 @@ public class Engine {
 	private void secondPass()
 	{
 		
-		for(FrameBufferObject fbo : FrameBufferObjectManager.getFBOList())
-		{
-			fbo.render();
-		}
+		PostProcessEffectManager.render();
+		debugger.renderFBO();
 	}
 
 	private void setFPS()

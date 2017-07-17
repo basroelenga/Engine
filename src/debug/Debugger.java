@@ -13,9 +13,14 @@ import graphics.Texture;
 import graphics.TextureManager;
 import input.KeyboardInput;
 import light.LightManager;
+import math.Matrix4f;
 import math.Vector4f;
+import matrices.MatrixObjectManager;
+import shaders.Shader;
+import shaders.ShaderManager;
 import text.Text;
 import text.TextManager;
+import utils.DrawShapes;
 
 public class Debugger {
 
@@ -67,6 +72,12 @@ public class Debugger {
 	private ArrayList<String> commandList = new ArrayList<String>();
 	private int listIndex = 0;
 	
+	// Matrices for FBO rendering
+	private Matrix4f modelMatrix;
+	
+	private Texture fboTexture;
+	private Shader fboShader;
+	
 	public Debugger()
 	{
 		
@@ -75,7 +86,7 @@ public class Debugger {
 		debugTimer = System.currentTimeMillis();
 		
 		// Create the debug FBO
-		FrameBufferObjectManager.addDefaultFrameBufferObject("debug", "debug", 2048, 2048);
+		FrameBufferObjectManager.addFrameBufferObject("debug", "default", 2048, 2048);
 		debugFBO = FrameBufferObjectManager.getFrameBuffer("debug");
 		
 		// Set up the debug window (2 windows: input and output)
@@ -86,7 +97,7 @@ public class Debugger {
 		float xScale_in = Engine.getWidth();
 		float yScale_in = DEBUGTEXTSIZE;
 		
-		Vector4f color_in = new Vector4f(0.0f, 0.0f, 0.0f, 0.6f);
+		Vector4f color_in = new Vector4f(0.0f, 0.0f, 0.0f, 0.8f);
 		windowInput = new Rectangle("windowIn", null, x_in, y_in, xScale_in, yScale_in, color_in);
 		
 		// The output window:
@@ -96,7 +107,7 @@ public class Debugger {
 		float xScale_out = Engine.getWidth();
 		float yScale_out = outLines * DEBUGTEXTSIZE;
 		
-		Vector4f color_out = new Vector4f(0.8f, 0.8f, 0.8f, 0.6f);
+		Vector4f color_out = new Vector4f(0.8f, 0.8f, 0.8f, 0.8f);
 		windowOutput = new Rectangle("windowOut", null, x_out, y_out, xScale_out, yScale_out, color_out);
 		
 		// Blinker
@@ -107,6 +118,16 @@ public class Debugger {
 		
 		// Initial text
 		startText = new Text(">", "HUD", 0, Engine.getHeight() - outLines * DEBUGTEXTSIZE, 0f, DEBUGTEXTSIZE);
+		
+		// Requirments for rendering the debug FBO
+		modelMatrix = new Matrix4f();
+		
+		modelMatrix.translate(0, Engine.getHeight(), 0.1f);
+		modelMatrix.scale(Engine.getWidth(), Engine.getHeight(), 0);
+		modelMatrix.rotateQ(180, 0, 0, false);
+		
+		fboTexture = new Texture("debug_texture", debugFBO.getTexID());
+		fboShader = ShaderManager.getShader("basictex");
 	}
 	
 	public void update()
@@ -565,5 +586,15 @@ public class Debugger {
 		
 		// Unbind the debug FBO
 		debugFBO.unbind();
+	}
+	
+	public void renderFBO()
+	{
+		
+		fboShader.uploadMatrix4f(modelMatrix, fboShader.getModelMatrixLoc());
+		fboShader.uploadMatrix4f(new Matrix4f(), fboShader.getViewMatrixLoc());
+		fboShader.uploadMatrix4f(MatrixObjectManager.getMatrixObject("orthographicMatrixDefault").getMatrix(), fboShader.getProjectionMatrixLoc());
+		
+		DrawShapes.drawQuadToScreen(fboShader, fboTexture, null, EngineObjectManager.getQuad().getVaoID());
 	}
 }
