@@ -14,34 +14,12 @@ public class TextManager {
 	private static ArrayList<ECharacter> charList = new ArrayList<ECharacter>();
 	
 	/**
-	 * Construct the text manager, this class manages text displayed on the screen
-	 * @param useConf Type of text to use (Should be configuration file only in the future)
+	 * Construct a character list from a square bitmap.
 	 */
-	public TextManager(boolean useConf)
+	public static void constructCharListSquare()
 	{
 		
-		// Construct a character list from a square bitmap
-		if(!useConf) 
-		{
-			
-			fontTex = new Texture("font1");
-			constructCharListSquare();
-		}
-		
-		// Construct a character list from a config file
-		if(useConf) 
-		{
-			
-			fontTex = new Texture("fontHD");
-			constructCharListConfig();
-		}
-	}
-	
-	/**
-	 * Construct a character list from a square bitmap
-	 */
-	private void constructCharListSquare()
-	{
+		fontTex = new Texture("font1");
 		
 		// Construct the character list
 		for(int i = 0; i < 256; i++)
@@ -51,10 +29,12 @@ public class TextManager {
 	}
 	
 	/**
-	 * Construct a character list from config file
+	 * Construct a character list from config file.
 	 */
-	private void constructCharListConfig()
+	public static void constructCharListConfig()
 	{
+		
+		fontTex = new Texture("fontHD");
 		
 		// Load the configuration file in a ArrayObject
 		ArrayObject conf = FileIO.loadtxt("textures/texdata/fontHD_converted.dat", ",", true, null);

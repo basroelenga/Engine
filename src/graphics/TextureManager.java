@@ -8,13 +8,10 @@ public class TextureManager {
 
 	private static ArrayList<Texture> textureList = new ArrayList<Texture>();
 	
-	public TextureManager()
-	{
-	
-		loadTexture();
-	}
-	
-	private void loadTexture()
+	/**
+	 * Load all the available textures.
+	 */
+	public static void loadTextures()
 	{
 		
 		// Check all the files in the texture map
@@ -27,15 +24,20 @@ public class TextureManager {
 		}
 	}
 	
+	/**
+	 * Get a texture.
+	 * @param name The name of the texture.
+	 * @return The texture.
+	 */
 	public static Texture getTexture(String name)
 	{
 		
 		for(Texture tex : textureList)
 		{
 
-			if(tex.getTexName().equals(name)) return tex;
+			if(tex.getTextureName().equals(name)) return tex;
 		}
 		
-		return null;
+		throw new RuntimeException("Texture does not exist");
 	}
 }

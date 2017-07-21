@@ -2,7 +2,7 @@ package light;
 
 import java.util.ArrayList;
 
-import camera.Camera;
+import camera.PlayerCamera;
 import math.Matrix4f;
 import math.Vector3f;
 import shaders.Shader;
@@ -14,9 +14,11 @@ public class LightManager {
 	
 	private static Matrix4f biasMatrix;
 	
-	private static ArrayList<LightObject> pointLightList = new ArrayList<LightObject>();
-	private static ArrayList<LightObject> directionalLightList = new ArrayList<LightObject>();
-	private static ArrayList<LightObject> spotLightList = new ArrayList<LightObject>();
+	private static ArrayList<PointLight> pointLightList = new ArrayList<PointLight>();
+	private static ArrayList<DirectionalLight> directionalLightList = new ArrayList<DirectionalLight>();
+	private static ArrayList<SpotLight> spotLightList = new ArrayList<SpotLight>();
+	
+	private static ArrayList<LightObject> lightList = new ArrayList<LightObject>();
 	
 	private LightManager(){}
 	
@@ -76,18 +78,24 @@ public class LightManager {
 		for(LightObject light : directionalLightList) light.render();
 	}
 	
-	public static void toggleShadow(boolean toggle)
+	/**
+	 * Enable the rendering of shadows for all lights.
+	 */
+	public static void enableShadows()
 	{
 		
-		for(LightObject obj : getLightList())
-		{
-			
-			if(toggle) obj.renderShadows = true;
-			else obj.renderShadows = false;
-		}
+		for(LightObject obj : getLightList()) obj.renderShadows = true;
+		shadows = true;
+	}
+	
+	/**
+	 * Disable the rendering of shadows for all lights.
+	 */
+	public static void disableShadows()
+	{
 		
-		if(toggle) shadows = true;
-		else shadows = false;
+		for(LightObject obj : getLightList()) obj.renderShadows = false;
+		shadows = false;
 	}
 	
 	public static void addPointLight(String name, float x, float y, float z, Vector3f lightColor, boolean show)
@@ -107,7 +115,7 @@ public class LightManager {
 		}
 	}
 	
-	public static void addDirectionalLight(String name, Camera cam, float xDir, float yDir, float zDir, Vector3f lightColor)
+	public static void addDirectionalLight(String name, PlayerCamera cam, float xDir, float yDir, float zDir, Vector3f lightColor)
 	{
 		
 		directionalLightList.add(new DirectionalLight(name, cam, xDir, yDir, zDir, lightColor));
@@ -141,31 +149,43 @@ public class LightManager {
 		}
 	}
 	
-	public static LightObject getLight(String id)
+	public static DirectionalLight getDirectionalLight(String name)
 	{
 		
-		for(LightObject light : pointLightList)
+		for(DirectionalLight light : directionalLightList)
 		{
 			
-			if(light.getName().equals(id)) return light;
+			if(light.getName().equals(name)) return light;
 		}
 		
-		for(LightObject light : directionalLightList)
-		{
-			
-			if(light.getName().equals(id)) return light;
-		}
-		
-		for(LightObject light : spotLightList)
-		{
-			
-			if(light.getName().equals(id)) return light;
-		}
-		
-		throw new RuntimeException("Light does not exist: " + id);
+		throw new RuntimeException("Light does not exist: " + name);
 	}
 	
-	public static ArrayList<LightObject> getPointLightList()
+	public static PointLight getPointLight(String name)
+	{
+		
+		for(PointLight light : pointLightList)
+		{
+			
+			if(light.getName().equals(name)) return light;
+		}
+		
+		throw new RuntimeException("Light does not exist: " + name);
+	}
+	
+	public static SpotLight getSpotLight(String name)
+	{
+		
+		for(SpotLight light : spotLightList)
+		{
+			
+			if(light.getName().equals(name)) return light;
+		}
+		
+		throw new RuntimeException("Light does not exist: " + name);
+	}
+	
+	public static ArrayList<PointLight> getPointLightList()
 	{
 		return pointLightList;
 	}
@@ -175,7 +195,7 @@ public class LightManager {
 		return pointLightList.size();
 	}
 	
-	public static ArrayList<LightObject> getDirectionalLightList()
+	public static ArrayList<DirectionalLight> getDirectionalLightList()
 	{
 		return directionalLightList;
 	}
@@ -185,7 +205,7 @@ public class LightManager {
 		return directionalLightList.size();
 	}
 	
-	public static ArrayList<LightObject> getSpotLightList()
+	public static ArrayList<SpotLight> getSpotLightList()
 	{
 		return spotLightList;
 	}
@@ -202,13 +222,13 @@ public class LightManager {
 	public static ArrayList<LightObject> getLightList()
 	{
 		
-		ArrayList<LightObject> tempLightList = new ArrayList<LightObject>();
+		lightList.clear();
 		
-		tempLightList.addAll(pointLightList);
-		tempLightList.addAll(directionalLightList);
-		tempLightList.addAll(spotLightList);
+		lightList.addAll(pointLightList);
+		lightList.addAll(directionalLightList);
+		lightList.addAll(spotLightList);
 		
-		return tempLightList;
+		return lightList;
 	}
 	
 	public static int getNumberOfLights()

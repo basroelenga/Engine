@@ -2,32 +2,43 @@ package camera;
 
 import java.util.ArrayList;
 
-import math.Vector3f;
-
 public class CameraManager {
 
-	private static ArrayList<Camera> cameraList = new ArrayList<Camera>();
+	private static ArrayList<FreeCamera> freeCameraList = new ArrayList<FreeCamera>();
+	private static ArrayList<PlayerCamera> playerCameraList = new ArrayList<PlayerCamera>();
+	
+	private static ArrayList<CameraObject> cameraList = new ArrayList<CameraObject>();
 	
 	private CameraManager() {}
 	
-	public static void addCamera(String name, Vector3f position, Vector3f angles)
+	public static void addFreeCamera(String name, float x, float y, float z, float yaw, float pitch, float roll)
 	{
-		cameraList.add(new Camera(name, position, angles));
+		freeCameraList.add(new FreeCamera(name, x, y, z, yaw, pitch, roll));
+	}
+	
+	public static void addPlayerCamera(String name, float x, float y, float z, float yaw, float pitch, float roll)
+	{
+		playerCameraList.add(new PlayerCamera(name, x, y, z, yaw, pitch, roll));
 	}
 	
 	public static void update()
 	{
 		
-		for(Camera cam : cameraList)
+		for(PlayerCamera cam : playerCameraList)
+		{
+			cam.update();
+		}
+		
+		for(FreeCamera cam : freeCameraList)
 		{
 			cam.update();
 		}
 	}
 	
-	public static Camera getCamera(String name)
+	public static FreeCamera getFreeCamera(String name)
 	{
 		
-		for(Camera cam : cameraList)
+		for(FreeCamera cam : freeCameraList)
 		{
 			if(cam.getName().equals(name))
 			{
@@ -36,5 +47,30 @@ public class CameraManager {
 		}
 		
 		throw new RuntimeException("Camera does not exist");
+	}
+	
+	public static PlayerCamera getPlayerCamera(String name)
+	{
+		
+		for(PlayerCamera cam : playerCameraList)
+		{
+			if(cam.getName().equals(name))
+			{
+				return cam;
+			}
+		}
+		
+		throw new RuntimeException("Camera does not exist");
+	}
+	
+	public static ArrayList<CameraObject> getCameraList()
+	{
+		
+		cameraList.clear();
+		
+		cameraList.addAll(freeCameraList);
+		cameraList.addAll(playerCameraList);
+		
+		return cameraList;
 	}
 }

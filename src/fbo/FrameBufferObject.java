@@ -1,13 +1,12 @@
 package fbo;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 
-import java.nio.ByteBuffer;
 import engine.Engine;
+import graphics.Texture;
 
 public class FrameBufferObject {
 
@@ -17,11 +16,9 @@ public class FrameBufferObject {
 	private String bufferName;
 	
 	private int fboID;
-	
-	private int texID;
-	
-	private int depthTexID;
 	private int depthBufferID;
+	
+	private Texture texture;
 	
 	/**
 	 * Initialize a default frame buffer object.
@@ -38,19 +35,32 @@ public class FrameBufferObject {
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
 		
+		// Create the frame buffer object
+		fboID = glGenFramebuffers();
+		
 		switch(type)
 		{
 		
-		case "default":
+		case "RGBA":
 			
 			generateDefaultBuffer();
 			break;
 			
-		case "shadow":
+		case "DEPTH":
 			
 			generateShadowBuffer();
 			break;
 			
+		case "CUBE_RGBA":
+			
+			generateCubeMapRGBABuffer();
+			break;
+			
+		case "CUBE_DEPTH":	
+			
+			generateCubeMapDepthBuffer();
+			break;
+		
 		default:
 			
 			System.err.println("Buffer type does not exist");
@@ -60,39 +70,20 @@ public class FrameBufferObject {
 		checkBuffer();
 	}
 	
+	/**
+	 * Create a default frame buffer which contains texture and depth information.
+	 * Can be used for rendering to texture.
+	 */
 	private void generateDefaultBuffer()
 	{
-		// Create the frame buffer object
-		fboID = glGenFramebuffers();
-		
-		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
+
+		bind();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
-		// Add the components to the frame buffer object
-		// Add texture attachment
-		texID = glGenTextures();
-		
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-		
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texID, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		
-		// Add the depth texture attachment
-		depthTexID = glGenTextures();
-		
-		glBindTexture(GL_TEXTURE_2D, depthTexID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
-		
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexID, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		
+		// Add the components to the frame buffer object, first the texture component
+		texture = new Texture(bufferName, "RGBA", WIDTH, HEIGHT);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.getTextureID(), 0);
+
 		// Add the depth buffer attachment
 		depthBufferID = glGenRenderbuffers();
 		
@@ -106,30 +97,70 @@ public class FrameBufferObject {
 		unbind();
 	}
 	
+	/**
+	 * Generate a shadow buffer, this essentially generates a depth map.
+	 */
 	private void generateShadowBuffer()
 	{
 		
-		// Create the frame buffer object
-		fboID = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboID);
+		bind();
 		
 		// The draw and read buffers are none because only the depth buffer is rendered.
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		
-		// Create the depth attachment
-		depthTexID = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, depthTexID);
+		// Create the depth texture
+		texture = new Texture(bufferName, "DEPTH", WIDTH, HEIGHT);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture.getTextureID(), 0);
+        
+        unbind();
+	}
+	
+	/**
+	 * Generate a cube map buffer of the type RGBA, thus it also contains a depth buffer.
+	 */
+	private void generateCubeMapRGBABuffer()
+	{
 		
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
-        
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexID, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		bind();
+		
+        // Create the cube map texture
+		texture = new Texture(bufferName, "CUBE_RGBA", WIDTH, HEIGHT);
+		
+		// Attach the cube map texture to all faces, maybe only attach 1?
+		for(int i = 0; i < 6; i++)
+		{
+			
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture.getTextureID(), 0);
+		}		
+		
+		// Also attach a depth buffer
+		depthBufferID = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
+		
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBufferID);
+		
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		unbind();
+	}
+	
+	private void generateCubeMapDepthBuffer()
+	{
+		
+		bind();
+		
+		// Create the cube map depth texture
+		texture = new Texture(bufferName, "CUBE_DEPTH", WIDTH, HEIGHT);
+		
+		// Attach the cube map texture to all faces, maybe only attach 1?
+		for(int i = 0; i < 6; i++)
+		{
+			
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture.getTextureID(), 0);
+		}
+		
+		unbind();
 	}
 	
 	private void checkBuffer()
@@ -171,6 +202,13 @@ public class FrameBufferObject {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	
+	public void deleteBuffer()
+	{
+		
+		glDeleteRenderbuffers(depthBufferID);
+		glDeleteFramebuffers(fboID);
+	}
+	
 	public void bind()
 	{
 		
@@ -185,6 +223,22 @@ public class FrameBufferObject {
 		glViewport(0, 0, Engine.getWidth(), Engine.getHeight());
 	}
 	
+	public void bindCube(int face)
+	{
+		
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboID);
+		glViewport(0, 0, WIDTH, HEIGHT);
+		
+		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, depthTexID, 0);
+	}
+	
+	public void unbindCube()
+	{
+		
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glViewport(0, 0, Engine.getWidth(), Engine.getHeight());
+	}
+	
 	public String getName()
 	{
 		return bufferName;
@@ -195,13 +249,8 @@ public class FrameBufferObject {
 		return fboID;
 	}
 	
-	public int getTexID()
+	public int getTextureID()
 	{
-		return texID;
-	}
-	
-	public int getDepthTexID()
-	{
-		return depthTexID;
+		return texture.getTextureID();
 	}
 }

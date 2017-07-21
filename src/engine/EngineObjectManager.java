@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import engine.objects.Particle;
 import engine.objects.Rectangle;
+import engine.objects.Skybox;
 import engine.objects.Sphere;
 import engine.objects.TestObject;
 import graphics.Texture;
@@ -47,15 +48,6 @@ public class EngineObjectManager {
 		
 		// Create the quad which represents the rectangle as a cube/box.
 		quad = new Quad(points, true);
-		
-		// Create a quad with normals
-		ArrayList<Vector3f> nPoints = new ArrayList<Vector3f>();
-		
-		nPoints.add(new Vector3f(0, 0, -1f));
-		nPoints.add(new Vector3f(0, 0, -1f));
-		nPoints.add(new Vector3f(0, 0, -1f));
-		nPoints.add(new Vector3f(0, 0, -1f));
-		
 		quadN = new Quad(points, new Vector3f(0, 0, -1f));
 		
 		// Set the init state to true
@@ -107,6 +99,11 @@ public class EngineObjectManager {
 	public static void addParticle(float x, float y, float z, float vx, float vy, float vz, float scaling, float mass, String type, Texture tex)
 	{
 		engineObjectList.add(new Particle(x, y, z, vx, vy, vz, scaling, mass, tex, type));
+	}
+	
+	public static void addSkybox()
+	{
+		engineObjectList.add(new Skybox());
 	}
 	
 	public static void addTO(String name, Model model)

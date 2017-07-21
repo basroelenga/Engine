@@ -6,7 +6,6 @@ import engine.EngineObjects;
 import fbo.FrameBufferObjectManager;
 import graphics.Texture;
 import light.LightManager;
-import light.LightObject;
 import math.Vector4f;
 import matrices.MatrixObjectManager;
 import shaders.ShaderManager;
@@ -41,7 +40,7 @@ public class Rectangle extends EngineObjects{
 		this.tex = tex;
 		
 		// Obtain the depth texture ID
-		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("dir").getDepthTexID());
+		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("dir").getTextureID());
 		
 		// Put the different texture in the map
 		textureMap.put("mTexture", tex);
@@ -55,7 +54,7 @@ public class Rectangle extends EngineObjects{
 		vaoID = EngineObjectManager.getQuad().getVaoID();
 		
 		// Set up shaders and other matrices
-		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
+		viewMatrix = CameraManager.getPlayerCamera("playercam").getViewMatrix();
 		shader = ShaderManager.getShader("light");
 	}
 	
@@ -106,33 +105,11 @@ public class Rectangle extends EngineObjects{
 		modelMatrix.scale(xs, ys, zs);
 	}
 	
-	@Override
-	public void prerender() {
-		
-		if(renderDepthMap)
-		{
-			
-			// Update the FBO depth map of every directional light
-			for(LightObject dLight : LightManager.getDirectionalLightList())
-			{
-				
-				if(dLight.isRenderShadows())
-				{
-					
-					depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
-					depthShader.uploadMatrix4f(dLight.getViewLightMatrix(), depthShader.getViewMatrixLoc());
-					depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
-
-					DrawShapes.drawQuad(depthShader, dLight.getDepthBuffer(), vaoID);
-				}
-			}
-		}
-	}
-	
 	/**
 	 * The render phase depends if the rectangle is 2 or 3 dimensional. In the 2 dimensional case the lights are not uploaded to the shaders
 	 * but they are in the 3 dimensional case. This is the same for color and the bias matrix.
 	 */
+	@Override
 	public void render()
 	{
 		

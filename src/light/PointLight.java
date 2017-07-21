@@ -1,5 +1,10 @@
 package light;
 
+import camera.CameraManager;
+import engine.Engine;
+import engine.objects.Rectangle;
+import fbo.FrameBufferObjectManager;
+import graphics.Texture;
 import math.Vector3f;
 import math.Vector4f;
 import shaders.Shader;
@@ -10,6 +15,11 @@ import utils.DrawShapes;
 public class PointLight extends LightObject{
 
 	private UVSphere sphere;
+	
+	private Rectangle rect;
+	
+	private float pitch;
+	private float yaw;
 	
 	public PointLight(String name, float x, float y, float z, Vector3f lightColor, boolean show) 
 	{
@@ -30,6 +40,16 @@ public class PointLight extends LightObject{
 		sphere = new UVSphere(8);
 		vaoID = sphere.getVaoID();
 		
+		// Create the cubemap buffer for shadow rendering
+		FrameBufferObjectManager.addFrameBufferObject(name, "cubemap", 512, 512);
+		depthBuffer = FrameBufferObjectManager.getFrameBuffer(name);
+		
+		// Create a camera to change the direction of the view matrix for depth rendering
+		CameraManager.addFreeCamera("pointCamera" + name, x, y, z, 0, 0, 0);
+		
+		// Rendering the cube map
+		rect = new Rectangle("cube", new Texture("cube", depthBuffer.getTextureID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, Engine.getWidth() / 4, Engine.getHeight() / 4, new Vector4f());
+		
 		// The sphere should not be influenced by other lighting, thus use basic shader
 		shader = ShaderManager.getShader("basic");
 		
@@ -38,6 +58,82 @@ public class PointLight extends LightObject{
 		ambIntensity = new Vector3f(0.02f, 0.02f, 0.02f);
 		
 		attenuationFactor = 0.01f;
+	}
+	
+	public void prepare(int face)
+	{
+
+		changeDirection(face);
+		viewLightMatrix = CameraManager.getFreeCamera("pointCamera" + name).getViewMatrix();
+		
+		depthBuffer.bindCube(face);
+	}
+	
+	public void reset()
+	{
+		
+		depthBuffer.unbindCube();
+	}
+	
+	/**
+	 * Change the direction of the camera of the point light to update the view matrix.
+	 * @param direction The direction of the camera.
+	 */
+	public void changeDirection(int direction)
+	{
+		
+		switch(direction)
+		{
+		
+		case 0:
+			
+			pitch = 0f;
+			yaw = 90f;
+			
+			break;
+		
+		case 1:
+			
+			pitch = 0f;
+			yaw = -90f;
+			
+			break;
+		
+		case 2:
+			
+			pitch = 90f;
+			yaw = 0f;
+			
+			break;
+		
+		case 3:
+			
+			pitch = -90f;
+			yaw = 0f;
+			
+			break;
+			
+		case 4:
+			
+			pitch = 0f;
+			yaw = 180f;
+			
+			break;
+		
+		case 5:
+			
+			pitch = 0f;
+			yaw = 0f;
+			
+			break;
+			
+		default:
+			
+			System.err.println("Invalid direction number (0 - 5)");
+		}
+		
+		CameraManager.getFreeCamera("pointCamera" + name).setPitch(pitch);
+		CameraManager.getFreeCamera("pointCamera" + name).setYaw(yaw);
 	}
 	
 	public void update()
@@ -65,6 +161,7 @@ public class PointLight extends LightObject{
 	public void render()
 	{
 		
+		// Renders the point light location
 		if(show)
 		{
 			
@@ -74,6 +171,14 @@ public class PointLight extends LightObject{
 			shader.uploadVector4f(new Vector4f(lightColor.getX(), lightColor.getY(), lightColor.getZ(), 1), shader.getRgbaColorLoc());
 			
 			DrawShapes.drawUVSphere(shader, null, sphere.getVaoID(), sphere.getAmountOfTriangles());
+		}
+		
+		// Renders the cube map
+		if(renderShadowMap)
+		{
+			
+			rect.update();
+			rect.render();
 		}
 	}
 }

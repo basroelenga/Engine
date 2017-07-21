@@ -8,7 +8,7 @@ public class ShaderManager {
 	
 	private static ArrayList<Shader> shaderList = new ArrayList<Shader>();
 	
-	public ShaderManager()
+	public static void loadShaders()
 	{
 		
 		for(int i = 0; i < shaders.length; i++)

@@ -1,14 +1,11 @@
 package engine.objects;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import camera.CameraManager;
 import engine.EngineObjects;
 import fbo.FrameBufferObjectManager;
 import graphics.Texture;
 import graphics.TextureManager;
 import light.LightManager;
-import light.LightObject;
 import math.Vector4f;
 import matrices.MatrixObjectManager;
 import models.Model;
@@ -29,12 +26,12 @@ public class TestObject extends EngineObjects{
 		amountOfTriangles = model.getVertices();
 		
 		tex = TextureManager.getTexture("testtex");
-		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("directional_shadow").getDepthTexID());
+		depthTex = new Texture("depthtex", FrameBufferObjectManager.getFrameBuffer("directional_shadow").getTextureID());
 		
 		textureMap.put("mTexture", null);
 		textureMap.put("dTexture", depthTex);
 		
-		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
+		viewMatrix = CameraManager.getPlayerCamera("playercam").getViewMatrix();
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 	}
 	
@@ -66,29 +63,5 @@ public class TestObject extends EngineObjects{
 		shader.uploadVector4f(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f), shader.getRgbaColorLoc());
 				
 		DrawShapes.drawModel(this, shader, fbo, textureMap, vaoID, amountOfTriangles);
-	}
-	
-	@Override
-	public void prerender()
-	{
-		
-		if(renderDepthMap)
-		{
-						
-			// Update the FBO of every directional light
-			for(LightObject dLight : LightManager.getDirectionalLightList())
-			{
-				
-				if(dLight.isRenderShadows())
-				{
-					
-					depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
-					depthShader.uploadMatrix4f(dLight.getViewLightMatrix(), depthShader.getViewMatrixLoc());
-					depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
-					
-					DrawShapes.drawModel(depthShader, dLight.getDepthBuffer(), vaoID, amountOfTriangles);
-				}
-			}
-		}
 	}
 }

@@ -15,17 +15,18 @@ public class Simulation {
 	public Simulation()
 	{
 		
-		CameraManager.addCamera("cam", new Vector3f(0, 0, -2), new Vector3f(0, 0, 0));
+		CameraManager.addPlayerCamera("playercam", 0f, 0f, -2f, 0f, 0f, 0f);
 		// =========================
 		
 		// Set up post process effect
 		PostProcessEffectManager.addPostProcessEffect("testeffect");
 		
-		LightManager.addDirectionalLight("directional_shadow", CameraManager.getCamera("cam"), 0, 1, 0, new Vector3f(1.0f, 0.0f, 0.0f));
-		
+		LightManager.addDirectionalLight("directional_shadow", CameraManager.getPlayerCamera("playercam"), 0, 1, 0, new Vector3f(1.0f, 0.0f, 0.0f));
+		//LightManager.addPointLight("point", 0, 0, -5, new Vector3f(0.0f, 1.0f, 0.0f), true);
+		PostProcessEffectManager.disable();
 		addScene();
 
-		LightManager.getLight("directional_shadow").setRenderShadowMap(false);
+		LightManager.getDirectionalLight("directional_shadow").setRenderShadowMap(false);
 	}
 	
 	private void addScene()
@@ -54,6 +55,8 @@ public class Simulation {
 		EngineObjectManager.getEngineObject("plane").setXs(0.2f);
 		EngineObjectManager.getEngineObject("plane").setZs(0.2f);
 		
+		EngineObjectManager.addSkybox();
+		
 		EngineObjectManager.getEngineObject("bunny").setFbo(FrameBufferObjectManager.getFrameBuffer("testeffect"));
 		EngineObjectManager.getEngineObject("surface").setFbo(FrameBufferObjectManager.getFrameBuffer("testeffect"));
 		EngineObjectManager.getEngineObject("plane").setFbo(FrameBufferObjectManager.getFrameBuffer("testeffect"));
@@ -69,6 +72,7 @@ public class Simulation {
 		EngineObjectManager.getEngineObject("bunny").setYa(angle);
 		
 		EngineObjectManager.getEngineObject("plane").setXa(90 + angle);
+		LightManager.getDirectionalLight("directional_shadow").setxDir(-angle / 1000);
 		
 		//MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix().print();
 	}

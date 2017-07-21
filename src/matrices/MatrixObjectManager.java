@@ -23,6 +23,11 @@ public class MatrixObjectManager {
 		matrixList.add(new OrthographicMatrix(name, lr, tb, nf));
 	}
 	
+	public static void generateCubeMapMatrix(String name, float zNear, float zFar)
+	{
+		matrixList.add(new PerspectiveMatrix(name, 90, zNear, zFar, 1, 1));
+	}
+	
 	/**
 	 * Update an element of the selected matrix.
 	 * @param name Name of the matrix.

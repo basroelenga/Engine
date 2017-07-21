@@ -8,6 +8,8 @@ import shaders.Shader;
 
 public class PostProcessEffectManager {
 	
+	private static boolean isEnabled = true;
+	
 	private static String[] postProcessShaders = {"testeffect"};
 	private static ArrayList<Shader> postProcessShaderList = new ArrayList<Shader>();
 	
@@ -41,7 +43,7 @@ public class PostProcessEffectManager {
 			if(obj.getName().equals(name)) exist = true;
 		}
 		
-		if(!exist) FrameBufferObjectManager.addFrameBufferObject(name, "default", 2048, 2048);
+		if(!exist) FrameBufferObjectManager.addFrameBufferObject(name, "RGBA", 2048, 2048);
 		else {System.err.println("Framebuffer object already exists"); return;}
 		
 		ppList.add(new PostProcessEffect(name));
@@ -71,8 +73,6 @@ public class PostProcessEffectManager {
 	public static Shader getPostProcessShader(String name)
 	{
 		
-		System.out.println(name);
-		
 		for(Shader shader : postProcessShaderList)
 		{
 			if(shader.getShaderName().equals(name))	return shader;
@@ -92,5 +92,34 @@ public class PostProcessEffectManager {
 		{
 			ppe.render();
 		}
+	}
+	
+	/**
+	 * Enable all post process effects.
+	 */
+	public static void enable()
+	{
+		
+		for(PostProcessEffect pp : ppList) pp.shouldRender(true);
+		isEnabled = true;
+	}
+	
+	/**
+	 * Disable all post process effects.
+	 */
+	public static void disable()
+	{
+		
+		for(PostProcessEffect pp : ppList) pp.shouldRender(false);
+		isEnabled = false;
+	}
+	
+	/**
+	 * Check if the post processing effects are rendered.
+	 * @return Are post processing effects rendered.
+	 */
+	public static boolean isEnabled()
+	{
+		return isEnabled;
 	}
 }

@@ -16,6 +16,7 @@ import light.LightManager;
 import math.Matrix4f;
 import math.Vector4f;
 import matrices.MatrixObjectManager;
+import postprocess.PostProcessEffectManager;
 import shaders.Shader;
 import shaders.ShaderManager;
 import text.Text;
@@ -86,7 +87,7 @@ public class Debugger {
 		debugTimer = System.currentTimeMillis();
 		
 		// Create the debug FBO
-		FrameBufferObjectManager.addFrameBufferObject("debug", "default", 2048, 2048);
+		FrameBufferObjectManager.addFrameBufferObject("debug", "RGBA", 2048, 2048);
 		debugFBO = FrameBufferObjectManager.getFrameBuffer("debug");
 		
 		// Set up the debug window (2 windows: input and output)
@@ -126,7 +127,7 @@ public class Debugger {
 		modelMatrix.scale(Engine.getWidth(), Engine.getHeight(), 0);
 		modelMatrix.rotateQ(180, 0, 0, false);
 		
-		fboTexture = new Texture("debug_texture", debugFBO.getTexID());
+		fboTexture = new Texture("debug_texture", debugFBO.getTextureID());
 		fboShader = ShaderManager.getShader("basictex");
 	}
 	
@@ -474,14 +475,14 @@ public class Debugger {
 			if(commandParts.length == 1)
 			{
 				
-				reply = new Text("Following toggle commands available: shadow", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+				reply = new Text("Following toggle commands available: shadow, ppeffects", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
 				break;
 			}
 			
 			switch(commandParts[1])
 			{
 			
-			case "shadow":
+			case "shadows":
 				
 				if(commandParts.length == 2)
 				{
@@ -492,8 +493,8 @@ public class Debugger {
 				else
 				{
 					
-					if(commandParts[2].equals("0")) LightManager.toggleShadow(false);
-					else if(commandParts[2].equals("1")) LightManager.toggleShadow(true);
+					if(commandParts[2].equals("0")) LightManager.disableShadows();
+					else if(commandParts[2].equals("1")) LightManager.enableShadows();
 					else
 					{
 					
@@ -502,6 +503,30 @@ public class Debugger {
 					}
 					
 					reply = new Text("Toggle shadows: " + LightManager.getRenderShadows(), "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				
+			case "ppeffects":
+				
+				if(commandParts.length == 2)
+				{
+					
+					reply = new Text("Missing command parameter (0 or 1)", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+					break;
+				}
+				else
+				{
+					
+					if(commandParts[2].equals("0")) PostProcessEffectManager.disable();
+					else if(commandParts[2].equals("1")) PostProcessEffectManager.enable();
+					else
+					{
+					
+						reply = new Text("Not a valid command parameter", "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
+						break;
+					}
+					
+					reply = new Text("Toggle post processing effects: " + PostProcessEffectManager.isEnabled(), "HUD", 20f, 0f, 0.1f, DEBUGTEXTSIZE);
 					break;
 				}
 				

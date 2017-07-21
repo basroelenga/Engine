@@ -32,16 +32,28 @@ public class FrameBufferObjectManager {
 		return frameBufferList;
 	}
 	
-	/**
-	 * Renders all the FBO to the screen. It will do this in a particular order.
-	 * Namely:
-	 * 
-	 * SCENE ---> GUI ---> DEBUG
-	 * 
-	 * This way the overlay will be good and not hidden
-	 */
-	public static void renderFBO()
+	public static void deleteFrameBufferObject(String name)
 	{
 		
+		boolean isDeleted = false;
+		
+		for(FrameBufferObject obj : frameBufferList)
+		{
+			
+			if(obj.getName().equals(name))
+			{
+				
+				obj.deleteBuffer();
+				isDeleted = true;
+			}
+		}
+
+		if(!isDeleted) System.err.println("Framebuffer object could not be deleted: " + name);
+	}
+	
+	public static void cleanUp()
+	{
+		
+		for(FrameBufferObject obj : frameBufferList) obj.deleteBuffer();
 	}
 }

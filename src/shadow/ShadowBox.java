@@ -3,7 +3,7 @@ package shadow;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import camera.Camera;
+import camera.FreeCamera;
 import light.DirectionalLight;
 import math.Matrix4f;
 import math.Quaternion;
@@ -17,7 +17,7 @@ public class ShadowBox {
 	private MatrixObject perspectiveMatrix;
 	private DirectionalLight dLight;
 	
-	private Camera camera;
+	private FreeCamera camera;
 		
 	/**
 	 * Create a shadow box for a directional light
@@ -25,7 +25,7 @@ public class ShadowBox {
 	 * @param perspectiveMatrix
 	 * @param camera
 	 */
-	public ShadowBox(DirectionalLight dLight, MatrixObject perspectiveMatrix, Camera camera)
+	public ShadowBox(DirectionalLight dLight, MatrixObject perspectiveMatrix, FreeCamera camera)
 	{
 		
 		this.perspectiveMatrix = perspectiveMatrix;

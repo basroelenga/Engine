@@ -4,11 +4,15 @@ import java.util.LinkedHashMap;
 
 import fbo.FrameBufferObject;
 import graphics.Texture;
+import light.LightManager;
+import light.LightObject;
+import light.PointLight;
 import math.Matrix4f;
 import math.Vector4f;
 import models.Model;
 import shaders.Shader;
 import shaders.ShaderManager;
+import utils.DrawShapes;
 
 public abstract class EngineObjects {
 
@@ -85,7 +89,51 @@ public abstract class EngineObjects {
 	public abstract void render();
 	
 	// Prerender function which renders depth maps from the objects for all directional lights
-	public abstract void prerender();
+	public void prerender()
+	{
+		
+		if(renderDepthMap)
+		{
+						
+			// Update the FBO of every directional light
+			for(LightObject dLight : LightManager.getDirectionalLightList())
+			{
+				
+				if(dLight.isRenderShadows())
+				{
+					
+					depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
+					depthShader.uploadMatrix4f(dLight.getViewLightMatrix(), depthShader.getViewMatrixLoc());
+					depthShader.uploadMatrix4f(dLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
+					
+					DrawShapes.drawModel(depthShader, dLight.getDepthBuffer(), vaoID, amountOfTriangles);
+				}
+			}
+			
+			// Update the FBO of every point light
+			for(PointLight pLight : LightManager.getPointLightList())
+			{
+				
+				if(pLight.isRenderShadows())
+				{
+					
+					for(int i = 0; i < 6; i++)
+					{
+						
+						pLight.prepare(i);
+						
+						depthShader.uploadMatrix4f(modelMatrix, depthShader.getModelMatrixLoc());
+						depthShader.uploadMatrix4f(pLight.getViewLightMatrix(), depthShader.getViewMatrixLoc());
+						depthShader.uploadMatrix4f(pLight.getProjectionLightMatrix(), depthShader.getProjectionMatrixLoc());
+						
+						DrawShapes.drawModel(depthShader, null, vaoID, amountOfTriangles);
+						
+						pLight.reset();
+					}
+				}
+			}
+		}
+	}
 	
 	// Calculate the MVP on the CPU
 	public Matrix4f getMVP() {

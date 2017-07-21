@@ -23,6 +23,7 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -145,11 +146,13 @@ public class Engine {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_CUBE_MAP);
 		
 		// Set up the projection matrices (these are configured at the width and height of the OpenGL window)
 		// These are the default projection matrices and used for camera and GUI rendering and can be changed
 		MatrixObjectManager.generateProjectionMatrix("projectionMatrixDefault", 70, 0.1f, 10f, Engine.getWidth(), Engine.getHeight());
 		MatrixObjectManager.generateOrthographicMatrix("orthographicMatrixDefault", -0.2f, 0.2f, 0f, Engine.getWidth(), Engine.getHeight(), 0f);
+		MatrixObjectManager.generateCubeMapMatrix("cubeMatrix", 0.1f, 10f);
 	}
 	
 	private void setIcon()
@@ -172,24 +175,25 @@ public class Engine {
 	{
 		
 		// Create the engine fundamental managers
-		new TextureManager();
-		new TextManager(true);
-		new ShaderManager();
-		new ModelManager();
+		TextureManager.loadTextures();
+		TextManager.constructCharListConfig();
+		ShaderManager.loadShaders();
+		ModelManager.loadModels();
 		
+		// Load the available post process effects
 		PostProcessEffectManager.loadPostProcessShaders();
 		
 		// Create primitives, these shapes can be used for anything
 		EngineObjectManager.createPrimitives();
 		
-		// Create the debugger
+		// Create the debugger, since the debugger is a real object it will be treated like that
 		debugger = new Debugger();
 		
 		// Intialize the light manager
 		LightManager.initialize();
 		
 		// Create the engine FPS timer
-		engineFPS = new Text("FPS", "HUD", Engine.getWidth() - 105f, Engine.getHeight() - 7f, 0.1f, 32);
+		engineFPS = new Text("FPS", "HUD", Engine.getWidth() - 105f, Engine.getHeight() - 7f, 0.05f, 32);
 	}
 	
 	private void engineLoop()
@@ -334,6 +338,12 @@ public class Engine {
 		}
 		
 		time1 = System.nanoTime();
+	}
+	
+	private void cleanUp()
+	{
+		
+		
 	}
 	
 	/**

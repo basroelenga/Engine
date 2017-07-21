@@ -37,7 +37,7 @@ public class Particle extends EngineObjects{
 		
 		this.pType = type;
 		
-		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
+		viewMatrix = CameraManager.getPlayerCamera("playercam").getViewMatrix();
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 		
 		// Set the initial modelmatrix

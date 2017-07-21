@@ -8,13 +8,7 @@ public class ModelManager {
 
 	private static ArrayList<Model> modelList = new ArrayList<Model>();
 	
-	public ModelManager()
-	{
-		
-		loadModels();
-	}
-	
-	private void loadModels()
+	public static void loadModels()
 	{
 		
 		// Check all the files in the model map

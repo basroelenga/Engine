@@ -35,7 +35,7 @@ public class Sphere extends EngineObjects{
 		sphere = EngineObjectManager.getUVSphere(subdivision);
 		
 		projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
-		viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
+		viewMatrix = CameraManager.getPlayerCamera("playercam").getViewMatrix();
 
 		//fbo = FrameBufferObjectManager.getFrameBuffer("basic");
 		

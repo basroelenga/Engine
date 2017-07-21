@@ -1,6 +1,6 @@
 package light;
 
-import camera.Camera;
+import camera.PlayerCamera;
 import engine.Engine;
 import engine.objects.Rectangle;
 import fbo.FrameBufferObjectManager;
@@ -16,7 +16,7 @@ public class DirectionalLight extends LightObject{
 
 	private Rectangle rect;
 	
-	public DirectionalLight(String name, Camera cam, float xDir, float yDir, float zDir, Vector3f lightColor)
+	public DirectionalLight(String name, PlayerCamera cam, float xDir, float yDir, float zDir, Vector3f lightColor)
 	{
 		
 		this.name = name;
@@ -25,17 +25,17 @@ public class DirectionalLight extends LightObject{
 		this.yDir = yDir;
 		this.zDir = zDir;
 		
-		this.cam = cam;
+		this.playercam = cam;
 		this.lightColor = lightColor;
 		
 		ambIntensity = new Vector3f(0.2f, 0.2f, 0.2f);
 		
 		// Create the depth buffer for the light
-		FrameBufferObjectManager.addFrameBufferObject(name, "shadow", 4096, 4096);
+		FrameBufferObjectManager.addFrameBufferObject(name, "DEPTH", 4096, 4096);
 		depthBuffer = FrameBufferObjectManager.getFrameBuffer(name);
 		
 		// Rendering the depth map
-		rect = new Rectangle("depth", new Texture("depth", depthBuffer.getDepthTexID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, Engine.getWidth() / 4, Engine.getHeight() / 4, new Vector4f());
+		rect = new Rectangle("depth", new Texture("depth", depthBuffer.getTextureID()), Engine.getWidth() - Engine.getWidth() / 3, Engine.getHeight() - Engine.getHeight() / 3, Engine.getWidth() / 4, Engine.getHeight() / 4, new Vector4f());
 
 		// Calculate the initial direction of the light in polar coordinates
 		getPolarDirection();
@@ -74,7 +74,7 @@ public class DirectionalLight extends LightObject{
 		projectionLightMatrix = MatrixObjectManager.getMatrixObject("lightdirmatrix").getMatrix();
 		
 		// The center in world space is the camera position
-		Vector3f center = cam.getPosition();
+		Vector3f center = playercam.getPosition();
 
 		// Calculate the light view matrix
 		viewLightMatrix.setIdentity();

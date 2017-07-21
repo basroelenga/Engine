@@ -11,6 +11,18 @@ public class Quaternion {
 	private float w;
 	
 	/**
+	 * Create a quaternion
+	 */
+	public Quaternion()
+	{
+		
+		this.w = 0f;
+		this.x = 0f;
+		this.y = 0f;
+		this.z = 0f;
+	}
+	
+	/**
 	 * Create a quaternion.
 	 * @param w 
 	 * @param x

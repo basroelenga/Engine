@@ -181,7 +181,7 @@ public class DrawShapes {
 		if(fbo != null) fbo.bind();
 		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tex.getTexID());
+		glBindTexture(GL_TEXTURE_2D, tex.getTextureID());
 		
 		glBindVertexArray(vaoID);
 		
@@ -213,7 +213,7 @@ public class DrawShapes {
 		if(fbo != null) fbo.bind();
 		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tex.getTexID());
+		glBindTexture(GL_TEXTURE_2D, tex.getTextureID());
 		
 		glBindVertexArray(vaoID);
 		
@@ -246,7 +246,7 @@ public class DrawShapes {
 		if(fbo != null) fbo.bind();
 		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tex.getTexID());
+		glBindTexture(GL_TEXTURE_2D, tex.getTextureID());
 		
 		glBindVertexArray(vaoID);
 		
@@ -285,7 +285,7 @@ public class DrawShapes {
 			
 			// This indicates which texture to use, 33984 corresponds to GL_TEXTURE0.
 			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, texList.get(i).getTexID());
+			glBindTexture(GL_TEXTURE_2D, texList.get(i).getTextureID());
 			
 			glUniform1i(shader.getTextureLocList().get(i), i);
 		}
@@ -330,7 +330,7 @@ public class DrawShapes {
 			
 			// This indicates which texture to use, 33984 corresponds to GL_TEXTURE0.
 			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, texList.get(i).getTexID());
+			glBindTexture(GL_TEXTURE_2D, texList.get(i).getTextureID());
 			
 			glUniform1i(shader.getTextureLocList().get(i), i);
 		}
@@ -416,6 +416,31 @@ public class DrawShapes {
 		glDisable(GL_BLEND);
 	}
 	
+	public static void drawSkyBox(Shader shader, FrameBufferObject fbo, int vaoID, int amountOfTriangles)
+	{
+		
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+		
+		shader.bind();
+		if(fbo != null) fbo.bind();
+		
+		glBindVertexArray(vaoID);
+		
+		glEnableVertexAttribArray(0);
+		
+		glDrawArrays(GL_TRIANGLES, 0, amountOfTriangles);
+		
+		glDisableVertexAttribArray(0);
+		
+		glBindVertexArray(0);
+		
+		if(fbo != null) fbo.unbind();
+		shader.unbind();
+		
+		glDisable(GL_BLEND);
+	}
+	
 	public static void drawModel(Shader shader, FrameBufferObject fbo, Texture tex, int vaoID, int amountOfTriangles)
 	{
 		
@@ -426,7 +451,7 @@ public class DrawShapes {
 		shader.bind();
 		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tex.getTexID());
+		glBindTexture(GL_TEXTURE_2D, tex.getTextureID());
 		
 		glBindVertexArray(vaoID);
 		
@@ -467,7 +492,7 @@ public class DrawShapes {
 			
 			// This indicates which texture to use
 			glActiveTexture(GL_TEXTURE0 + j);
-			glBindTexture(GL_TEXTURE_2D, entry.getValue().getTexID());
+			glBindTexture(GL_TEXTURE_2D, entry.getValue().getTextureID());
 			
 			shader.setLocation(entry.getKey(), j);
 			j += 1;
@@ -534,7 +559,7 @@ public class DrawShapes {
 		shader.bind();
 		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, tex.getTexID());
+		glBindTexture(GL_TEXTURE_2D, tex.getTextureID());
 		
 		glBindVertexArray(vaoID);
 		

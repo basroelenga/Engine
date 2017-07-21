@@ -2,7 +2,7 @@ package terrain;
 
 import java.util.ArrayList;
 
-import camera.Camera;
+import camera.FreeCamera;
 import camera.CameraManager;
 
 public class Terrain {

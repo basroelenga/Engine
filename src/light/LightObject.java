@@ -1,7 +1,8 @@
 package light;
 
-import camera.Camera;
+import camera.FreeCamera;
 import camera.CameraManager;
+import camera.PlayerCamera;
 import fbo.FrameBufferObject;
 import math.Matrix4f;
 import math.Vector3f;
@@ -47,7 +48,8 @@ public abstract class LightObject {
 	protected float shadowDistance = 10f;
 	
 	// A camera is needed to do the shadow calculation from
-	protected Camera cam;
+	protected PlayerCamera playercam;
+	protected FreeCamera freecam;
 	
 	// The cone angle for spotlights
 	protected float coneAngle;
@@ -72,7 +74,7 @@ public abstract class LightObject {
 	
 	// The light is always displayed(as a sphere) in perspective space
 	protected Matrix4f modelMatrix = new Matrix4f();
-	protected Matrix4f viewMatrix = CameraManager.getCamera("cam").getViewMatrix();
+	protected Matrix4f viewMatrix = CameraManager.getPlayerCamera("playercam").getViewMatrix();
 	protected Matrix4f projectionMatrix = MatrixObjectManager.getMatrixObject("projectionMatrixDefault").getMatrix();
 	protected Matrix4f normalMatrix = new Matrix4f();
 	
@@ -194,8 +196,8 @@ public abstract class LightObject {
 	public void setPhi(float phi) {
 		this.phi = phi;
 	}
-	public Camera getCam() {
-		return cam;
+	public PlayerCamera getCam() {
+		return playercam;
 	}
 	public boolean isRenderShadows() {
 		return renderShadows;

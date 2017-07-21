@@ -38,7 +38,7 @@ public class PostProcessEffect {
 		
 		// Get the fbo and shader
 		fbo = FrameBufferObjectManager.getFrameBuffer(name);		
-		tex = new Texture(name, fbo.getTexID());
+		tex = new Texture(name, fbo.getTextureID());
 		
 		shader = PostProcessEffectManager.getPostProcessShader(name);
 		
@@ -71,7 +71,7 @@ public class PostProcessEffect {
 		}
 		else
 		{
-			shader = ShaderManager.getShader("basicTex");
+			shader = ShaderManager.getShader("basictex");
 			
 			shader.uploadMatrix4f(modelMatrix, shader.getModelMatrixLoc());
 			shader.uploadMatrix4f(new Matrix4f(), shader.getViewMatrixLoc());
